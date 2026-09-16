@@ -6,14 +6,15 @@ import { InstagramIcon } from './CreatorModal';
 interface FooterProps {
   onNavigate: (view: ActiveTab) => void;
   onOpenCreator?: () => void;
+  onOpenFeedback?: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenCreator }) => {
+export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenCreator, onOpenFeedback }) => {
   return (
     <footer className="border-t border-slate-200 dark:border-slate-800/80 bg-white dark:bg-[#0f172a] text-slate-500 dark:text-slate-400 text-xs py-4 px-4 sm:px-6">
       <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
         {/* Brand & Creator Action */}
-        <div className="flex items-center gap-3 flex-wrap justify-center sm:justify-start">
+        <div className="flex items-center gap-2.5 flex-wrap justify-center sm:justify-start">
           <div className="flex items-center gap-2">
             <span className="font-bold text-slate-800 dark:text-slate-200">MechKit [Sem 3]</span>
             <span className="text-slate-300 dark:text-slate-700">•</span>
@@ -24,11 +25,22 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenCreator }) => 
             id="btn-footer-about-creator"
             type="button"
             onClick={onOpenCreator}
-            className="min-h-[44px] px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 hover:text-mech-orange dark:hover:text-mech-orange bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/60 transition-all cursor-pointer active:scale-95 flex items-center gap-1.5"
+            className="min-h-[40px] px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 hover:text-mech-orange dark:hover:text-mech-orange bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/60 transition-all cursor-pointer active:scale-95 flex items-center gap-1.5"
           >
             <span className="w-2 h-2 rounded-full bg-mech-orange animate-pulse" />
             <span>About Creator</span>
           </button>
+
+          {onOpenFeedback && (
+            <button
+              id="btn-footer-feedback"
+              type="button"
+              onClick={onOpenFeedback}
+              className="min-h-[40px] px-3 py-1.5 rounded-xl text-xs font-semibold text-emerald-700 dark:text-emerald-400 hover:text-emerald-600 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 transition-all cursor-pointer active:scale-95 flex items-center gap-1.5"
+            >
+              <span>Feedback / Request PYQ</span>
+            </button>
+          )}
         </div>
 
         {/* Quick Nav Links */}

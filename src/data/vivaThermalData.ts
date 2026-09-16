@@ -17,7 +17,146 @@ export interface BoilerVivaExperiment {
 
 export const boilerExperiments: BoilerVivaExperiment[] = [
   // ====================================================
-  // 1. LANCASHIRE BOILER (14 Labeled Components)
+  // 1. BABCOCK & WILCOX BOILER (18 Labeled Components)
+  // ====================================================
+  {
+    id: 'babcock',
+    title: 'Babcock & Wilcox Boiler',
+    imageSrc: '/viva/babcock.png',
+    type: 'Water Tube',
+    summary: 'High-pressure, horizontal water-tube boiler with inclined water tubes and natural convective circulation.',
+    components: [
+      {
+        partName: 'Pressure Gauge',
+        question: 'What is the exact function of Pressure Gauge?',
+        examinerAnswer: 'Indicates the steam pressure within the main drum to ensure safe operating conditions.',
+        answer: 'Indicates the steam pressure within the main drum to ensure safe operating conditions.',
+        category: 'Mounting',
+      },
+      {
+        partName: 'Safety Valve',
+        question: 'What is the exact function of Safety Valve?',
+        examinerAnswer: 'Blows off steam automatically when the drum pressure reaches dangerous limits.',
+        answer: 'Blows off steam automatically when the drum pressure reaches dangerous limits.',
+        category: 'Mounting',
+      },
+      {
+        partName: 'Antipriming Pipe',
+        question: 'What is the exact function of Antipriming Pipe?',
+        examinerAnswer: 'Internal baffle tube that extracts moisture droplets from steam exiting the stop valve.',
+        answer: 'Internal baffle tube that extracts moisture droplets from steam exiting the stop valve.',
+        category: 'Accessory',
+      },
+      {
+        partName: 'Stop Valve',
+        question: 'What is the exact function of Stop Valve?',
+        examinerAnswer: 'Regulates the flow of superheated steam exiting the boiler plant to external machinery.',
+        answer: 'Regulates the flow of superheated steam exiting the boiler plant to external machinery.',
+        category: 'Mounting',
+      },
+      {
+        partName: 'Drum',
+        question: 'What is the exact function of Drum?',
+        examinerAnswer: 'Longitudinal horizontal cylinder that acts as a reservoir for feedwater and separates steam from water.',
+        answer: 'Longitudinal horizontal cylinder that acts as a reservoir for feedwater and separates steam from water.',
+        category: 'Structural',
+      },
+      {
+        partName: 'Steam',
+        question: 'What is the exact role of the Steam Space?',
+        examinerAnswer: 'Upper space in the drum where dry saturated steam collects before feeding the superheater.',
+        answer: 'Upper space in the drum where dry saturated steam collects before feeding the superheater.',
+        category: 'Structural',
+      },
+      {
+        partName: 'Water',
+        question: 'What is the exact role of the Water Space?',
+        examinerAnswer: 'Lower volume of the drum maintaining continuous natural circulation through the inclined tubes.',
+        answer: 'Lower volume of the drum maintaining continuous natural circulation through the inclined tubes.',
+        category: 'Structural',
+      },
+      {
+        partName: 'Water Level Indicator',
+        question: 'What is the exact function of Water Level Indicator?',
+        examinerAnswer: 'Shows the water boundary in the drum to prevent tube dry-out or priming.',
+        answer: 'Shows the water boundary in the drum to prevent tube dry-out or priming.',
+        category: 'Mounting',
+      },
+      {
+        partName: 'Feed Check Valve',
+        question: 'What is the exact function of Feed Check Valve?',
+        examinerAnswer: 'Non-return valve that admits pressurized feedwater into the drum.',
+        answer: 'Non-return valve that admits pressurized feedwater into the drum.',
+        category: 'Mounting',
+      },
+      {
+        partName: 'Uptake Header',
+        question: 'What is the exact function of Uptake Header?',
+        examinerAnswer: 'Front vertical header that collects the heated water-steam mixture from inclined tubes and returns it to the drum.',
+        answer: 'Front vertical header that collects the heated water-steam mixture from inclined tubes and returns it to the drum.',
+        category: 'Structural',
+      },
+      {
+        partName: 'Baffle Plates',
+        question: 'What is the exact function of Baffle Plates?',
+        examinerAnswer: 'Firebrick partitions that direct combustion gases across the inclined tubes in a 3-pass zig-zag path.',
+        answer: 'Firebrick partitions that direct combustion gases across the inclined tubes in a 3-pass zig-zag path.',
+        category: 'Structural',
+      },
+      {
+        partName: 'Superheater Tubes',
+        question: 'What is the exact function of Superheater Tubes?',
+        examinerAnswer: 'U-bend tube bank placed above the water tubes to raise steam temperature above its saturation point.',
+        answer: 'U-bend tube bank placed above the water tubes to raise steam temperature above its saturation point.',
+        category: 'Accessory',
+      },
+      {
+        partName: 'Water Tubes',
+        question: 'What is the exact function of Water Tubes?',
+        examinerAnswer: '15-degree inclined tubes where water flows internally while absorbing heat from external flue gases.',
+        answer: '15-degree inclined tubes where water flows internally while absorbing heat from external flue gases.',
+        category: 'Structural',
+      },
+      {
+        partName: 'Downtake Header',
+        question: 'What is the exact function of Downtake Header?',
+        examinerAnswer: 'Rear vertical header directing cold, dense water from the drum down into the water tubes.',
+        answer: 'Rear vertical header directing cold, dense water from the drum down into the water tubes.',
+        category: 'Structural',
+      },
+      {
+        partName: 'Mud Collector',
+        question: 'What is the exact function of Mud Collector?',
+        examinerAnswer: 'Low-point cylindrical trap beneath the downtake header that collects scale and precipitate for blow-down.',
+        answer: 'Low-point cylindrical trap beneath the downtake header that collects scale and precipitate for blow-down.',
+        category: 'Mounting',
+      },
+      {
+        partName: 'Fire Door',
+        question: 'What is the exact function of Fire Door?',
+        examinerAnswer: 'Access door used to feed coal and inspect the combustion bed.',
+        answer: 'Access door used to feed coal and inspect the combustion bed.',
+        category: 'Structural',
+      },
+      {
+        partName: 'Grate',
+        question: 'What is the exact function of Grate?',
+        examinerAnswer: 'Moving or stationary grate platform supporting fuel combustion directly under the uptake header.',
+        answer: 'Moving or stationary grate platform supporting fuel combustion directly under the uptake header.',
+        category: 'Structural',
+      },
+      {
+        partName: 'Doors (Soot/Cleanout Doors)',
+        question: 'What is the exact function of Doors (Soot/Cleanout Doors)?',
+        examinerAnswer: 'Access doors in brickwork used for soot blowing and cleaning the exterior of the water tubes.',
+        answer: 'Access doors in brickwork used for soot blowing and cleaning the exterior of the water tubes.',
+        category: 'Structural',
+      },
+    ],
+  },
+
+  // ====================================================
+  // 2. LANCASHIRE BOILER (14 Labeled Components)
   // ====================================================
   {
     id: 'lancashire',
@@ -128,7 +267,7 @@ export const boilerExperiments: BoilerVivaExperiment[] = [
   },
 
   // ====================================================
-  // 2. COCHRAN BOILER (22 Labeled Components)
+  // 3. COCHRAN BOILER (22 Labeled Components)
   // ====================================================
   {
     id: 'cochran',
@@ -289,145 +428,6 @@ export const boilerExperiments: BoilerVivaExperiment[] = [
         question: 'What is the exact function of Ash pit?',
         examinerAnswer: 'Bottom chamber beneath the grate collecting burnt ashes and clinker.',
         answer: 'Bottom chamber beneath the grate collecting burnt ashes and clinker.',
-        category: 'Structural',
-      },
-    ],
-  },
-
-  // ====================================================
-  // 3. BABCOCK & WILCOX BOILER (18 Labeled Components)
-  // ====================================================
-  {
-    id: 'babcock',
-    title: 'Babcock & Wilcox Boiler',
-    imageSrc: '/viva/babcock.png',
-    type: 'Water Tube',
-    summary: 'High-pressure, horizontal water-tube boiler with inclined water tubes and natural convective circulation.',
-    components: [
-      {
-        partName: 'Pressure Gauge',
-        question: 'What is the exact function of Pressure Gauge?',
-        examinerAnswer: 'Indicates the steam pressure within the main drum to ensure safe operating conditions.',
-        answer: 'Indicates the steam pressure within the main drum to ensure safe operating conditions.',
-        category: 'Mounting',
-      },
-      {
-        partName: 'Safety Valve',
-        question: 'What is the exact function of Safety Valve?',
-        examinerAnswer: 'Blows off steam automatically when the drum pressure reaches dangerous limits.',
-        answer: 'Blows off steam automatically when the drum pressure reaches dangerous limits.',
-        category: 'Mounting',
-      },
-      {
-        partName: 'Antipriming Pipe',
-        question: 'What is the exact function of Antipriming Pipe?',
-        examinerAnswer: 'Internal baffle tube that extracts moisture droplets from steam exiting the stop valve.',
-        answer: 'Internal baffle tube that extracts moisture droplets from steam exiting the stop valve.',
-        category: 'Accessory',
-      },
-      {
-        partName: 'Stop Valve',
-        question: 'What is the exact function of Stop Valve?',
-        examinerAnswer: 'Regulates the flow of superheated steam exiting the boiler plant to external machinery.',
-        answer: 'Regulates the flow of superheated steam exiting the boiler plant to external machinery.',
-        category: 'Mounting',
-      },
-      {
-        partName: 'Drum',
-        question: 'What is the exact function of Drum?',
-        examinerAnswer: 'Longitudinal horizontal cylinder that acts as a reservoir for feedwater and separates steam from water.',
-        answer: 'Longitudinal horizontal cylinder that acts as a reservoir for feedwater and separates steam from water.',
-        category: 'Structural',
-      },
-      {
-        partName: 'Steam',
-        question: 'What is the exact role of the Steam Space?',
-        examinerAnswer: 'Upper space in the drum where dry saturated steam collects before feeding the superheater.',
-        answer: 'Upper space in the drum where dry saturated steam collects before feeding the superheater.',
-        category: 'Structural',
-      },
-      {
-        partName: 'Water',
-        question: 'What is the exact role of the Water Space?',
-        examinerAnswer: 'Lower volume of the drum maintaining continuous natural circulation through the inclined tubes.',
-        answer: 'Lower volume of the drum maintaining continuous natural circulation through the inclined tubes.',
-        category: 'Structural',
-      },
-      {
-        partName: 'Water Level Indicator',
-        question: 'What is the exact function of Water Level Indicator?',
-        examinerAnswer: 'Shows the water boundary in the drum to prevent tube dry-out or priming.',
-        answer: 'Shows the water boundary in the drum to prevent tube dry-out or priming.',
-        category: 'Mounting',
-      },
-      {
-        partName: 'Feed Check Valve',
-        question: 'What is the exact function of Feed Check Valve?',
-        examinerAnswer: 'Non-return valve that admits pressurized feedwater into the drum.',
-        answer: 'Non-return valve that admits pressurized feedwater into the drum.',
-        category: 'Mounting',
-      },
-      {
-        partName: 'Uptake Header',
-        question: 'What is the exact function of Uptake Header?',
-        examinerAnswer: 'Front vertical header that collects the heated water-steam mixture from inclined tubes and returns it to the drum.',
-        answer: 'Front vertical header that collects the heated water-steam mixture from inclined tubes and returns it to the drum.',
-        category: 'Structural',
-      },
-      {
-        partName: 'Baffle Plates',
-        question: 'What is the exact function of Baffle Plates?',
-        examinerAnswer: 'Firebrick partitions that direct combustion gases across the inclined tubes in a 3-pass zig-zag path.',
-        answer: 'Firebrick partitions that direct combustion gases across the inclined tubes in a 3-pass zig-zag path.',
-        category: 'Structural',
-      },
-      {
-        partName: 'Superheater Tubes',
-        question: 'What is the exact function of Superheater Tubes?',
-        examinerAnswer: 'U-bend tube bank placed above the water tubes to raise steam temperature above its saturation point.',
-        answer: 'U-bend tube bank placed above the water tubes to raise steam temperature above its saturation point.',
-        category: 'Accessory',
-      },
-      {
-        partName: 'Water Tubes',
-        question: 'What is the exact function of Water Tubes?',
-        examinerAnswer: '15-degree inclined tubes where water flows internally while absorbing heat from external flue gases.',
-        answer: '15-degree inclined tubes where water flows internally while absorbing heat from external flue gases.',
-        category: 'Structural',
-      },
-      {
-        partName: 'Downtake Header',
-        question: 'What is the exact function of Downtake Header?',
-        examinerAnswer: 'Rear vertical header directing cold, dense water from the drum down into the water tubes.',
-        answer: 'Rear vertical header directing cold, dense water from the drum down into the water tubes.',
-        category: 'Structural',
-      },
-      {
-        partName: 'Mud Collector',
-        question: 'What is the exact function of Mud Collector?',
-        examinerAnswer: 'Low-point cylindrical trap beneath the downtake header that collects scale and precipitate for blow-down.',
-        answer: 'Low-point cylindrical trap beneath the downtake header that collects scale and precipitate for blow-down.',
-        category: 'Mounting',
-      },
-      {
-        partName: 'Fire Door',
-        question: 'What is the exact function of Fire Door?',
-        examinerAnswer: 'Access door used to feed coal and inspect the combustion bed.',
-        answer: 'Access door used to feed coal and inspect the combustion bed.',
-        category: 'Structural',
-      },
-      {
-        partName: 'Grate',
-        question: 'What is the exact function of Grate?',
-        examinerAnswer: 'Moving or stationary grate platform supporting fuel combustion directly under the uptake header.',
-        answer: 'Moving or stationary grate platform supporting fuel combustion directly under the uptake header.',
-        category: 'Structural',
-      },
-      {
-        partName: 'Doors (Soot/Cleanout Doors)',
-        question: 'What is the exact function of Doors (Soot/Cleanout Doors)?',
-        examinerAnswer: 'Access doors in brickwork used for soot blowing and cleaning the exterior of the water tubes.',
-        answer: 'Access doors in brickwork used for soot blowing and cleaning the exterior of the water tubes.',
         category: 'Structural',
       },
     ],

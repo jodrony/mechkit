@@ -5,25 +5,28 @@ import {
   Hammer,
   BookOpen,
   HelpCircle,
-  FolderArchive,
   Calendar,
   ChevronRight,
   Scale,
   Clock,
   CheckCircle2,
-  Share2
+  Share2,
+  FileText,
+  ArrowRight,
+  Search
 } from 'lucide-react';
 import type { ActiveTab } from '../App';
 import { CountdownTimer } from '../components/CountdownTimer';
 import { useToast } from '../components/Toast';
 
 interface HomeProps {
-  onNavigate: (tab: ActiveTab) => void;
+  onNavigate: (tab: ActiveTab | string, toolId?: string) => void;
   onOpenCreator?: () => void;
   onShare?: () => void;
+  onOpenSearch?: () => void;
 }
 
-export const Home: React.FC<HomeProps> = ({ onNavigate, onOpenCreator, onShare }) => {
+export const Home: React.FC<HomeProps> = ({ onNavigate, onOpenCreator, onShare, onOpenSearch }) => {
   const { showToast } = useToast();
 
   const handleShare = async () => {
@@ -38,7 +41,6 @@ export const Home: React.FC<HomeProps> = ({ onNavigate, onOpenCreator, onShare }
       url: shareUrl
     };
 
-    // Attempt native share if supported and in secure context (works automatically on production HTTPS)
     if (navigator.share && window.isSecureContext) {
       try {
         await navigator.share(shareData);
@@ -48,12 +50,10 @@ export const Home: React.FC<HomeProps> = ({ onNavigate, onOpenCreator, onShare }
       }
     }
 
-    // Robust fallback for HTTP / Localhost preview:
     try {
       if (navigator.clipboard && navigator.clipboard.writeText) {
         await navigator.clipboard.writeText(shareUrl);
       } else {
-        // Older mobile fallback using textarea
         const textArea = document.createElement('textarea');
         textArea.value = shareUrl;
         textArea.style.position = 'fixed';
@@ -64,152 +64,177 @@ export const Home: React.FC<HomeProps> = ({ onNavigate, onOpenCreator, onShare }
         document.execCommand('copy');
         document.body.removeChild(textArea);
       }
-      // Trigger a visible toast banner at the top or bottom of the screen
       showToast('Link copied to clipboard! Share it in your WhatsApp group.');
-    } catch (err) {
+    } catch {
       showToast('Unable to auto-copy. App URL: ' + window.location.origin);
     }
   };
 
-  const cards: {
-    id: ActiveTab;
-    title: string;
-    subtitle: string;
-    count: string;
-    icon: React.ComponentType<{ className?: string }>;
-    accentColor: string;
-    badgeColor: string;
-  }[] = [
+  // 2x2 Core High-Priority Modules
+  const coreModules = [
     {
-      id: 'calculators',
+      id: 'resources' as ActiveTab,
+      title: 'PYQ Archive',
+      badge: '2018–2026 PYQs',
+      tag: 'Official Papers',
+      icon: FileText,
+      accentBg: 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-900/50',
+      borderHover: 'hover:border-blue-500/60 dark:hover:border-blue-500/60',
+    },
+    {
+      id: 'labs' as ActiveTab,
+      title: 'Lab Companion',
+      badge: '4 Lab Subjects',
+      tag: 'Reports & Manuals',
+      icon: FlaskConical,
+      accentBg: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900/50',
+      borderHover: 'hover:border-emerald-500/60 dark:hover:border-emerald-500/60',
+    },
+    {
+      id: 'formulas' as ActiveTab,
+      title: 'Formula Deck',
+      badge: '40+ Formulas',
+      tag: 'Curated Equations',
+      icon: BookOpen,
+      accentBg: 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-200 dark:border-purple-900/50',
+      borderHover: 'hover:border-purple-500/60 dark:hover:border-purple-500/60',
+    },
+    {
+      id: 'resources' as ActiveTab,
+      title: 'Routine & Syllabus',
+      badge: '2026–2027 Schedule',
+      tag: 'Official WBSCTE',
+      icon: Calendar,
+      accentBg: 'bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border-cyan-200 dark:border-cyan-900/50',
+      borderHover: 'hover:border-cyan-500/60 dark:hover:border-cyan-500/60',
+    },
+  ];
+
+  // Secondary Tools (Compact Scannable Grid)
+  const secondaryTools = [
+    {
+      id: 'calculators' as ActiveTab,
       title: 'Calculators',
-      subtitle: 'Workshop, SOM, Kinematics',
       count: '8 Tools',
       icon: Calculator,
-      accentColor: 'text-blue-500 dark:text-blue-400',
-      badgeColor: 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-900/50',
+      color: 'text-blue-500 dark:text-blue-400',
+      bg: 'bg-blue-500/10',
     },
     {
-      id: 'utilities',
-      title: 'Engineering Utilities',
-      subtitle: 'Universal SI, Density, Stock Weights',
-      count: '12 Tools',
-      icon: Scale,
-      accentColor: 'text-indigo-500 dark:text-indigo-400',
-      badgeColor: 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-200 dark:border-indigo-900/50',
+      id: 'viva' as ActiveTab,
+      title: 'Viva Center',
+      count: 'Boilers & Practice',
+      icon: HelpCircle,
+      color: 'text-rose-500 dark:text-rose-400',
+      bg: 'bg-rose-500/10',
     },
     {
-      id: 'labs',
-      title: 'Lab Companion',
-      subtitle: 'Materials, Thermal, Mfg, Drawing',
-      count: '4 Labs',
-      icon: FlaskConical,
-      accentColor: 'text-emerald-500 dark:text-emerald-400',
-      badgeColor: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900/50',
-    },
-    {
-      id: 'workshop',
+      id: 'workshop' as ActiveTab,
       title: 'Workshop Reference',
-      subtitle: 'Lathe, Welding, Safety',
       count: '6 Topics',
       icon: Hammer,
-      accentColor: 'text-amber-500 dark:text-amber-400',
-      badgeColor: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-900/50',
+      color: 'text-amber-500 dark:text-amber-400',
+      bg: 'bg-amber-500/10',
     },
     {
-      id: 'formulas',
-      title: 'Formula Library',
-      subtitle: 'Curated Equations',
-      count: '40 Formulas',
-      icon: BookOpen,
-      accentColor: 'text-purple-500 dark:text-purple-400',
-      badgeColor: 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-200 dark:border-purple-900/50',
-    },
-    {
-      id: 'viva',
-      title: 'Viva Center',
-      subtitle: 'Oral Exam Practice',
-      count: '5 Subjects',
-      icon: HelpCircle,
-      accentColor: 'text-rose-500 dark:text-rose-400',
-      badgeColor: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-200 dark:border-rose-900/50',
-    },
-    {
-      id: 'resources',
-      title: 'Resources Hub',
-      subtitle: 'Curriculum, Lab Kit, PYQs',
-      count: '3 Sections',
-      icon: FolderArchive,
-      accentColor: 'text-cyan-500 dark:text-cyan-400',
-      badgeColor: 'bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border-cyan-200 dark:border-cyan-900/50',
+      id: 'utilities' as ActiveTab,
+      title: 'Engineering Utilities',
+      count: '12 Tools',
+      icon: Scale,
+      color: 'text-indigo-500 dark:text-indigo-400',
+      bg: 'bg-indigo-500/10',
     },
   ];
 
   return (
     <div className="max-w-5xl mx-auto px-3 sm:px-6 py-5 space-y-5">
-      {/* 1. Official Status Bar Chip & Creator Hero Pill */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between px-3.5 py-2.5 rounded-xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700/60 shadow-2xs gap-2">
-        <div className="flex items-center gap-2 text-xs font-semibold text-slate-700 dark:text-slate-300">
-          <Calendar className="w-4 h-4 text-mech-orange shrink-0" />
-          <span>WBSCTE Sem 3 • Board Exam Target: Jan 5, 2027</span>
+      {/* 1. Header: MechKit Logo + WBSCTE Mechanical Engineering + Instant Search */}
+      <div className="flex flex-col gap-3 pb-2 border-b border-neutral-200 dark:border-neutral-800">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-orange-500/10 dark:bg-orange-500/20 border border-orange-500/30 flex items-center justify-center text-orange-500 shrink-0">
+              <span className="font-mono font-black text-base">MK</span>
+            </div>
+            <div>
+              <h1 className="text-lg sm:text-xl font-black tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
+                MechKit
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-orange-500/10 text-orange-500 dark:text-orange-400 border border-orange-500/20">
+                  v0.3
+                </span>
+              </h1>
+              <p className="text-xs font-semibold text-slate-500 dark:text-neutral-400">
+                WBSCTE Mechanical Engineering
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 flex-wrap self-start sm:self-auto">
+            <button
+              id="btn-share-mechkit"
+              type="button"
+              onClick={handleShare}
+              title="Share MechKit v0.3"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-orange-500/10 hover:bg-orange-500/20 border border-orange-500/30 text-xs font-bold text-orange-500 dark:text-orange-400 transition-all active:scale-95 cursor-pointer shadow-2xs"
+            >
+              <Share2 className="w-3.5 h-3.5" />
+              <span>Share</span>
+            </button>
+            <button
+              id="btn-creator-hero-pill"
+              type="button"
+              onClick={onOpenCreator}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-800/90 border border-slate-700/80 hover:border-orange-500 text-xs text-slate-300 transition-all active:scale-95 cursor-pointer shadow-2xs"
+            >
+              <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
+              <span>Built by Rony Biswas</span>
+              <span className="text-orange-400 font-semibold">ME &apos;25</span>
+            </button>
+          </div>
         </div>
-        <div className="flex items-center gap-2 flex-wrap self-start sm:self-auto">
-          <button
-            id="btn-share-mechkit"
-            type="button"
-            onClick={handleShare}
-            title="Share MechKit v0.3"
-            className="flex items-center gap-1.5 px-3.5 py-2 min-h-[44px] rounded-full bg-orange-500/10 hover:bg-orange-500/20 border border-orange-500/30 text-xs font-bold text-mech-orange transition-all active:scale-95 cursor-pointer shadow-xs"
-          >
-            <Share2 className="w-3.5 h-3.5" />
-            <span>Share MechKit</span>
-          </button>
-          <button
-            id="btn-creator-hero-pill"
-            type="button"
-            onClick={onOpenCreator}
-            className="flex items-center gap-2 px-3.5 py-2 min-h-[44px] rounded-full bg-slate-800/80 border border-slate-700/80 hover:border-mech-orange text-xs text-slate-300 transition-all active:scale-95 cursor-pointer shadow-xs"
-          >
-            <span className="w-2 h-2 rounded-full bg-mech-orange animate-pulse" />
-            <span>Built by Rony Biswas</span>
-            <span className="text-mech-orange font-semibold">ME &apos;25</span>
-          </button>
-          <span className="px-2.5 py-0.5 rounded text-[10px] font-mono font-bold bg-orange-500/10 text-mech-orange border border-orange-200 dark:border-orange-900/60 shrink-0 hidden md:inline-block">
-            Official WBSCTVESD 2026-27
+
+        {/* Instant Search Bar */}
+        <div
+          id="btn-hero-search"
+          onClick={onOpenSearch}
+          className="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl bg-slate-100/90 dark:bg-neutral-800/80 border border-neutral-200 dark:border-neutral-700/80 hover:border-orange-500/50 text-slate-400 dark:text-neutral-400 text-xs sm:text-sm cursor-pointer transition-colors shadow-2xs group"
+        >
+          <Search className="w-4 h-4 text-slate-400 group-hover:text-orange-500 transition-colors shrink-0" />
+          <span className="flex-1 font-medium text-slate-500 dark:text-neutral-400 truncate">
+            Search PYQs, lab manuals, formulas, calculators...
           </span>
+          <kbd className="hidden sm:inline text-[10px] font-mono px-1.5 py-0.5 rounded bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 text-slate-500">
+            ⌘K
+          </kbd>
         </div>
       </div>
 
       {/* 2. Official Academic Countdown & Milestones Card */}
-      <div className="bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700/60 rounded-2xl p-4 sm:p-5 shadow-xs space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
+      <div className="bg-white dark:bg-neutral-900/60 backdrop-blur-sm border border-neutral-200 dark:border-neutral-800/80 rounded-2xl p-3.5 sm:p-4 shadow-xs space-y-3 sm:space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2.5 border-b border-neutral-100 dark:border-neutral-800">
           <div className="space-y-0.5">
-            <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
               Official Academic Timeline
             </span>
-            <h3 className="font-extrabold text-base sm:text-lg text-slate-900 dark:text-white flex items-center gap-2">
+            <h3 className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white flex items-center gap-2">
               <Clock className="w-4 h-4 text-mech-blue shrink-0" />
               <span>Board Exam Target: Jan 5, 2027</span>
             </h3>
           </div>
 
           <div className="flex items-center gap-1.5 self-start sm:self-auto">
-            <span className="px-3 py-1 rounded-full text-xs font-mono font-bold bg-blue-500/10 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-800">
-              Theory Commencement Target
+            <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold bg-blue-500/10 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-800">
+              Theory Target
             </span>
           </div>
         </div>
 
-        {/* Live Countdown Timer Digits Display (Isolated Component to prevent parent re-renders) */}
+        {/* Live Countdown Timer Digits Display */}
         <CountdownTimer />
 
         {/* Milestones List */}
-        <div className="pt-2 space-y-2">
-          <span className="text-[11px] font-mono font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">
-            Academic Calendar Milestones:
-          </span>
+        <div className="pt-1 space-y-2">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
-            <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 flex items-start gap-2.5">
+            <div className="p-2 sm:p-2.5 rounded-xl bg-slate-50 dark:bg-neutral-800/40 border border-neutral-200 dark:border-neutral-800 flex items-start gap-2.5">
               <div className="p-1 rounded-md bg-blue-500/10 text-mech-blue dark:text-blue-400 shrink-0 mt-0.5">
                 <CheckCircle2 className="w-3.5 h-3.5" />
               </div>
@@ -223,7 +248,7 @@ export const Home: React.FC<HomeProps> = ({ onNavigate, onOpenCreator, onShare }
               </div>
             </div>
 
-            <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 flex items-start gap-2.5">
+            <div className="p-2 sm:p-2.5 rounded-xl bg-slate-50 dark:bg-neutral-800/40 border border-neutral-200 dark:border-neutral-800 flex items-start gap-2.5">
               <div className="p-1 rounded-md bg-rose-500/10 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5">
                 <Calendar className="w-3.5 h-3.5" />
               </div>
@@ -232,7 +257,7 @@ export const Home: React.FC<HomeProps> = ({ onNavigate, onOpenCreator, onShare }
                   Board Theory
                 </span>
                 <p className="text-xs font-bold text-slate-900 dark:text-white">
-                  Theoretical Board Examinations: Tentative Start Jan 5, 2027
+                  Theoretical Board Exams: Tentative Jan 5, 2027
                 </p>
               </div>
             </div>
@@ -240,45 +265,88 @@ export const Home: React.FC<HomeProps> = ({ onNavigate, onOpenCreator, onShare }
         </div>
       </div>
 
-      {/* 3. Tap Cards Grid (2-column on mobile, 3-column on tablet/desktop) */}
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
-        {cards.map((card, idx) => {
-          const Icon = card.icon;
-          return (
-            <button
-              key={card.id}
-              type="button"
-              onClick={() => onNavigate(card.id)}
-              className="flex flex-col justify-between p-4 rounded-2xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700/60 hover:border-mech-blue/60 dark:hover:border-mech-blue/60 shadow-2xs hover:shadow-md transition-all text-left cursor-pointer group active:scale-[0.98]"
-            >
-              <div>
-                <div className="flex items-center justify-between gap-2 mb-3">
-                  <div className={`p-2 rounded-xl ${card.badgeColor} group-hover:scale-105 transition-transform`}>
+      {/* 3. Core Modules: 2x2 Quick-Access Grid */}
+      <div className="space-y-2.5">
+        <div className="flex items-center justify-between px-0.5">
+          <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+            Core Modules
+          </span>
+          <span className="text-[10px] font-mono text-slate-400">Tap to open</span>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3.5">
+          {coreModules.map((module) => {
+            const Icon = module.icon;
+            return (
+              <button
+                key={module.title}
+                type="button"
+                onClick={() => onNavigate(module.id)}
+                className={`flex items-center justify-between p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-neutral-900/60 backdrop-blur-sm border border-neutral-200 dark:border-neutral-800/80 ${module.borderHover} shadow-xs hover:shadow-md transition-all text-left cursor-pointer group active:scale-[0.99]`}
+              >
+                <div className="flex items-center gap-3">
+                  <div className={`p-2.5 rounded-xl ${module.accentBg} group-hover:scale-105 transition-transform`}>
                     <Icon className="w-5 h-5" />
                   </div>
-                  <span className="text-[10px] font-mono font-bold text-slate-400 dark:text-slate-500">
-                    0{idx + 1}
-                  </span>
+                  <div className="space-y-0.5">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <h3 className="font-bold text-sm text-slate-900 dark:text-white group-hover:text-orange-500 transition-colors">
+                        {module.title}
+                      </h3>
+                    </div>
+                    <div className="flex items-center gap-1.5 text-[11px] text-slate-500 dark:text-slate-400">
+                      <span className="font-semibold text-slate-700 dark:text-slate-300">{module.badge}</span>
+                      <span>•</span>
+                      <span>{module.tag}</span>
+                    </div>
+                  </div>
                 </div>
 
-                <h3 className="font-bold text-sm sm:text-base text-slate-900 dark:text-white group-hover:text-mech-blue dark:group-hover:text-blue-400 transition-colors leading-snug">
-                  {card.title}
-                </h3>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 truncate">
-                  {card.subtitle}
-                </p>
-              </div>
+                <div className="p-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-400 group-hover:text-orange-500 group-hover:bg-orange-50 dark:group-hover:bg-orange-950/30 transition-all">
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
 
-              <div className="flex items-center justify-between pt-3 mt-3 border-t border-slate-100 dark:border-slate-700/40 text-[11px]">
-                <span className="font-semibold text-slate-600 dark:text-slate-300">
-                  {card.count}
-                </span>
-                <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-0.5 group-hover:text-mech-blue transition-all" />
-              </div>
-            </button>
-          );
-        })}
+      {/* 4. Secondary Tools: Compact Scannable Row / Grid */}
+      <div className="space-y-2.5">
+        <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 px-0.5 block">
+          Tools &amp; Practice
+        </span>
+
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+          {secondaryTools.map((tool) => {
+            const Icon = tool.icon;
+            return (
+              <button
+                key={tool.id}
+                type="button"
+                onClick={() => onNavigate(tool.id)}
+                className="flex flex-col justify-between p-3 rounded-2xl bg-white dark:bg-neutral-900/60 backdrop-blur-sm border border-neutral-200 dark:border-neutral-800/80 hover:border-neutral-400 dark:hover:border-neutral-700 shadow-xs hover:shadow-sm transition-all text-left cursor-pointer group active:scale-[0.98]"
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <div className={`p-1.5 rounded-lg ${tool.bg} ${tool.color}`}>
+                    <Icon className="w-4 h-4" />
+                  </div>
+                  <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-xs text-slate-900 dark:text-white group-hover:text-orange-500 transition-colors">
+                    {tool.title}
+                  </h4>
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400 block mt-0.5">
+                    {tool.count}
+                  </span>
+                </div>
+              </button>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
 };
+

@@ -43,13 +43,10 @@ export const WorkshopReference: React.FC = () => {
           <Image className="w-6 h-6" />
         </div>
 
-        <div className="space-y-1 max-w-md mx-auto">
+        <div className="max-w-md mx-auto">
           <h3 className="font-bold text-sm sm:text-base text-slate-900 dark:text-white">
-            Diagram & notes slot ready for content.
+            {currentTopic.title}
           </h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
-            Technical illustrations, schematics, and reference guidelines for {currentTopic.title} will appear in this module.
-          </p>
         </div>
 
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-mono font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
@@ -58,27 +55,21 @@ export const WorkshopReference: React.FC = () => {
       </div>
 
       {/* Structured Outline Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div className="p-4 rounded-xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700/60 space-y-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
+        <div className="py-2.5 sm:py-3 px-3.5 sm:px-4 rounded-xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700/60 flex items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <FileText className="w-4 h-4 text-amber-500" />
-            <h4 className="font-bold text-xs text-slate-900 dark:text-white">Technical Specifications Slot</h4>
+            <FileText className="w-4 h-4 text-amber-500 shrink-0" />
+            <h4 className="font-bold text-xs sm:text-sm text-slate-900 dark:text-white">Technical Specifications Slot</h4>
           </div>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
-            Machining tolerances, speed/feed reference tables, and standard tooling parameters ready to populate.
-          </p>
-          <div className="text-[10px] font-mono text-slate-400">Status: Content slot ready</div>
+          <span className="text-[10px] font-mono font-medium px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 shrink-0">Ready</span>
         </div>
 
-        <div className="p-4 rounded-xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700/60 space-y-2">
+        <div className="py-2.5 sm:py-3 px-3.5 sm:px-4 rounded-xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700/60 flex items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-            <h4 className="font-bold text-xs text-slate-900 dark:text-white">Shop Practice Checklist Slot</h4>
+            <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+            <h4 className="font-bold text-xs sm:text-sm text-slate-900 dark:text-white">Shop Practice Checklist Slot</h4>
           </div>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
-            Step-by-step machining checks, clamp alignments, and safety clearance verification outline.
-          </p>
-          <div className="text-[10px] font-mono text-slate-400">Status: Checklist slot ready</div>
+          <span className="text-[10px] font-mono font-medium px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 shrink-0">Ready</span>
         </div>
       </div>
     </div>

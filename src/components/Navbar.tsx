@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Wrench,
   Sun,
@@ -11,7 +10,8 @@ import {
   HelpCircle,
   LayoutDashboard,
   Scale,
-  FolderArchive
+  FolderArchive,
+  MessageSquarePlus
 } from 'lucide-react';
 import type { ActiveTab } from '../App';
 
@@ -21,6 +21,7 @@ interface NavbarProps {
   isDark: boolean;
   onToggleTheme: () => void;
   onOpenSearch: () => void;
+  onOpenFeedback?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -29,6 +30,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   isDark,
   onToggleTheme,
   onOpenSearch,
+  onOpenFeedback,
 }) => {
   const navItems: { id: ActiveTab; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -100,6 +102,20 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span className="hidden sm:inline font-semibold">Search</span>
               <kbd className="hidden sm:inline text-[10px] font-mono opacity-60">⌘K</kbd>
             </button>
+
+            {/* Feedback / Request Action */}
+            {onOpenFeedback && (
+              <button
+                id="btn-nav-feedback"
+                type="button"
+                onClick={onOpenFeedback}
+                className="flex items-center gap-1.5 px-2.5 sm:px-3 py-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 text-xs font-bold transition-colors cursor-pointer"
+                title="Feedback / Request PYQ"
+              >
+                <MessageSquarePlus className="w-4 h-4 shrink-0" />
+                <span className="hidden sm:inline">Feedback</span>
+              </button>
+            )}
 
             {/* Dark / Light Toggle */}
             <button

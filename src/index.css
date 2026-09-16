@@ -38,6 +38,15 @@
   contain-intrinsic-size: 0 120px;
 }
 
+/* Hide scrollbar utility for clean touch ribbons */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 /* Custom scrollbars */
 ::-webkit-scrollbar {
   width: 8px;

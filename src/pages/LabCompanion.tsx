@@ -10,7 +10,6 @@ import {
   Activity,
   FileSpreadsheet,
   GraduationCap,
-  Sparkles,
   PenTool,
   ExternalLink,
   Eye,
@@ -76,8 +75,6 @@ export const LabCompanion: React.FC<LabCompanionProps> = ({
       boilerId: 'lancashire',
       number: 'Experiment 01',
       title: 'Lancashire Boiler',
-      type: 'Fire-Tube • Horizontal • Internally Fired',
-      description: 'Study of construction, flue gas path, mountings (dead weight safety valve, water level indicator) and accessories of two-flue internal furnace boiler.',
       pdfUrl: '/labs/exp1_tl.pdf',
       badge: 'Low / Medium Pressure',
     },
@@ -86,8 +83,6 @@ export const LabCompanion: React.FC<LabCompanionProps> = ({
       boilerId: 'cochran',
       number: 'Experiment 02',
       title: 'Cochran Boiler',
-      type: 'Fire-Tube • Vertical • Multi-Tubular',
-      description: 'Study of vertical multi-tubular boiler with hemispherical crown, firebrick lined combustion chamber, and horizontal smoke tubes.',
       pdfUrl: '/labs/exp2_tl.pdf',
       badge: 'Vertical Portable',
     },
@@ -96,8 +91,6 @@ export const LabCompanion: React.FC<LabCompanionProps> = ({
       boilerId: 'babcock',
       number: 'Experiment 03',
       title: 'Babcock & Wilcox Boiler',
-      type: 'Water-Tube • Longitudinal Drum • Externally Fired',
-      description: 'Study of high-pressure inclined water tubes, mud box, uptake/downtake headers, superheater tubes, and baffle plates for steam generation.',
       pdfUrl: '/labs/exp3_tl.pdf',
       badge: 'High Pressure Water-Tube',
     },
@@ -157,14 +150,9 @@ export const LabCompanion: React.FC<LabCompanionProps> = ({
               <div className="p-1.5 rounded-lg bg-orange-500/10 text-mech-orange">
                 <Flame className="w-5 h-5" />
               </div>
-              <div>
-                <h3 className="font-extrabold text-base sm:text-lg text-slate-900 dark:text-white">
-                  Thermal Engineering Lab Manuals
-                </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
-                  Boiler study experiments with full diagrams, specifications, and viva questions.
-                </p>
-              </div>
+              <h3 className="font-extrabold text-base sm:text-lg text-slate-900 dark:text-white">
+                Thermal Engineering Lab Manuals
+              </h3>
             </div>
             <span className="hidden sm:inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900/40">
               <CheckCircle2 className="w-3.5 h-3.5" />
@@ -172,200 +160,170 @@ export const LabCompanion: React.FC<LabCompanionProps> = ({
             </span>
           </div>
 
-          {/* Quick-Access Header Action & Utility Bar */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
-            {/* A. Thermal Lab Report Kit */}
-            <div className="bg-white dark:bg-[#1e293b] border border-amber-300/80 dark:border-amber-700/60 rounded-2xl p-4 sm:p-5 shadow-xs flex flex-col justify-between space-y-3">
-              <div className="space-y-2">
-                <div className="flex flex-wrap items-center justify-between gap-1.5">
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-mono font-bold bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-800">
-                    Gayeshpur Govt. Polytechnic / Official Format
-                  </span>
-                  <span className="text-[11px] font-mono font-semibold text-slate-400 dark:text-slate-500">MEPC 215</span>
-                </div>
-                <h4 className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white flex items-center gap-2">
-                  <span className="p-1 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400">
-                    <FileSpreadsheet className="w-4 h-4" />
-                  </span>
-                  <span>Thermal Engineering-I Lab Report Kit</span>
-                </h4>
-                <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                  Front, title, and blank index sheet specifically formatted for MEPC 215 Thermal Lab submissions.
-                </p>
-              </div>
-
-              <div className="pt-1 flex flex-col sm:flex-row items-stretch gap-2">
-                <button
-                  id="btn-view-front-index"
-                  type="button"
-                  onClick={(e) => handlePdfAction(e, '/labs/thermal_front_index.pdf', true, 'Thermal Engineering-I Lab Report Kit')}
-                  className="flex-1 min-h-[44px] px-3 py-2.5 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 shadow-xs"
-                >
-                  <Eye className="w-4 h-4 text-mech-orange shrink-0" />
-                  <span>View</span>
-                </button>
-                <a
-                  id="btn-download-front-index"
-                  href="/labs/thermal_front_index.pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  download="thermal_front_index.pdf"
-                  onClick={(e) => handlePdfAction(e, '/labs/thermal_front_index.pdf', false, 'Thermal Engineering-I Lab Report Kit')}
-                  className="flex-1 min-h-[44px] px-3 py-2.5 rounded-xl text-xs font-bold bg-mech-orange hover:bg-orange-600 text-white transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 shadow-xs"
-                >
-                  <Download className="w-4 h-4 shrink-0" />
-                  <span>Download</span>
-                </a>
-              </div>
+          {/* Primary Tier: Core Experiments */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between px-0.5">
+              <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                Core Experiments
+              </span>
+              <span className="text-xs font-mono text-slate-400 dark:text-slate-500">
+                3 Manuals Ready
+              </span>
             </div>
 
-            {/* B. Universal Lab Report Cover Sheet (Pending Upload) */}
-            <div className="bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700/60 rounded-2xl p-4 sm:p-5 shadow-xs flex flex-col justify-between space-y-3">
-              <div className="space-y-2">
-                <div className="flex flex-wrap items-center justify-between gap-1.5">
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-mono font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                    All Semester Labs
-                  </span>
-                  <span className="text-[11px] font-mono font-semibold text-slate-400 dark:text-slate-500">Universal Format</span>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
+              {thermalExperiments.map((exp, idx) => (
+                <div
+                  key={exp.id}
+                  className="rounded-2xl border border-neutral-200 dark:border-neutral-800/80 bg-white dark:bg-neutral-900/60 backdrop-blur-sm p-4 shadow-xs hover:border-orange-500/40 dark:hover:border-orange-500/40 transition-all flex flex-col justify-between space-y-3 group"
+                >
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded-full bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-500/20">
+                        Exp 0{idx + 1}
+                      </span>
+                      <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
+                        {exp.badge}
+                      </span>
+                    </div>
+
+                    <h4 className="font-bold text-base text-slate-900 dark:text-white group-hover:text-orange-500 transition-colors leading-snug">
+                      {exp.title}
+                    </h4>
+                  </div>
+
+                  <div className="pt-2.5 border-t border-neutral-100 dark:border-neutral-800/80 space-y-2">
+                    <div className="flex items-center gap-2">
+                      <button
+                        id={`btn-view-${exp.id}`}
+                        type="button"
+                        onClick={(e) => handlePdfAction(e, exp.pdfUrl, true, `${exp.title} Manual`)}
+                        className="flex-1 py-2 px-3 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 transition-colors flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 shadow-xs"
+                      >
+                        <Eye className="w-3.5 h-3.5 text-orange-400 shrink-0" />
+                        <span>Open PDF</span>
+                      </button>
+                      <a
+                        id={`btn-download-${exp.id}`}
+                        href={exp.pdfUrl}
+                        download={`${exp.id}.pdf`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => handlePdfAction(e, exp.pdfUrl, false, `${exp.title} Manual`)}
+                        className="p-2 rounded-xl text-xs font-bold bg-orange-500 hover:bg-orange-600 text-white transition-colors flex items-center justify-center cursor-pointer active:scale-95 shadow-xs"
+                        title="Download PDF"
+                        aria-label={`Download ${exp.title} PDF`}
+                      >
+                        <Download className="w-3.5 h-3.5 shrink-0" />
+                      </a>
+                    </div>
+
+                    <button
+                      id={`btn-viva-${exp.id}`}
+                      type="button"
+                      onClick={() => onNavigate?.('viva', exp.boilerId)}
+                      title={`Practice ${exp.title} Viva`}
+                      className="w-full py-1.5 px-2.5 text-xs font-semibold rounded-xl bg-orange-500/10 hover:bg-orange-500/20 text-orange-600 dark:text-orange-400 border border-orange-200 dark:border-orange-900/40 transition-colors flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
+                    >
+                      <GraduationCap className="w-3.5 h-3.5 shrink-0" />
+                      <span>Practice Boiler Viva</span>
+                    </button>
+                  </div>
                 </div>
-                <h4 className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white flex items-center gap-2">
-                  <span className="p-1 rounded-lg bg-slate-500/10 text-slate-600 dark:text-slate-400">
-                    <FileText className="w-4 h-4" />
-                  </span>
-                  <span>Universal Lab Report Cover Sheet</span>
-                </h4>
-                <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                  General lab cover sheet template for Materials Testing, Manufacturing Practice, and Drawing submissions.
-                </p>
-              </div>
-
-              <div className="pt-1 flex flex-col sm:flex-row items-stretch gap-2">
-                <button
-                  id="btn-view-universal-lab-kit"
-                  type="button"
-                  onClick={(e) => handlePdfAction(e, '/templates/universal_assignment_lab_master.pdf', true, 'Universal Lab Report Cover Sheet')}
-                  className="flex-1 min-h-[44px] px-3 py-2.5 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 shadow-xs"
-                >
-                  <Eye className="w-4 h-4 text-mech-orange shrink-0" />
-                  <span>View</span>
-                </button>
-                <a
-                  id="btn-download-universal-lab-kit"
-                  href="/templates/universal_assignment_lab_master.pdf"
-                  download="universal_assignment_lab_master.pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={(e) => handlePdfAction(e, '/templates/universal_assignment_lab_master.pdf', false, 'Universal Lab Report Cover Sheet')}
-                  className="flex-1 min-h-[44px] px-3 py-2.5 rounded-xl text-xs font-bold bg-mech-orange hover:bg-orange-600 text-white transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 shadow-xs"
-                >
-                  <Download className="w-4 h-4 shrink-0" />
-                  <span>Download</span>
-                </a>
-              </div>
-            </div>
-
-            {/* C. Direct Viva Practice Shortcut */}
-            <div className="bg-white dark:bg-[#1e293b] border border-blue-300/80 dark:border-blue-700/60 rounded-2xl p-4 sm:p-5 shadow-xs flex flex-col justify-between space-y-3">
-              <div className="space-y-2">
-                <div className="flex flex-wrap items-center justify-between gap-1.5">
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-mono font-bold bg-blue-500/15 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-800">
-                    Boiler Component Quiz
-                  </span>
-                  <span className="text-[11px] font-mono font-semibold text-slate-400 dark:text-slate-500">Viva Center</span>
-                </div>
-                <h4 className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white flex items-center gap-2">
-                  <span className="p-1 rounded-lg bg-blue-500/10 text-mech-blue dark:text-blue-400">
-                    <GraduationCap className="w-4 h-4" />
-                  </span>
-                  <span>Thermal Component Viva</span>
-                </h4>
-                <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                  Zero-click oral exam practice on 54 labeled boiler parts with examiner recall answers.
-                </p>
-              </div>
-
-              <div className="pt-1">
-                <button
-                  id="btn-launch-thermal-viva"
-                  type="button"
-                  onClick={() => onNavigate?.('viva', 'lancashire')}
-                  className="w-full min-h-[42px] px-3 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-mech-blue hover:bg-blue-600 text-white transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer active:scale-95"
-                >
-                  <Sparkles className="w-4 h-4 shrink-0 text-amber-300" />
-                  <span>Launch Boiler Viva →</span>
-                </button>
-              </div>
+              ))}
             </div>
           </div>
 
-          {/* Boiler Experiment Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {thermalExperiments.map((exp) => (
-              <div
-                key={exp.id}
-                className="bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700/60 rounded-2xl p-5 shadow-xs hover:shadow-md transition-all flex flex-col justify-between space-y-4 group"
-              >
-                <div className="space-y-2.5">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-mono font-bold text-mech-orange uppercase tracking-wider">
-                      {exp.number}
-                    </span>
-                    <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                      {exp.badge}
+          {/* Secondary Tier: Index & Templates */}
+          <div className="space-y-3 pt-2">
+            <div className="flex items-center justify-between px-0.5">
+              <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                Index &amp; Templates
+              </span>
+              <span className="text-xs font-mono text-slate-400">Official Standards</span>
+            </div>
+
+            <div className="rounded-2xl border border-neutral-200 dark:border-neutral-800/80 bg-white dark:bg-neutral-900/60 backdrop-blur-sm divide-y divide-neutral-100 dark:divide-neutral-800/80 overflow-hidden shadow-xs">
+              {/* Front Index Sheet */}
+              <div className="py-2.5 px-3.5 sm:px-4 flex items-center justify-between gap-3 hover:bg-neutral-50/50 dark:hover:bg-neutral-800/30 transition-colors">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 shrink-0">
+                    <FileSpreadsheet className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h5 className="font-bold text-xs sm:text-sm text-slate-900 dark:text-white">
+                      Front Index Sheet
+                    </h5>
+                    <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
+                      Official Format • MEPC 215
                     </span>
                   </div>
-
-                  <h4 className="font-bold text-base sm:text-lg text-slate-900 dark:text-white group-hover:text-mech-blue transition-colors">
-                    {exp.title}
-                  </h4>
-
-                  <span className="inline-block text-xs font-semibold text-slate-600 dark:text-slate-300 font-mono">
-                    {exp.type}
-                  </span>
-
-                  <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                    {exp.description}
-                  </p>
                 </div>
 
-                <div className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-2">
-                  <div className="flex flex-col sm:flex-row items-stretch gap-2">
-                    <button
-                      id={`btn-view-${exp.id}`}
-                      type="button"
-                      onClick={(e) => handlePdfAction(e, exp.pdfUrl, true, `${exp.title} Manual`)}
-                      className="flex-1 min-h-[44px] px-3 py-2 text-xs sm:text-sm font-medium rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 shadow-xs"
-                    >
-                      <Eye className="w-4 h-4 text-blue-400 shrink-0" />
-                      <span>View</span>
-                    </button>
-                    <a
-                      id={`btn-download-${exp.id}`}
-                      href={exp.pdfUrl}
-                      download={`${exp.id}.pdf`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => handlePdfAction(e, exp.pdfUrl, false, `${exp.title} Manual`)}
-                      className="flex-1 min-h-[44px] px-3 py-2 text-xs sm:text-sm font-medium rounded-xl bg-mech-orange hover:bg-orange-600 text-white transition-colors flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 shadow-xs"
-                    >
-                      <Download className="w-4 h-4 shrink-0" />
-                      <span>Download</span>
-                    </a>
-                  </div>
-
+                <div className="flex items-center gap-2 shrink-0">
                   <button
-                    id={`btn-viva-${exp.id}`}
                     type="button"
-                    onClick={() => onNavigate?.('viva', exp.boilerId)}
-                    title={`Practice ${exp.title} Viva`}
-                    className="w-full min-h-[44px] px-4 py-2 text-xs sm:text-sm font-medium rounded-xl bg-orange-500/10 hover:bg-orange-500/20 text-mech-orange border border-orange-300 dark:border-orange-800/80 transition-colors flex items-center justify-center gap-2 cursor-pointer active:scale-95 shadow-xs"
+                    onClick={(e) => handlePdfAction(e, '/labs/thermal_front_index.pdf', true, 'Front Index Sheet')}
+                    className="py-1.5 px-3 rounded-xl text-xs font-semibold bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-slate-700 dark:text-slate-200 transition-colors flex items-center gap-1.5 cursor-pointer"
                   >
-                    <GraduationCap className="w-4 h-4 shrink-0" />
-                    <span>Practice Viva</span>
+                    <Eye className="w-3.5 h-3.5 text-orange-500" />
+                    <span>View</span>
                   </button>
+                  <a
+                    href="/labs/thermal_front_index.pdf"
+                    download="thermal_front_index.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => handlePdfAction(e, '/labs/thermal_front_index.pdf', false, 'Front Index Sheet')}
+                    className="p-1.5 rounded-xl bg-orange-500 hover:bg-orange-600 text-white transition-colors flex items-center justify-center cursor-pointer shadow-2xs"
+                    title="Download Front Index Sheet"
+                    aria-label="Download Front Index Sheet"
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                  </a>
                 </div>
               </div>
-            ))}
+
+              {/* Universal Assignment Template */}
+              <div className="py-2.5 px-3.5 sm:px-4 flex items-center justify-between gap-3 hover:bg-neutral-50/50 dark:hover:bg-neutral-800/30 transition-colors">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 shrink-0">
+                    <FileText className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h5 className="font-bold text-xs sm:text-sm text-slate-900 dark:text-white">
+                      Universal Assignment Template
+                    </h5>
+                    <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
+                      Standard Report Cover Sheet • Universal
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 shrink-0">
+                  <button
+                    type="button"
+                    onClick={(e) => handlePdfAction(e, '/templates/universal_assignment_lab_master.pdf', true, 'Universal Assignment Template')}
+                    className="py-1.5 px-3 rounded-xl text-xs font-semibold bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-slate-700 dark:text-slate-200 transition-colors flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <Eye className="w-3.5 h-3.5 text-orange-500" />
+                    <span>View</span>
+                  </button>
+                  <a
+                    href="/templates/universal_assignment_lab_master.pdf"
+                    download="universal_assignment_lab_master.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => handlePdfAction(e, '/templates/universal_assignment_lab_master.pdf', false, 'Universal Assignment Template')}
+                    className="p-1.5 rounded-xl bg-orange-500 hover:bg-orange-600 text-white transition-colors flex items-center justify-center cursor-pointer shadow-2xs"
+                    title="Download Universal Assignment Template"
+                    aria-label="Download Universal Assignment Template"
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}
@@ -379,21 +337,18 @@ export const LabCompanion: React.FC<LabCompanionProps> = ({
             <UploadCloud className="w-7 h-7" />
           </div>
 
-          <div className="space-y-1.5 max-w-md mx-auto">
-            <div className="inline-block px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-blue-500/10 text-mech-blue dark:text-blue-400 border border-blue-200 dark:border-blue-900/50 mb-1">
+          <div className="space-y-2 max-w-md mx-auto">
+            <div className="inline-block px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-blue-500/10 text-mech-blue dark:text-blue-400 border border-blue-200 dark:border-blue-900/50">
               MEPC 211
             </div>
             <h3 className="font-bold text-base sm:text-lg text-slate-900 dark:text-white">
               Materials Testing Lab
             </h3>
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-              PDF upload pending for UTM Tensile Test on Mild Steel, Izod & Charpy Impact Toughness, and Brinell/Rockwell Hardness observation manuals.
-            </p>
           </div>
 
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-mono font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
             <Clock className="w-3.5 h-3.5 text-amber-500" />
-            <span>PDF upload pending • Structure slot ready</span>
+            <span>PDF upload pending</span>
           </div>
         </div>
       )}
@@ -407,21 +362,18 @@ export const LabCompanion: React.FC<LabCompanionProps> = ({
             <Wrench className="w-7 h-7" />
           </div>
 
-          <div className="space-y-1.5 max-w-md mx-auto">
-            <div className="inline-block px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-900/50 mb-1">
+          <div className="space-y-2 max-w-md mx-auto">
+            <div className="inline-block px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-900/50">
               MEPC 213
             </div>
             <h3 className="font-bold text-base sm:text-lg text-slate-900 dark:text-white">
               Manufacturing Practice Lab
             </h3>
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-              PDF upload pending for Lathe Step Turning, Taper Turning by Compound Rest, Knurling, Shaper machine mechanisms, and Milling job procedures.
-            </p>
           </div>
 
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-mono font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
             <Clock className="w-3.5 h-3.5 text-amber-500" />
-            <span>PDF upload pending • Structure slot ready</span>
+            <span>PDF upload pending</span>
           </div>
         </div>
       )}
@@ -435,21 +387,18 @@ export const LabCompanion: React.FC<LabCompanionProps> = ({
             <PenTool className="w-7 h-7" />
           </div>
 
-          <div className="space-y-1.5 max-w-md mx-auto">
-            <div className="inline-block px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-200 dark:border-cyan-900/50 mb-1">
+          <div className="space-y-2 max-w-md mx-auto">
+            <div className="inline-block px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-200 dark:border-cyan-900/50">
               MEPC 217
             </div>
             <h3 className="font-bold text-base sm:text-lg text-slate-900 dark:text-white">
               Drawing Practice Lab
             </h3>
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-              PDF upload pending for Machine Drawing, Orthographic & Sectional Views, Limits & Fits, Assembly Drawings, and CAD practice sheets.
-            </p>
           </div>
 
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-mono font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
             <Clock className="w-3.5 h-3.5 text-amber-500" />
-            <span>PDF upload pending • Structure slot ready</span>
+            <span>PDF upload pending</span>
           </div>
         </div>
       )}

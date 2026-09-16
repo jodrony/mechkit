@@ -31,7 +31,6 @@ interface SubjectPYQGroup {
   code: string;
   title: string;
   shortTitle: string;
-  description: string;
   masterArchiveUrl: string;
   sessions?: PYQSession[];
 }
@@ -84,7 +83,6 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
       code: 'MEPC 205',
       title: 'Strength of Materials (SOM)',
       shortTitle: 'SOM',
-      description: 'Axial stresses, strains, pure bending, torsion, shear force & bending moment diagrams.',
       masterArchiveUrl: '/pyq/som_pyq_all.pdf',
       sessions: [
         { sessionLabel: '2018', fileUrl: '/pyq/som_2018.pdf' },
@@ -101,7 +99,6 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
       code: 'MEPC 209',
       title: 'Thermal Engineering-I',
       shortTitle: 'Thermal-I',
-      description: 'Laws of thermodynamics, ideal gas processes, air-standard cycles, boilers, and steam properties.',
       masterArchiveUrl: '/pyq/thermal_pyq_all.pdf',
       sessions: [
         { sessionLabel: '2018', fileUrl: '/pyq/thermal_2018.pdf' },
@@ -119,7 +116,6 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
       code: 'MEPC 207',
       title: 'Manufacturing Processes-I',
       shortTitle: 'Mfg Processes-I',
-      description: 'Lathe kinematics, milling indexing, shaper quick return, drilling, welding, and casting.',
       masterArchiveUrl: '/pyq/mfg1_pyq_all.pdf',
       sessions: [
         { sessionLabel: '2017', fileUrl: '/pyq/mfg1_2017.pdf' },
@@ -138,7 +134,6 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
       code: 'MEPC 203',
       title: 'Mechanical Engineering Materials',
       shortTitle: 'Materials',
-      description: 'Iron-Carbon phase diagram, heat treatments, crystal structures, cast irons, and non-ferrous alloys.',
       masterArchiveUrl: '/pyq/materials_pyq_all.pdf',
       sessions: [
         { sessionLabel: '2018', fileUrl: '/pyq/materials_2018.pdf' },
@@ -155,7 +150,6 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
       code: 'MEPC 201',
       title: 'Mechanical Engineering Drawing',
       shortTitle: 'Engg Drawing',
-      description: 'First & third angle projections, sectional views, limits & fits, fasteners, and assembly drawings.',
       masterArchiveUrl: '/pyq/drawing_pyq_all.pdf',
     },
   ];
@@ -217,18 +211,13 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
     <div className="max-w-5xl mx-auto px-3 sm:px-6 py-5 space-y-6">
       {/* Header Banner */}
       <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            <span className="p-1.5 rounded-lg bg-orange-500/10 text-mech-orange">
-              <FolderArchive className="w-5 h-5" />
-            </span>
-            <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
-              Resources Hub
-            </h2>
-          </div>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
-            Official WBSCTE academic calendar, syllabus, class routines, lab submission kits, and exam archives.
-          </p>
+        <div className="flex items-center gap-2">
+          <span className="p-2 rounded-xl bg-orange-500/10 text-mech-orange">
+            <FolderArchive className="w-5 h-5" />
+          </span>
+          <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
+            Resources Hub
+          </h2>
         </div>
 
         <div className="flex items-center gap-2 self-start sm:self-auto shrink-0">
@@ -296,40 +285,34 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
             </div>
 
             {/* Vertically Stacked Mobile-First Cards */}
-            <div className="space-y-4">
+            <div className="space-y-2.5 sm:space-y-3">
               {/* Card 1: Academic Calendar (2026–2027) */}
-              <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-800 shadow-xs hover:border-orange-500/40 dark:hover:border-orange-500/40 transition-all space-y-3">
-                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-                  <div className="space-y-1.5 max-w-2xl">
+              <div className="py-2.5 sm:py-3 px-3.5 sm:px-4 rounded-xl sm:rounded-2xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-800 shadow-xs hover:border-orange-500/40 dark:hover:border-orange-500/40 transition-all">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <span className="p-2 rounded-xl bg-orange-500/10 text-mech-orange shrink-0">
+                      <Calendar className="w-5 h-5" />
+                    </span>
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="p-1 rounded-md bg-orange-500/10 text-mech-orange">
-                        <Calendar className="w-4 h-4" />
-                      </span>
                       <h4 className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white">
-                        Academic Calendar (2026–2027)
+                        Academic Calendar 2026–2027
                       </h4>
                       <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-orange-500/10 text-orange-700 dark:text-orange-400 border border-orange-200 dark:border-orange-900/60">
-                        WBSCTVESD Official
+                        Official
                       </span>
                     </div>
-                    <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-medium">
-                      Semester dates, internals, external practicals, and board exams
-                    </p>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                      Official Council schedule specifying teaching periods, 1st &amp; 2nd internal assessment deadlines, external practical exams, and theoretical board examination dates.
-                    </p>
                   </div>
 
                   {/* Dual Action Buttons */}
-                  <div className="flex flex-col xs:flex-row sm:flex-row items-stretch sm:items-center gap-2 shrink-0 self-stretch sm:self-auto">
+                  <div className="flex items-center gap-2 shrink-0 self-stretch sm:self-auto">
                     <button
                       id="btn-view-calendar"
                       type="button"
-                      onClick={() => handleView('/academic/academic_calendar_2026_2027.pdf', 'Academic Calendar (2026–2027)')}
-                      className="min-h-[44px] px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95 shadow-xs"
+                      onClick={() => handleView('/academic/academic_calendar_2026_2027.pdf', 'Academic Calendar 2026–2027')}
+                      className="flex-1 sm:flex-initial min-h-[40px] px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95 shadow-xs"
                     >
                       <Eye className="w-4 h-4 text-mech-orange shrink-0" />
-                      <span>View</span>
+                      <span>View PDF</span>
                     </button>
                     <a
                       id="btn-download-calendar"
@@ -338,7 +321,7 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={(e) => handleDownloadClick(e, '/academic/academic_calendar_2026_2027.pdf')}
-                      className="min-h-[44px] px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-mech-orange hover:bg-orange-600 text-white transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer active:scale-95"
+                      className="flex-1 sm:flex-initial min-h-[40px] px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-mech-orange hover:bg-orange-600 text-white transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer active:scale-95"
                     >
                       <Download className="w-4 h-4 shrink-0" />
                       <span>Download</span>
@@ -348,38 +331,32 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
               </div>
 
               {/* Card 2: Master Syllabus (Revised 2022) */}
-              <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-800 shadow-xs hover:border-orange-500/40 dark:hover:border-orange-500/40 transition-all space-y-4">
-                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-                  <div className="space-y-1.5 max-w-2xl">
+              <div className="py-2.5 sm:py-3 px-3.5 sm:px-4 rounded-xl sm:rounded-2xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-800 shadow-xs hover:border-blue-500/40 dark:hover:border-blue-500/40 transition-all">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <span className="p-2 rounded-xl bg-blue-500/10 text-mech-blue dark:text-blue-400 shrink-0">
+                      <BookOpen className="w-5 h-5" />
+                    </span>
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="p-1 rounded-md bg-blue-500/10 text-mech-blue dark:text-blue-400">
-                        <BookOpen className="w-4 h-4" />
-                      </span>
                       <h4 className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white">
                         Master Syllabus (Revised 2022)
                       </h4>
                       <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-500/10 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-900/60">
-                        44 Pages • 21 Credits
+                        Official
                       </span>
                     </div>
-                    <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-medium">
-                      Full curriculum for MEPC 201–209 and practical labs MEPC 211–217
-                    </p>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                      Comprehensive semester curriculum detailing course outcomes, weekly contact periods, internal continuous assessments, end-semester evaluation schemes, and laboratory requirements.
-                    </p>
                   </div>
 
                   {/* Dual Action Buttons */}
-                  <div className="flex flex-col xs:flex-row sm:flex-row items-stretch sm:items-center gap-2 shrink-0 self-stretch sm:self-auto">
+                  <div className="flex items-center gap-2 shrink-0 self-stretch sm:self-auto">
                     <button
                       id="btn-view-syllabus"
                       type="button"
                       onClick={() => handleView('/syllabus/DME_3rd_Semester_Syllabus.pdf', 'Master Syllabus (Revised 2022)')}
-                      className="min-h-[44px] px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95 shadow-xs"
+                      className="flex-1 sm:flex-initial min-h-[40px] px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95 shadow-xs"
                     >
                       <Eye className="w-4 h-4 text-blue-400 shrink-0" />
-                      <span>View</span>
+                      <span>View PDF</span>
                     </button>
                     <a
                       id="btn-download-syllabus"
@@ -388,7 +365,50 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
                       rel="noopener noreferrer"
                       download="DME_3rd_Semester_Syllabus.pdf"
                       onClick={(e) => handleDownloadClick(e, '/syllabus/DME_3rd_Semester_Syllabus.pdf')}
-                      className="min-h-[44px] px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-mech-orange hover:bg-orange-600 text-white transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer active:scale-95"
+                      className="flex-1 sm:flex-initial min-h-[40px] px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-mech-orange hover:bg-orange-600 text-white transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer active:scale-95"
+                    >
+                      <Download className="w-4 h-4 shrink-0" />
+                      <span>Download</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              {/* Card 3: Class Routine (Dual View) */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
+                {/* Routine A: Official College Routine */}
+                <div className="py-2.5 sm:py-3 px-3.5 sm:px-4 rounded-xl sm:rounded-2xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-800 shadow-xs hover:border-amber-500/40 dark:hover:border-amber-500/40 transition-all flex flex-col justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <span className="p-2 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 shrink-0">
+                      <FileText className="w-5 h-5" />
+                    </span>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h4 className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white">
+                        Official College Routine
+                      </h4>
+                      <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-900/60">
+                        Timetable
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      id="btn-view-college-routine"
+                      type="button"
+                      onClick={() => handleView('/routine/college_routine_sem3.pdf', 'Official College Routine')}
+                      className="flex-1 min-h-[40px] px-3 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 transition-colors flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 shadow-xs"
+                    >
+                      <Eye className="w-4 h-4 text-mech-orange shrink-0" />
+                      <span>View PDF</span>
+                    </button>
+                    <a
+                      id="btn-download-college-routine"
+                      href="/routine/college_routine_sem3.pdf"
+                      download="college_routine_sem3.pdf"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => handleDownloadClick(e, '/routine/college_routine_sem3.pdf')}
+                      className="flex-1 min-h-[40px] px-3 py-2 rounded-xl text-xs sm:text-sm font-bold bg-mech-orange hover:bg-orange-600 text-white transition-colors flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 shadow-xs"
                     >
                       <Download className="w-4 h-4 shrink-0" />
                       <span>Download</span>
@@ -396,161 +416,74 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
                   </div>
                 </div>
 
-                {/* Official Subject List Chips */}
-                <div className="pt-2 border-t border-slate-100 dark:border-slate-800/80">
-                  <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 block mb-2">
-                    Prescribed 5 Theory Courses &amp; 4 Practical Labs:
-                  </span>
-                  <div className="flex flex-wrap gap-2">
-                    <span className="px-2.5 py-1 rounded-lg text-xs font-mono font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                      <strong className="text-slate-900 dark:text-white font-bold">MEPC 201:</strong> Engg Drawing
+                {/* Routine B: Simplified Student Routine */}
+                <div className="py-2.5 sm:py-3 px-3.5 sm:px-4 rounded-xl sm:rounded-2xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-800 shadow-xs hover:border-amber-500/40 dark:hover:border-amber-500/40 transition-all flex flex-col justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <span className="p-2 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 shrink-0">
+                      <Clock className="w-5 h-5" />
                     </span>
-                    <span className="px-2.5 py-1 rounded-lg text-xs font-mono font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                      <strong className="text-slate-900 dark:text-white font-bold">MEPC 203:</strong> Materials
-                    </span>
-                    <span className="px-2.5 py-1 rounded-lg text-xs font-mono font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                      <strong className="text-slate-900 dark:text-white font-bold">MEPC 205:</strong> Strength of Materials
-                    </span>
-                    <span className="px-2.5 py-1 rounded-lg text-xs font-mono font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                      <strong className="text-slate-900 dark:text-white font-bold">MEPC 207:</strong> Manufacturing Processes-I
-                    </span>
-                    <span className="px-2.5 py-1 rounded-lg text-xs font-mono font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                      <strong className="text-slate-900 dark:text-white font-bold">MEPC 209:</strong> Thermal Engineering-I
-                    </span>
-                    <span className="px-2.5 py-1 rounded-lg text-xs font-mono font-semibold bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800">
-                      Labs: MEPC 211, 213, 215, 217
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Card 3: Class Routine (Dual View) */}
-              <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-800 shadow-xs hover:border-orange-500/40 dark:hover:border-orange-500/40 transition-all space-y-4">
-                <div className="space-y-1.5">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="p-1 rounded-md bg-amber-500/10 text-amber-600 dark:text-amber-400">
-                      <Clock className="w-4 h-4" />
-                    </span>
-                    <h4 className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white">
-                      Class Routine (Dual View)
-                    </h4>
-                    <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-900/60">
-                      3rd Semester ME
-                    </span>
-                  </div>
-                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-medium">
-                    Weekly class and lab schedule with faculty allocations and student daily view
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                  {/* Routine A: Official College Routine */}
-                  <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 flex flex-col justify-between gap-3">
-                    <div className="space-y-1">
-                      <h5 className="font-bold text-xs sm:text-sm text-slate-900 dark:text-white flex items-center gap-1.5">
-                        <FileText className="w-3.5 h-3.5 text-mech-orange" />
-                        <span>Official College Routine</span>
-                      </h5>
-                      <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                        Full institutional timetable with room numbers and faculty allocations.
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-2 pt-1">
-                      <button
-                        id="btn-view-college-routine"
-                        type="button"
-                        onClick={() => handleView('/routine/college_routine_sem3.pdf', 'Official College Routine')}
-                        className="flex-1 min-h-[44px] px-3 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 shadow-xs"
-                      >
-                        <Eye className="w-3.5 h-3.5 text-mech-orange" />
-                        <span>View</span>
-                      </button>
-                      <a
-                        id="btn-download-college-routine"
-                        href="/routine/college_routine_sem3.pdf"
-                        download="college_routine_sem3.pdf"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => handleDownloadClick(e, '/routine/college_routine_sem3.pdf')}
-                        className="flex-1 min-h-[44px] px-3 py-2 rounded-xl text-xs font-bold bg-mech-orange hover:bg-orange-600 text-white transition-colors flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 shadow-xs"
-                      >
-                        <Download className="w-3.5 h-3.5" />
-                        <span>Download</span>
-                      </a>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h4 className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white">
+                        Simplified Student Routine
+                      </h4>
+                      <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-900/60">
+                        Student View
+                      </span>
                     </div>
                   </div>
-
-                  {/* Routine B: Simplified Student Routine */}
-                  <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 flex flex-col justify-between gap-3">
-                    <div className="space-y-1">
-                      <h5 className="font-bold text-xs sm:text-sm text-slate-900 dark:text-white flex items-center gap-1.5">
-                        <Clock className="w-3.5 h-3.5 text-amber-500" />
-                        <span>Simplified Student Routine</span>
-                      </h5>
-                      <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                        High-contrast timetable formatted for quick daily student checks on mobile.
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-2 pt-1">
-                      <button
-                        id="btn-view-simplified-routine"
-                        type="button"
-                        onClick={() => handleView('/routine/simplified_routine_sem3.pdf', 'Simplified Student Routine')}
-                        className="flex-1 min-h-[44px] px-3 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 shadow-xs"
-                      >
-                        <Eye className="w-3.5 h-3.5 text-amber-400" />
-                        <span>View</span>
-                      </button>
-                      <a
-                        id="btn-download-simplified-routine"
-                        href="/routine/simplified_routine_sem3.pdf"
-                        download="simplified_routine_sem3.pdf"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => handleDownloadClick(e, '/routine/simplified_routine_sem3.pdf')}
-                        className="flex-1 min-h-[44px] px-3 py-2 rounded-xl text-xs font-bold bg-mech-orange hover:bg-orange-600 text-white transition-colors flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 shadow-xs"
-                      >
-                        <Download className="w-3.5 h-3.5" />
-                        <span>Download</span>
-                      </a>
-                    </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      id="btn-view-simplified-routine"
+                      type="button"
+                      onClick={() => handleView('/routine/simplified_routine_sem3.pdf', 'Simplified Student Routine')}
+                      className="flex-1 min-h-[40px] px-3 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 transition-colors flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 shadow-xs"
+                    >
+                      <Eye className="w-4 h-4 text-amber-400 shrink-0" />
+                      <span>View PDF</span>
+                    </button>
+                    <a
+                      id="btn-download-simplified-routine"
+                      href="/routine/simplified_routine_sem3.pdf"
+                      download="simplified_routine_sem3.pdf"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => handleDownloadClick(e, '/routine/simplified_routine_sem3.pdf')}
+                      className="flex-1 min-h-[40px] px-3 py-2 rounded-xl text-xs sm:text-sm font-bold bg-mech-orange hover:bg-orange-600 text-white transition-colors flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 shadow-xs"
+                    >
+                      <Download className="w-4 h-4 shrink-0" />
+                      <span>Download</span>
+                    </a>
                   </div>
                 </div>
               </div>
 
               {/* Card 4: Universal Assignment & Lab Record Kit */}
-              <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-800 shadow-xs hover:border-orange-500/40 dark:hover:border-orange-500/40 transition-all space-y-3">
-                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-                  <div className="space-y-1.5 max-w-2xl">
+              <div className="py-2.5 sm:py-3 px-3.5 sm:px-4 rounded-xl sm:rounded-2xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-800 shadow-xs hover:border-emerald-500/40 dark:hover:border-emerald-500/40 transition-all">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <span className="p-2 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 shrink-0">
+                      <FileSpreadsheet className="w-5 h-5" />
+                    </span>
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="p-1 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
-                        <FileSpreadsheet className="w-4 h-4" />
-                      </span>
                       <h4 className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white">
                         Universal Assignment &amp; Lab Record Kit
                       </h4>
                       <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800">
-                        All Subjects • Print Ready
+                        Universal
                       </span>
                     </div>
-                    <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-medium">
-                      Universal front cover, title page, and blank index sheet for any 3rd sem lab report or home assignment
-                    </p>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                      Standardized printable template kit with universal front page, student credentials section, title sheet, and faculty evaluation index table for any 3rd semester diploma laboratory or home assignment.
-                    </p>
                   </div>
 
                   {/* Dual Action Buttons */}
-                  <div className="flex flex-col xs:flex-row sm:flex-row items-stretch sm:items-center gap-2 shrink-0 self-stretch sm:self-auto">
+                  <div className="flex items-center gap-2 shrink-0 self-stretch sm:self-auto">
                     <button
                       id="btn-view-universal-kit"
                       type="button"
                       onClick={() => handleView('/templates/universal_assignment_lab_master.pdf', 'Universal Lab & Assignment Kit')}
-                      className="min-h-[44px] px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95 shadow-xs"
+                      className="flex-1 sm:flex-initial min-h-[40px] px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95 shadow-xs"
                     >
                       <Eye className="w-4 h-4 text-emerald-400 shrink-0" />
-                      <span>View</span>
+                      <span>View PDF</span>
                     </button>
                     <a
                       id="btn-download-universal-kit"
@@ -559,7 +492,7 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
                       rel="noopener noreferrer"
                       download="universal_assignment_lab_master.pdf"
                       onClick={(e) => handleDownloadClick(e, '/templates/universal_assignment_lab_master.pdf')}
-                      className="min-h-[44px] px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-mech-orange hover:bg-orange-600 text-white transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer active:scale-95"
+                      className="flex-1 sm:flex-initial min-h-[40px] px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-mech-orange hover:bg-orange-600 text-white transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer active:scale-95"
                     >
                       <Download className="w-4 h-4 shrink-0" />
                       <span>Download</span>
@@ -569,38 +502,32 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
               </div>
 
               {/* Card 5: Companion Lab Kit: Thermal Engineering-I */}
-              <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#1e293b] border border-amber-300/80 dark:border-amber-700/60 shadow-xs hover:border-orange-500/40 dark:hover:border-orange-500/40 transition-all space-y-3">
-                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-                  <div className="space-y-1.5 max-w-2xl">
+              <div className="py-2.5 sm:py-3 px-3.5 sm:px-4 rounded-xl sm:rounded-2xl bg-white dark:bg-[#1e293b] border border-amber-300/80 dark:border-amber-700/60 shadow-xs hover:border-orange-500/40 dark:hover:border-orange-500/40 transition-all">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <span className="p-2 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 shrink-0">
+                      <FileText className="w-5 h-5" />
+                    </span>
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="p-1 rounded-md bg-amber-500/10 text-amber-600 dark:text-amber-400">
-                        <FileText className="w-4 h-4" />
-                      </span>
                       <h4 className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white">
-                        Thermal Engineering-I Lab Report Kit (Front &amp; Index Sheet)
+                        Thermal Engineering-I Lab Report Kit
                       </h4>
                       <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-800">
-                        Gayeshpur Govt. Polytechnic • MEPC 215
+                        MEPC 215
                       </span>
                     </div>
-                    <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-medium">
-                      Specialized cover and index sheet tailored for MEPC 215 Thermal Engineering-I Lab submissions
-                    </p>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                      Includes pre-filled experiment indexing for boiler studies (Lancashire, Cochran, Babcock &amp; Wilcox) and standard evaluation columns for oral viva and submission grades.
-                    </p>
                   </div>
 
                   {/* Dual Action Buttons */}
-                  <div className="flex flex-col xs:flex-row sm:flex-row items-stretch sm:items-center gap-2 shrink-0 self-stretch sm:self-auto">
+                  <div className="flex items-center gap-2 shrink-0 self-stretch sm:self-auto">
                     <button
                       id="btn-view-thermal-kit"
                       type="button"
                       onClick={() => handleView('/labs/thermal_front_index.pdf', 'Thermal Engineering-I Lab Report Kit')}
-                      className="min-h-[44px] px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95 shadow-xs"
+                      className="flex-1 sm:flex-initial min-h-[40px] px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95 shadow-xs"
                     >
                       <Eye className="w-4 h-4 text-amber-400 shrink-0" />
-                      <span>View</span>
+                      <span>View PDF</span>
                     </button>
                     <a
                       id="btn-download-thermal-kit"
@@ -609,7 +536,7 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
                       rel="noopener noreferrer"
                       download="thermal_front_index.pdf"
                       onClick={(e) => handleDownloadClick(e, '/labs/thermal_front_index.pdf')}
-                      className="min-h-[44px] px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-mech-orange hover:bg-orange-600 text-white transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer active:scale-95"
+                      className="flex-1 sm:flex-initial min-h-[40px] px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-mech-orange hover:bg-orange-600 text-white transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer active:scale-95"
                     >
                       <Download className="w-4 h-4 shrink-0" />
                       <span>Download</span>
@@ -640,34 +567,31 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
             </div>
 
             {/* Top Banner: All-Semester-3 Master Archive Mega Bundle */}
-            <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-purple-900/40 via-indigo-900/30 to-slate-900/50 border-2 border-purple-500/40 shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div className="space-y-1.5 max-w-xl">
+            <div className="py-2.5 sm:py-3 px-3.5 sm:px-4 rounded-xl sm:rounded-2xl bg-gradient-to-r from-purple-900/40 via-indigo-900/30 to-slate-900/50 border-2 border-purple-500/40 shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <span className="p-2 rounded-xl bg-purple-500/20 text-purple-300 shrink-0">
+                  <Sparkles className="w-5 h-5" />
+                </span>
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="p-1 rounded-lg bg-purple-500/20 text-purple-300">
-                    <Sparkles className="w-5 h-5" />
-                  </span>
                   <h4 className="font-black text-base sm:text-lg text-white">
                     3rd Sem Complete PYQ Mega Bundle
                   </h4>
                   <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-extrabold bg-purple-500/20 text-purple-300 border border-purple-500/40">
-                    All 5 Core Subjects (2017–2026)
+                    2017–2026
                   </span>
                 </div>
-                <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                  All-in-one compiled master archive containing all 5 core subjects from 2017 to 2026 in a single comprehensive PDF bundle.
-                </p>
               </div>
 
               {/* Mega Bundle Dual Actions */}
-              <div className="flex flex-col xs:flex-row sm:flex-row items-stretch sm:items-center gap-2 shrink-0">
+              <div className="flex items-center gap-2 shrink-0 self-stretch sm:self-auto">
                 <button
                   id="btn-view-mega-bundle"
                   type="button"
                   onClick={() => handleView('/pyq/sem3_pyq_master_all.pdf', '3rd Sem Complete PYQ Mega Bundle')}
-                  className="min-h-[44px] px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-slate-800 hover:bg-slate-700 text-purple-300 border border-purple-500/40 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95 shadow-xs"
+                  className="flex-1 sm:flex-initial min-h-[40px] px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-800 hover:bg-slate-700 text-purple-300 border border-purple-500/40 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95 shadow-xs"
                 >
-                  <Eye className="w-4 h-4 text-purple-400" />
-                  <span>View Bundle</span>
+                  <Eye className="w-4 h-4 text-purple-400 shrink-0" />
+                  <span>View PDF</span>
                 </button>
                 <a
                   id="btn-download-mega-bundle"
@@ -676,10 +600,10 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
                   rel="noopener noreferrer"
                   download="sem3_pyq_master_all.pdf"
                   onClick={(e) => handleDownloadClick(e, '/pyq/sem3_pyq_master_all.pdf')}
-                  className="min-h-[44px] px-5 py-2.5 rounded-xl text-xs sm:text-sm font-black bg-purple-600 hover:bg-purple-500 text-white transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer active:scale-95"
+                  className="flex-1 sm:flex-initial min-h-[40px] px-4 py-2 rounded-xl text-xs sm:text-sm font-black bg-purple-600 hover:bg-purple-500 text-white transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer active:scale-95"
                 >
-                  <Download className="w-4 h-4" />
-                  <span>Download Bundle</span>
+                  <Download className="w-4 h-4 shrink-0" />
+                  <span>Download</span>
                 </a>
               </div>
             </div>
@@ -764,33 +688,28 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
                     key={sub.id}
                     id={`pyq-card-${sub.id}`}
                     style={{ contentVisibility: 'auto', containIntrinsicSize: '0 120px' }}
-                    className="bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700/60 rounded-2xl p-4 sm:p-5 shadow-xs space-y-4 hover:border-purple-300/60 dark:hover:border-purple-800/60 transition-all content-visibility-auto"
+                    className="bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700/60 rounded-xl sm:rounded-2xl p-3 sm:p-4 shadow-xs space-y-3 hover:border-purple-300/60 dark:hover:border-purple-800/60 transition-all content-visibility-auto"
                   >
                     {/* Subject Header & Master Archive Dual Actions */}
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span className="px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-purple-500/10 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-900/60">
-                            {sub.code}
-                          </span>
-                          <h4 className="font-bold text-sm sm:text-base text-slate-900 dark:text-white">
-                            {sub.title}
-                          </h4>
-                        </div>
-                        <p className="text-xs text-slate-500 dark:text-slate-400">
-                          {sub.description}
-                        </p>
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2.5 border-b border-slate-100 dark:border-slate-800">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-purple-500/10 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-900/60">
+                          {sub.code}
+                        </span>
+                        <h4 className="font-bold text-sm sm:text-base text-slate-900 dark:text-white">
+                          {sub.title}
+                        </h4>
                       </div>
 
                       {/* Master Archive Dual Buttons */}
-                      <div className="flex items-center gap-2 shrink-0">
+                      <div className="flex items-center gap-2 shrink-0 self-stretch sm:self-auto">
                         <button
                           type="button"
                           onClick={() => handleView(sub.masterArchiveUrl, `${sub.title} — Master Archive`)}
-                          className="min-h-[44px] px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 flex items-center justify-center gap-1.5 transition-all active:scale-95 cursor-pointer"
+                          className="flex-1 sm:flex-initial min-h-[38px] px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 flex items-center justify-center gap-1.5 transition-all active:scale-95 cursor-pointer"
                         >
-                          <Eye className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
-                          <span>View All</span>
+                          <Eye className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400 shrink-0" />
+                          <span>View Master PDF</span>
                         </button>
                         <a
                           href={sub.masterArchiveUrl}
@@ -798,9 +717,9 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
                           rel="noopener noreferrer"
                           download={`${sub.id}_pyq_all.pdf`}
                           onClick={(e) => handleDownloadClick(e, sub.masterArchiveUrl)}
-                          className="min-h-[44px] px-3.5 py-2 rounded-xl text-xs font-bold bg-purple-600 hover:bg-purple-500 text-white transition-all flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer shadow-xs"
+                          className="flex-1 sm:flex-initial min-h-[38px] px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-purple-600 hover:bg-purple-500 text-white transition-all flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer shadow-xs"
                         >
-                          <FileDown className="w-3.5 h-3.5" />
+                          <FileDown className="w-3.5 h-3.5 shrink-0" />
                           <span>Download Archive</span>
                         </a>
                       </div>
@@ -810,19 +729,19 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
                     {sub.sessions && sub.sessions.length > 0 ? (
                       <div className="space-y-2">
                         <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 block">
-                          Available Individual Sessions ({sub.sessions.length} Papers):
+                          Available Sessions ({sub.sessions.length} Papers):
                         </span>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5">
                           {sub.sessions.map((sess) => (
                             <div
                               key={sess.fileUrl}
-                              className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 flex flex-col justify-between gap-2 transition-all hover:border-purple-300 dark:hover:border-purple-700 shadow-2xs"
+                              className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 flex flex-col justify-between gap-2.5 transition-all hover:border-purple-300 dark:hover:border-purple-700 shadow-2xs"
                             >
                               <div className="flex items-center justify-between gap-1">
                                 <span className="text-xs font-mono font-bold text-slate-800 dark:text-slate-200 truncate">
                                   {sess.sessionLabel}
                                 </span>
-                                <span className="text-[10px] font-mono text-purple-600 dark:text-purple-400 font-semibold uppercase">
+                                <span className="px-1.5 py-0.2 rounded text-[10px] font-mono text-purple-600 dark:text-purple-400 bg-purple-500/10 font-bold uppercase">
                                   PDF
                                 </span>
                               </div>
@@ -830,10 +749,10 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
                                 <button
                                   type="button"
                                   onClick={() => handleView(sess.fileUrl, `${sub.shortTitle} — ${sess.sessionLabel}`)}
-                                  className="flex-1 min-h-[44px] px-2 py-1.5 text-xs font-bold rounded-lg bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition-colors flex items-center justify-center gap-1 cursor-pointer active:scale-95"
+                                  className="flex-1 min-h-[40px] px-2 py-1.5 text-xs font-bold rounded-lg bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition-colors flex items-center justify-center gap-1 cursor-pointer active:scale-95"
                                   title={`View ${sub.shortTitle} ${sess.sessionLabel}`}
                                 >
-                                  <Eye className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
+                                  <Eye className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400 shrink-0" />
                                   <span>View</span>
                                 </button>
                                 <a
@@ -842,10 +761,10 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   onClick={(e) => handleDownloadClick(e, sess.fileUrl)}
-                                  className="flex-1 min-h-[44px] px-2 py-1.5 text-xs font-bold rounded-lg bg-purple-600 hover:bg-purple-500 text-white transition-colors flex items-center justify-center gap-1 cursor-pointer active:scale-95 shadow-2xs"
+                                  className="flex-1 min-h-[40px] px-2 py-1.5 text-xs font-bold rounded-lg bg-purple-600 hover:bg-purple-500 text-white transition-colors flex items-center justify-center gap-1 cursor-pointer active:scale-95 shadow-2xs"
                                   title={`Download ${sub.shortTitle} ${sess.sessionLabel}`}
                                 >
-                                  <Download className="w-3.5 h-3.5" />
+                                  <Download className="w-3.5 h-3.5 shrink-0" />
                                   <span>Download</span>
                                 </a>
                               </div>
@@ -854,10 +773,12 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
                         </div>
                       </div>
                     ) : sub.id === 'drawing' ? (
-                      <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-slate-500 dark:text-slate-400">
-                        <p>Single consolidated board question paper archive. No individual session split required.</p>
-                        <span className="px-2.5 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-800 self-start sm:self-auto">
-                          Master Drawing PDF Active
+                      <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-2">
+                        <span className="text-xs font-mono font-bold text-slate-700 dark:text-slate-300">
+                          Complete Master Drawing Question Archive
+                        </span>
+                        <span className="px-2.5 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-800 shrink-0">
+                          Consolidated PDF
                         </span>
                       </div>
                     ) : (

@@ -55,12 +55,12 @@ export const SearchModal: React.FC<SearchModalProps> = ({
     { id: 'u-conv', title: 'Individual Unit Converters (10 Types)', category: 'Utilities', view: 'utilities', description: 'Pressure, area, volume, mass, force, speed, power, energy, angle, temp', icon: Scale },
 
     // Lab
-    { id: 'l-boiler1', title: 'Lancashire Boiler Lab Manual (exp1_tl.pdf)', category: 'Thermal Lab', view: 'labs', description: 'Two-flue horizontal internally fired fire-tube boiler construction & mountings', icon: FlaskConical },
-    { id: 'l-boiler2', title: 'Cochran Boiler Lab Manual (exp2_tl.pdf)', category: 'Thermal Lab', view: 'labs', description: 'Vertical multi-tubular fire-tube boiler with hemispherical crown', icon: FlaskConical },
-    { id: 'l-boiler3', title: 'Babcock & Wilcox Boiler Manual (exp3_tl.pdf)', category: 'Thermal Lab', view: 'labs', description: 'High-pressure inclined water-tube boiler with superheater', icon: FlaskConical },
-    { id: 'l-utm', title: 'Materials Testing: UTM Tensile Test (MEPC 211)', category: 'Materials Lab', view: 'labs', description: 'Stress-strain diagram, yield point, UTS, elongation (pending upload)', icon: FlaskConical },
-    { id: 'l-mfg', title: 'Manufacturing Practice (MEPC 213)', category: 'Mfg Lab', view: 'labs', description: 'Lathe step turning, taper turning, knurling, shaper, milling (pending upload)', icon: FlaskConical },
-    { id: 'l-drawing', title: 'Drawing Practice (MEPC 217)', category: 'Drawing Lab', view: 'labs', description: 'Machine drawing, orthographic sections, limits & fits, CAD (pending upload)', icon: FlaskConical },
+    { id: 'l-boiler1', title: 'Lancashire Boiler Lab Manual (exp1_tl.pdf)', category: 'Thermal Lab', view: 'labs', description: 'Lancashire Boiler Lab Manual PDF', icon: FlaskConical },
+    { id: 'l-boiler2', title: 'Cochran Boiler Lab Manual (exp2_tl.pdf)', category: 'Thermal Lab', view: 'labs', description: 'Cochran Boiler Lab Manual PDF', icon: FlaskConical },
+    { id: 'l-boiler3', title: 'Babcock & Wilcox Boiler Manual (exp3_tl.pdf)', category: 'Thermal Lab', view: 'labs', description: 'Babcock & Wilcox Boiler Manual PDF', icon: FlaskConical },
+    { id: 'l-utm', title: 'Materials Testing: UTM Tensile Test (MEPC 211)', category: 'Materials Lab', view: 'labs', description: 'Materials Testing Lab Manual', icon: FlaskConical },
+    { id: 'l-mfg', title: 'Manufacturing Practice (MEPC 213)', category: 'Mfg Lab', view: 'labs', description: 'Manufacturing Practice Manual', icon: FlaskConical },
+    { id: 'l-drawing', title: 'Drawing Practice (MEPC 217)', category: 'Drawing Lab', view: 'labs', description: 'Drawing Practice Manual', icon: FlaskConical },
 
     // Workshop
     { id: 'w-lathe', title: 'Lathe Practice & ASA Tool Geometry', category: 'Workshop', view: 'workshop', description: '7-element ASA signature: αb - αs - θe - θs - Ce - Cs - R', icon: Hammer },
@@ -80,13 +80,13 @@ export const SearchModal: React.FC<SearchModalProps> = ({
     { id: 'v-all', title: 'Viva Oral Exam Question Bank (5 Subjects)', category: 'Viva Center', view: 'viva', description: 'SOM, Thermal-I, Mfg-I, Materials, Drawing oral exam preparation', icon: HelpCircle },
 
     // Resources Hub
-    { id: 'r-calendar', title: 'Official Academic Calendar (2026–2027)', category: 'Academic', view: 'resources', description: 'WBSCTVESD official semester dates, internals, practicals, board exams PDF', icon: Calendar },
-    { id: 'r-syllabus', title: 'WBSCTVESD Diploma ME Sem 3 Official Syllabus (Revised 2022)', category: 'Academic', view: 'resources', description: 'Full 1000 marks scheme, 5 theory subjects, 4 practical labs', icon: BookOpen },
-    { id: 'r-routine-college', title: 'Official College Routine (Sem 3 ME)', category: 'Academic', view: 'resources', description: 'Weekly 3rd semester class & lab timetable with faculty allocations', icon: Clock },
-    { id: 'r-routine-simple', title: 'Simplified Student Routine (Sem 3 ME)', category: 'Academic', view: 'resources', description: 'High-contrast mobile-friendly weekly student routine', icon: Clock },
-    { id: 'r-univ-template', title: 'Universal Assignment & Lab Record Kit', category: 'Academic', view: 'resources', description: 'Universal front cover, title page, and blank index sheet (Print Ready)', icon: Download },
-    { id: 'r-front-index', title: 'Thermal Engineering-I Lab Report Kit (Front & Index Sheet)', category: 'Resources', view: 'resources', description: 'Printable A4 cover, title sheet & index table for MEPC 215', icon: Download },
-    { id: 'r-pyq', title: 'Previous Year Question Papers & Mega Bundle (2017–2026)', category: 'Resources', view: 'resources', description: 'SOM, Thermal-I, Mfg-I, Materials, Drawing PYQ master archives & session papers', icon: HelpCircle },
+    { id: 'r-calendar', title: 'Official Academic Calendar (2026–2027)', category: 'Academic', view: 'resources', description: 'Official Academic Calendar PDF', icon: Calendar },
+    { id: 'r-syllabus', title: 'WBSCTVESD Diploma ME Sem 3 Official Syllabus (Revised 2022)', category: 'Academic', view: 'resources', description: 'Official ME Sem 3 Syllabus PDF', icon: BookOpen },
+    { id: 'r-routine-college', title: 'Official College Routine (Sem 3 ME)', category: 'Academic', view: 'resources', description: 'Official College Timetable PDF', icon: Clock },
+    { id: 'r-routine-simple', title: 'Simplified Student Routine (Sem 3 ME)', category: 'Academic', view: 'resources', description: 'Student Routine Timetable PDF', icon: Clock },
+    { id: 'r-univ-template', title: 'Universal Assignment & Lab Record Kit', category: 'Academic', view: 'resources', description: 'Universal Lab & Assignment Kit PDF', icon: Download },
+    { id: 'r-front-index', title: 'Thermal Engineering-I Lab Report Kit (Front & Index Sheet)', category: 'Resources', view: 'resources', description: 'Thermal Lab Report Kit MEPC 215 PDF', icon: Download },
+    { id: 'r-pyq', title: 'Previous Year Question Papers & Mega Bundle (2017–2026)', category: 'Resources', view: 'resources', description: 'PYQ Archives & Complete Mega Bundle', icon: HelpCircle },
   ];
 
   const filteredItems = useMemo(() => {

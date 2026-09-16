@@ -4,6 +4,7 @@ import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { SearchModal } from './components/SearchModal';
 import { CreatorModal } from './components/CreatorModal';
+import { FeedbackModal } from './components/FeedbackModal';
 import { PdfViewerModal, type ActivePdf } from './components/PdfViewerModal';
 import { ToastProvider, useToast } from './components/Toast';
 import { isPdfAvailable, shareMechKit } from './utils/pdfRegistry';
@@ -15,7 +16,7 @@ import { WorkshopReference } from './pages/WorkshopReference';
 import { FormulaLibrary } from './pages/FormulaLibrary';
 import { VivaCenter } from './pages/VivaCenter';
 import { ResourcesHub } from './pages/ResourcesHub';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, MessageSquarePlus } from 'lucide-react';
 
 export type ActiveTab = 'dashboard' | 'calculators' | 'utilities' | 'labs' | 'workshop' | 'formulas' | 'viva' | 'resources' | 'downloads';
 
@@ -52,15 +53,21 @@ function AppContent() {
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
   const [isCreatorModalOpen, setIsCreatorModalOpen] = useState<boolean>(false);
   const isCreatorModalOpenRef = useRef<boolean>(false);
+  const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState<boolean>(false);
+  const isFeedbackModalOpenRef = useRef<boolean>(false);
   const [activePdf, setActivePdf] = useState<ActivePdf | null>(null);
   const activePdfRef = useRef<ActivePdf | null>(null);
   const [activeCalculatorTool, setActiveCalculatorTool] = useState<string>('rpm');
-  const [activeBoilerVivaId, setActiveBoilerVivaId] = useState<string>('lancashire');
+  const [activeBoilerVivaId, setActiveBoilerVivaId] = useState<string>('babcock');
 
   // Keep refs synchronized for popstate callback without re-attaching listeners
   useEffect(() => {
     isCreatorModalOpenRef.current = isCreatorModalOpen;
   }, [isCreatorModalOpen]);
+
+  useEffect(() => {
+    isFeedbackModalOpenRef.current = isFeedbackModalOpen;
+  }, [isFeedbackModalOpen]);
 
   useEffect(() => {
     activePdfRef.current = activePdf;
@@ -78,6 +85,23 @@ function AppContent() {
       setIsCreatorModalOpen(false);
       isCreatorModalOpenRef.current = false;
       if (window.history.state && window.history.state.modal === 'creator') {
+        window.history.back();
+      }
+    }
+  };
+
+  // Feedback Modal Handlers with history back synchronization
+  const handleOpenFeedbackModal = () => {
+    setIsFeedbackModalOpen(true);
+    isFeedbackModalOpenRef.current = true;
+    window.history.pushState({ modal: 'feedback', tab: currentTab }, '', window.location.search);
+  };
+
+  const handleCloseFeedbackModal = () => {
+    if (isFeedbackModalOpenRef.current) {
+      setIsFeedbackModalOpen(false);
+      isFeedbackModalOpenRef.current = false;
+      if (window.history.state && window.history.state.modal === 'feedback') {
         window.history.back();
       }
     }
@@ -144,10 +168,23 @@ function AppContent() {
         return;
       }
 
+      // Intercept mobile back gesture/button: If Feedback Modal is open, dismiss it first without leaving the view
+      if (isFeedbackModalOpenRef.current) {
+        setIsFeedbackModalOpen(false);
+        isFeedbackModalOpenRef.current = false;
+        return;
+      }
+
       // Restore modal if user navigated forward to a modal history state
       if (event.state && event.state.modal === 'creator') {
         setIsCreatorModalOpen(true);
         isCreatorModalOpenRef.current = true;
+        return;
+      }
+
+      if (event.state && event.state.modal === 'feedback') {
+        setIsFeedbackModalOpen(true);
+        isFeedbackModalOpenRef.current = true;
         return;
       }
 
@@ -261,6 +298,7 @@ function AppContent() {
         isDark={isDark}
         onToggleTheme={() => setIsDark((prev) => !prev)}
         onOpenSearch={() => setIsSearchOpen(true)}
+        onOpenFeedback={handleOpenFeedbackModal}
       />
 
       {/* Sub-Header with "← Back to Dashboard" when inside any module */}
@@ -289,6 +327,7 @@ function AppContent() {
             onNavigate={handleNavigate}
             onOpenCreator={handleOpenCreatorModal}
             onShare={handleShare}
+            onOpenSearch={() => setIsSearchOpen(true)}
           />
         )}
         {currentTab === 'calculators' && <Calculators initialToolId={activeCalculatorTool} />}
@@ -304,8 +343,24 @@ function AppContent() {
         )}
       </main>
 
+      {/* Persistent Floating Feedback Pill Trigger */}
+      <button
+        type="button"
+        onClick={handleOpenFeedbackModal}
+        className="fixed bottom-5 right-5 z-40 px-3.5 py-2 rounded-full bg-orange-500 hover:bg-orange-600 text-white shadow-lg hover:shadow-orange-500/25 transition-all duration-150 active:scale-95 flex items-center gap-1.5 cursor-pointer group text-xs font-bold"
+        title="Feedback & Resource Requests"
+        aria-label="Feedback and Resource Requests"
+      >
+        <MessageSquarePlus className="w-4 h-4 transition-transform group-hover:scale-110" />
+        <span>Feedback</span>
+      </button>
+
       {/* Compact Minimal Footer */}
-      <Footer onNavigate={handleNavigate} onOpenCreator={handleOpenCreatorModal} />
+      <Footer
+        onNavigate={handleNavigate}
+        onOpenCreator={handleOpenCreatorModal}
+        onOpenFeedback={handleOpenFeedbackModal}
+      />
 
       {/* Global Search Modal */}
       <SearchModal
@@ -319,6 +374,12 @@ function AppContent() {
         isOpen={isCreatorModalOpen}
         onClose={handleCloseCreatorModal}
         onShare={handleShare}
+      />
+
+      {/* Direct Feedback & Contact Modal */}
+      <FeedbackModal
+        isOpen={isFeedbackModalOpen}
+        onClose={handleCloseFeedbackModal}
       />
 
       {/* In-App PDF Previewer Modal */}

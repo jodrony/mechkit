@@ -117,9 +117,6 @@ export const FormulaLibrary: React.FC<FormulaLibraryProps> = ({ onNavigate }) =>
               Formula Reference Library
             </h2>
           </div>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
-            40 core engineering formulas across SOM, Thermal, Workshop, and Mechanics with KaTeX proofs, variable legends, and solved examples.
-          </p>
         </div>
 
         <div className="flex items-center gap-2 self-start sm:self-auto">
@@ -237,7 +234,7 @@ export const FormulaLibrary: React.FC<FormulaLibraryProps> = ({ onNavigate }) =>
                 {/* Collapsed State Header: Clickable Card Bar */}
                 <div
                   onClick={() => toggleExpand(formula.id)}
-                  className="p-4 sm:p-5 cursor-pointer select-none hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors"
+                  className="py-2.5 sm:py-3 px-3.5 sm:px-4 cursor-pointer select-none hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors"
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                     <div className="space-y-1.5 flex-1 min-w-0">
