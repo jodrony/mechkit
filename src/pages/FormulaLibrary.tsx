@@ -1,0 +1,453 @@
+import React, { useState, useMemo } from 'react';
+import { MathView } from '../components/MathView';
+import { formulasData, type FormulaItem } from '../data/formulasData';
+import {
+  Search,
+  X,
+  ChevronDown,
+  ChevronUp,
+  Calculator,
+  ArrowRight,
+  BookOpen,
+  Activity,
+  Flame,
+  Wrench,
+  Compass,
+  CheckCircle2,
+  ChevronsUpDown,
+  Hash
+} from 'lucide-react';
+
+export type FormulaCategory = 'All' | 'SOM' | 'Thermal' | 'Workshop' | 'Mechanics';
+
+export interface FormulaLibraryProps {
+  onNavigate?: (tab: string, toolId?: string) => void;
+}
+
+export const FormulaLibrary: React.FC<FormulaLibraryProps> = ({ onNavigate }) => {
+  const [activeCategory, setActiveCategory] = useState<FormulaCategory>('All');
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set(['som_1'])); // default first one expanded
+
+  const categoryConfigs: {
+    id: FormulaCategory;
+    label: string;
+    count: number;
+    subject: string;
+    icon: React.ComponentType<{ className?: string }>;
+    colorClass: string;
+  }[] = [
+    { id: 'All', label: 'All', count: 40, subject: 'All Sem 3 Subjects', icon: BookOpen, colorClass: 'text-slate-600 dark:text-slate-300' },
+    { id: 'SOM', label: 'SOM', count: 15, subject: 'Strength of Materials', icon: Activity, colorClass: 'text-blue-500' },
+    { id: 'Thermal', label: 'Thermal', count: 10, subject: 'Thermal Engineering-I', icon: Flame, colorClass: 'text-orange-500' },
+    { id: 'Workshop', label: 'Workshop', count: 10, subject: 'Machine Tools & Machining', icon: Wrench, colorClass: 'text-emerald-500' },
+    { id: 'Mechanics', label: 'Mechanics', count: 5, subject: 'Engineering Mechanics', icon: Compass, colorClass: 'text-purple-500' },
+  ];
+
+  // Category & instant search filter
+  const filteredFormulas = useMemo(() => {
+    let list = formulasData;
+
+    if (activeCategory !== 'All') {
+      list = list.filter((f) => f.category === activeCategory);
+    }
+
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      list = list.filter((f) => {
+        const titleMatch = f.title.toLowerCase().includes(q);
+        const defMatch = f.definition.toLowerCase().includes(q);
+        const categoryMatch = f.category.toLowerCase().includes(q);
+        const siMatch = f.siUnits.toLowerCase().includes(q);
+        const variableMatch = f.variables.some(
+          (v) => v.meaning.toLowerCase().includes(q) || v.symbol.toLowerCase().includes(q) || v.unit.toLowerCase().includes(q)
+        );
+        return titleMatch || defMatch || categoryMatch || siMatch || variableMatch;
+      });
+    }
+
+    return list;
+  }, [activeCategory, searchQuery]);
+
+  const toggleExpand = (id: string) => {
+    setExpandedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
+
+  const handleExpandAll = () => {
+    if (expandedIds.size === filteredFormulas.length) {
+      setExpandedIds(new Set());
+    } else {
+      setExpandedIds(new Set(filteredFormulas.map((f) => f.id)));
+    }
+  };
+
+  const getCategoryBadgeColor = (cat: FormulaItem['category']) => {
+    switch (cat) {
+      case 'SOM':
+        return 'bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-900/40';
+      case 'Thermal':
+        return 'bg-orange-500/10 text-orange-700 dark:text-orange-400 border-orange-200 dark:border-orange-900/40';
+      case 'Workshop':
+        return 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900/40';
+      case 'Mechanics':
+        return 'bg-purple-500/10 text-purple-700 dark:text-purple-400 border-purple-200 dark:border-purple-900/40';
+      default:
+        return 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700';
+    }
+  };
+
+  return (
+    <div className="max-w-5xl mx-auto px-3 sm:px-6 py-5 space-y-6">
+      {/* Module Title Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
+        <div>
+          <div className="flex items-center gap-2">
+            <span className="p-1.5 rounded-lg bg-orange-500/10 text-mech-orange font-bold">
+              <BookOpen className="w-5 h-5" />
+            </span>
+            <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white">
+              Formula Reference Library
+            </h2>
+          </div>
+          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+            40 core engineering formulas across SOM, Thermal, Workshop, and Mechanics with KaTeX proofs, variable legends, and solved examples.
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2 self-start sm:self-auto">
+          <button
+            type="button"
+            onClick={handleExpandAll}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition-colors cursor-pointer border border-slate-200 dark:border-slate-700"
+          >
+            <ChevronsUpDown className="w-3.5 h-3.5" />
+            <span>{expandedIds.size === filteredFormulas.length && filteredFormulas.length > 0 ? 'Collapse All' : 'Expand All'}</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Category Tabs with Count Badges */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+            Select Category
+          </span>
+          <span className="text-xs font-mono font-bold text-slate-400 dark:text-slate-500">
+            {filteredFormulas.length} of {formulasData.length} Formulas Available
+          </span>
+        </div>
+
+        <div className="flex items-center gap-2 overflow-x-auto pb-1.5 scrollbar-none snap-x">
+          {categoryConfigs.map((cat) => {
+            const Icon = cat.icon;
+            const isActive = activeCategory === cat.id;
+            return (
+              <button
+                key={cat.id}
+                type="button"
+                id={`tab-category-${cat.id.toLowerCase()}`}
+                onClick={() => setActiveCategory(cat.id)}
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all cursor-pointer snap-start active:scale-95 ${
+                  isActive
+                    ? 'bg-mech-orange text-white shadow-md ring-2 ring-orange-500/30'
+                    : 'bg-white dark:bg-[#1e293b] text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700/60 hover:border-slate-300 dark:hover:border-slate-600'
+                }`}
+              >
+                <Icon className="w-4 h-4 shrink-0" />
+                <span>{cat.label}</span>
+                <span
+                  className={`px-1.5 py-0.5 rounded-full text-[10px] font-mono font-bold ${
+                    isActive ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
+                  }`}
+                >
+                  {cat.count}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Instant Search Bar */}
+      <div className="relative">
+        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+          <Search className="w-4 h-4" />
+        </div>
+        <input
+          type="text"
+          id="formula-search-input"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search formulas by name, symbol (σ, E, Q, MRR), unit (MPa, kW, RPM), or application..."
+          className="w-full pl-10 pr-10 py-2.5 bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700/70 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-hidden focus:ring-2 focus:ring-mech-orange focus:border-transparent transition-all shadow-xs"
+        />
+        {searchQuery && (
+          <button
+            type="button"
+            onClick={() => setSearchQuery('')}
+            className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        )}
+      </div>
+
+      {/* Formulas List (Card Accordion Architecture) */}
+      <div className="space-y-4">
+        {filteredFormulas.length === 0 ? (
+          <div className="p-8 sm:p-12 rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-700 bg-white dark:bg-[#1e293b] text-center space-y-3">
+            <div className="w-12 h-12 mx-auto rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">
+              <Search className="w-6 h-6" />
+            </div>
+            <h3 className="font-bold text-sm sm:text-base text-slate-800 dark:text-slate-200">
+              No matching formulas found
+            </h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
+              No formulas matched your search "{searchQuery}" under the {activeCategory} category.
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                setSearchQuery('');
+                setActiveCategory('All');
+              }}
+              className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-mech-orange text-white hover:bg-orange-700 transition-colors cursor-pointer"
+            >
+              Reset Filters
+            </button>
+          </div>
+        ) : (
+          filteredFormulas.map((formula, index) => {
+            const isExpanded = expandedIds.has(formula.id);
+
+            return (
+              <div
+                key={formula.id}
+                id={`formula-card-${formula.id}`}
+                className="bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700/60 rounded-2xl shadow-xs hover:shadow-md transition-all overflow-hidden"
+              >
+                {/* Collapsed State Header: Clickable Card Bar */}
+                <div
+                  onClick={() => toggleExpand(formula.id)}
+                  className="p-4 sm:p-5 cursor-pointer select-none hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors"
+                >
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <div className="space-y-1.5 flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        {/* Index Badge */}
+                        <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
+                          <Hash className="w-2.5 h-2.5" />
+                          {String(index + 1).padStart(2, '0')}
+                        </span>
+
+                        {/* Category Chip */}
+                        <span
+                          className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold border ${getCategoryBadgeColor(
+                            formula.category
+                          )}`}
+                        >
+                          {formula.category}
+                        </span>
+
+                        {/* Interactive Tool Pill */}
+                        {formula.relatedCalculatorId && (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900/40">
+                            <Calculator className="w-3 h-3" />
+                            Interactive Tool
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Formula Title */}
+                      <h3 className="font-bold text-base sm:text-lg text-slate-900 dark:text-white truncate">
+                        {formula.title}
+                      </h3>
+                    </div>
+
+                    {/* Right side: KaTeX equation snippet + Expansion toggle */}
+                    <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0">
+                      {/* Formula Equation Box */}
+                      <div className="px-3.5 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 max-w-[260px] sm:max-w-xs overflow-x-auto scrollbar-none">
+                        <MathView math={formula.formulaLatex} displayMode={false} className="text-sm font-semibold" />
+                      </div>
+
+                      {/* Expansion Chevron */}
+                      <div className="p-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 transition-transform duration-200">
+                        {isExpanded ? (
+                          <ChevronUp className="w-4 h-4 text-mech-orange" />
+                        ) : (
+                          <ChevronDown className="w-4 h-4" />
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Expanded State: Full Pedagogical Breakdown */}
+                {isExpanded && (
+                  <div className="border-t border-slate-100 dark:border-slate-800 p-4 sm:p-6 bg-slate-50/40 dark:bg-slate-900/30 space-y-5 animate-fadeIn">
+                    {/* 1. Definition & Principle */}
+                    <div className="space-y-1.5">
+                      <div className="flex items-center gap-2">
+                        <BookOpen className="w-4 h-4 text-mech-orange" />
+                        <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                          Definition & Engineering Principle
+                        </h4>
+                      </div>
+                      <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed pl-6">
+                        {formula.definition}
+                      </p>
+                    </div>
+
+                    {/* 2. Display KaTeX Equation */}
+                    <div className="p-4 rounded-xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700/80 text-center overflow-x-auto">
+                      <span className="text-[11px] font-mono text-slate-400 block mb-1 text-left">
+                        Governing Equation:
+                      </span>
+                      <div className="py-2">
+                        <MathView math={formula.formulaLatex} displayMode={true} className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white" />
+                      </div>
+                    </div>
+
+                    {/* 3. Variable Legend Table */}
+                    <div className="space-y-2">
+                      <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                        Variable Legend
+                      </h4>
+                      <div className="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-700/70 bg-white dark:bg-[#1e293b]">
+                        <table className="w-full text-left text-xs border-collapse">
+                          <thead>
+                            <tr className="border-b border-slate-200 dark:border-slate-700 bg-slate-100/70 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 font-mono font-bold">
+                              <th className="py-2.5 px-3 sm:px-4 w-28">Symbol</th>
+                              <th className="py-2.5 px-3 sm:px-4">Meaning / Parameter</th>
+                              <th className="py-2.5 px-3 sm:px-4 w-36">Standard Unit</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-slate-100 dark:divide-slate-800 font-medium">
+                            {formula.variables.map((v, vIdx) => (
+                              <tr key={vIdx} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30">
+                                <td className="py-2 px-3 sm:px-4 font-mono font-bold text-mech-blue dark:text-blue-400">
+                                  <MathView math={v.symbol} displayMode={false} />
+                                </td>
+                                <td className="py-2 px-3 sm:px-4 text-slate-700 dark:text-slate-300">
+                                  {v.meaning}
+                                </td>
+                                <td className="py-2 px-3 sm:px-4 font-mono text-slate-500 dark:text-slate-400">
+                                  {v.unit}
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                    {/* 4. SI Unit Breakdown */}
+                    <div className="flex items-center gap-2 p-3 rounded-xl bg-blue-50/60 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900/40 text-xs">
+                      <span className="font-mono font-bold text-mech-blue dark:text-blue-400 shrink-0">
+                        SI Units:
+                      </span>
+                      <span className="text-slate-700 dark:text-slate-300 font-mono">
+                        {formula.siUnits}
+                      </span>
+                    </div>
+
+                    {/* 5. Solved Example Box */}
+                    <div className="p-4 sm:p-5 rounded-xl bg-amber-500/5 dark:bg-amber-500/10 border border-amber-300/80 dark:border-amber-800/60 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase text-amber-700 dark:text-amber-400">
+                          <CheckCircle2 className="w-4 h-4" />
+                          Diploma Solved Numerical Example
+                        </span>
+                        <span className="text-[10px] font-mono text-slate-400">
+                          Step-by-step
+                        </span>
+                      </div>
+
+                      {/* Problem Statement */}
+                      <div className="p-3 rounded-lg bg-white dark:bg-[#1e293b] border border-amber-200 dark:border-amber-900/40">
+                        <span className="text-[11px] font-mono font-bold text-slate-400 block mb-1">
+                          PROBLEM STATEMENT
+                        </span>
+                        <p className="text-xs sm:text-sm text-slate-800 dark:text-slate-200 leading-relaxed font-medium">
+                          {formula.solvedExample.problem}
+                        </p>
+                      </div>
+
+                      {/* Given Data List */}
+                      <div className="space-y-1">
+                        <span className="text-[11px] font-mono font-bold text-slate-500 dark:text-slate-400">
+                          GIVEN DATA:
+                        </span>
+                        <ul className="list-disc list-inside text-xs text-slate-700 dark:text-slate-300 space-y-0.5 pl-1 font-mono">
+                          {formula.solvedExample.given.map((g, gIdx) => (
+                            <li key={gIdx}>{g}</li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      {/* Step-by-Step Calculation */}
+                      <div className="space-y-1">
+                        <span className="text-[11px] font-mono font-bold text-slate-500 dark:text-slate-400">
+                          CALCULATION STEPS:
+                        </span>
+                        <ol className="list-decimal list-inside text-xs text-slate-700 dark:text-slate-300 space-y-1 pl-1">
+                          {formula.solvedExample.steps.map((step, sIdx) => (
+                            <li key={sIdx} className="leading-relaxed">
+                              {step}
+                            </li>
+                          ))}
+                        </ol>
+                      </div>
+
+                      {/* Final Answer in Bold Orange */}
+                      <div className="pt-2 border-t border-amber-200 dark:border-amber-900/50 flex items-center justify-between">
+                        <span className="text-xs font-mono font-bold uppercase text-slate-600 dark:text-slate-400">
+                          Final Calculated Answer:
+                        </span>
+                        <span className="text-sm sm:text-base font-extrabold font-mono text-mech-orange bg-orange-500/10 px-3 py-1 rounded-lg border border-orange-500/20">
+                          {formula.solvedExample.answer}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* 6. Launch Calculator Button (if relatedCalculatorId exists) */}
+                    {formula.relatedCalculatorId && (
+                      <div className="flex justify-end pt-1">
+                        <button
+                          type="button"
+                          id={`btn-launch-calc-${formula.id}`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (onNavigate) {
+                              onNavigate('calculators', formula.relatedCalculatorId);
+                            }
+                          }}
+                          className="min-h-[44px] px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-mech-orange hover:bg-orange-700 text-white transition-all flex items-center gap-2 shadow-xs cursor-pointer active:scale-95"
+                        >
+                          <Calculator className="w-4 h-4" />
+                          <span>Launch Interactive Calculator</span>
+                          <ArrowRight className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default FormulaLibrary;

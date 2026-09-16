@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/((?!assets/|pyq/|academic/|syllabus/|routine/|templates/|labs/|favicon.svg|icon-512.png|manifest.json|robots.txt|sitemap.xml).*)",
+      "destination": "/index.html"
+    }
+  ]
+}

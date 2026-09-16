@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MechKit v0.3 — WBSCTE Diploma Mechanical Sem 3 Portal</title>
+    <meta name="description" content="Official WBSCTE 3rd Sem Mechanical study kit by Rony Biswas. Download 2018-2026 PYQs, lab manuals, viva questions, and routine." />
+    <meta name="author" content="Rony Biswas" />
+
+    <!-- OpenGraph / Facebook / Social Sharing -->
+    <meta property="og:title" content="MechKit v0.3 — WBSCTE Diploma Mechanical Sem 3 Portal" />
+    <meta property="og:description" content="Official WBSCTE 3rd Sem Mechanical study kit by Rony Biswas. Download 2018-2026 PYQs, lab manuals, viva questions, and routine." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://mechkit.vercel.app/" />
+    <meta property="og:image" content="https://mechkit.vercel.app/icon-512.png" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="MechKit v0.3 — WBSCTE Diploma Mechanical Sem 3 Portal" />
+    <meta name="twitter:description" content="Official WBSCTE 3rd Sem Mechanical study kit by Rony Biswas. Download 2018-2026 PYQs, lab manuals, viva questions, and routine." />
+    <meta name="twitter:image" content="https://mechkit.vercel.app/icon-512.png" />
+
+    <!-- PWA & Mobile Web App Meta -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="theme-color" content="#0f172a" />
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+    <!-- KaTeX CSS CDN backup for standalone rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous" />
+    <!-- Mozilla PDF.js (Client-Side HTML5 Canvas PDF Renderer) -->
+    <script src="/pdf.min.js"></script>
+    <script>
+      if (window.pdfjsLib) {
+        window.pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.js';
+      }
+    </script>
+  </head>
+  <body class="bg-slate-50 text-slate-900 dark:bg-mech-dark dark:text-slate-100 min-h-screen antialiased selection:bg-mech-orange selection:text-white transition-colors duration-200">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
