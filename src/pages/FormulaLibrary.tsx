@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { MathView } from '../components/MathView';
 import { formulasData, type FormulaItem } from '../data/formulasData';
 import { matchesMultiField } from '../utils/searchFilter';
@@ -22,13 +22,80 @@ import {
 export type FormulaCategory = 'All' | 'SOM' | 'Thermal' | 'Workshop' | 'Mechanics';
 
 export interface FormulaLibraryProps {
-  onNavigate?: (tab: string, toolId?: string) => void;
+  onNavigate?: (tab: string, toolId?: string, elementId?: string) => void;
 }
 
 export const FormulaLibrary: React.FC<FormulaLibraryProps> = ({ onNavigate }) => {
   const [activeCategory, setActiveCategory] = useState<FormulaCategory>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set(['som_1'])); // default first one expanded
+
+  // Exact Location Anchoring: Listen for window.location.hash and select active category/expanded state
+  useEffect(() => {
+    const handleHash = () => {
+      const hash = window.location.hash;
+      if (!hash) return;
+      const cleanHash = hash.replace(/^#/, '');
+      let formulaId = cleanHash
+        .replace(/^f-/, '')
+        .replace(/^item-/, '')
+        .replace(/^formula-card-/, '')
+        .replace(/^formula-/, '');
+      if (cleanHash === 'bernoulli-equation' || cleanHash === 'bernoulli') {
+        formulaId = 'bernoulli';
+      }
+
+      if (formulaId) {
+        setExpandedIds((prev) => new Set(prev).add(formulaId));
+      }
+
+      // If activeCategory is not 'All', auto-select category if needed to make the element visible
+      const targetFormula = formulasData.find((f) => f.id === formulaId);
+      if (targetFormula && activeCategory !== 'All' && targetFormula.category !== activeCategory) {
+        setActiveCategory('All');
+      }
+    };
+
+    handleHash();
+    window.addEventListener('hashchange', handleHash);
+    return () => window.removeEventListener('hashchange', handleHash);
+  }, [activeCategory]);
+
+  // Component-Level Auto-Scroll: Robust React-lifecycle scrolling on mount and hash changes
+  useEffect(() => {
+    const scrollOnHash = () => {
+      const hash = window.location.hash.replace('#', '');
+      if (hash) {
+        // Use requestAnimationFrame to ensure the map loop has painted the DOM
+        requestAnimationFrame(() => {
+          const formulaId = hash
+            .replace(/^f-/, '')
+            .replace(/^item-/, '')
+            .replace(/^formula-card-/, '')
+            .replace(/^formula-/, '');
+
+          const element =
+            document.getElementById(hash) ||
+            document.getElementById(`item-${hash}`) ||
+            document.getElementById(`item-${formulaId}`) ||
+            document.getElementById(`f-${formulaId}`) ||
+            document.getElementById(`formula-${formulaId}`) ||
+            document.getElementById(`formula-card-${formulaId}`) ||
+            (hash.includes('bernoulli') ? document.getElementById('item-bernoulli') : null);
+
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            element.classList.add('target-highlight');
+            setTimeout(() => element.classList.remove('target-highlight'), 2500);
+          }
+        });
+      }
+    };
+
+    scrollOnHash();
+    window.addEventListener('hashchange', scrollOnHash);
+    return () => window.removeEventListener('hashchange', scrollOnHash);
+  }, [activeCategory, expandedIds]);
 
   const categoryConfigs: {
     id: FormulaCategory;
@@ -228,9 +295,16 @@ export const FormulaLibrary: React.FC<FormulaLibraryProps> = ({ onNavigate }) =>
             return (
               <div
                 key={formula.id}
-                id={`formula-card-${formula.id}`}
+                id={`item-${formula.id}`}
                 className="bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700/60 rounded-2xl shadow-xs hover:shadow-md transition-all overflow-hidden"
               >
+                <div id={`f-${formula.id}`}>
+                  <div id={`formula-${formula.id}`}>
+                    <div id={formula.id}>
+                      {formula.id === 'bernoulli' && <div id="bernoulli-equation" />}
+                    </div>
+                  </div>
+                </div>
                 {/* Collapsed State Header: Clickable Card Bar */}
                 <div
                   onClick={() => toggleExpand(formula.id)}

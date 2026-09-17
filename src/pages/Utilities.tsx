@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { CalculatorShell } from '../components/CalculatorShell';
 import { Scale, ArrowRightLeft, Weight, Search, X } from 'lucide-react';
 import { matchesMultiField } from '../utils/searchFilter';
@@ -447,9 +447,122 @@ export const UTILITY_TOOLS: UtilityToolDef[] = [
   },
 ];
 
-export const Utilities: React.FC = () => {
-  const [activeCategory, setActiveCategory] = useState<UtilityCategory>('all');
-  const [activeToolId, setActiveToolId] = useState<string>('density');
+const UTILITY_TOOL_MAP: Record<string, { toolId: string; category: UtilityCategory }> = {
+  density: { toolId: 'density', category: 'stock' },
+  'u-density': { toolId: 'density', category: 'stock' },
+  stock_weight: { toolId: 'stock_weight', category: 'stock' },
+  'u-weight': { toolId: 'stock_weight', category: 'stock' },
+  conv_press: { toolId: 'conv_press', category: 'converters' },
+  'u-conv-press': { toolId: 'conv_press', category: 'converters' },
+  conv_area: { toolId: 'conv_area', category: 'converters' },
+  'u-conv-area': { toolId: 'conv_area', category: 'converters' },
+  conv_vol: { toolId: 'conv_vol', category: 'converters' },
+  'u-conv-vol': { toolId: 'conv_vol', category: 'converters' },
+  conv_mass: { toolId: 'conv_mass', category: 'converters' },
+  'u-conv-mass': { toolId: 'conv_mass', category: 'converters' },
+  conv_force: { toolId: 'conv_force', category: 'converters' },
+  'u-conv-force': { toolId: 'conv_force', category: 'converters' },
+  conv_speed: { toolId: 'conv_speed', category: 'converters' },
+  'u-conv-speed': { toolId: 'conv_speed', category: 'converters' },
+  conv_power: { toolId: 'conv_power', category: 'converters' },
+  'u-conv-power': { toolId: 'conv_power', category: 'converters' },
+  conv_energy: { toolId: 'conv_energy', category: 'converters' },
+  'u-conv-energy': { toolId: 'conv_energy', category: 'converters' },
+  conv_temp: { toolId: 'conv_temp', category: 'converters' },
+  'u-conv-temp': { toolId: 'conv_temp', category: 'converters' },
+  conv_angle: { toolId: 'conv_angle', category: 'converters' },
+  'u-conv-angle': { toolId: 'conv_angle', category: 'converters' },
+  'u-univ': { toolId: 'conv_press', category: 'converters' },
+  'u-conv': { toolId: 'conv_press', category: 'converters' },
+};
+
+export interface UtilitiesProps {
+  initialToolId?: string;
+}
+
+export const Utilities: React.FC<UtilitiesProps> = ({ initialToolId }) => {
+  const [activeCategory, setActiveCategory] = useState<UtilityCategory>(() => {
+    if (initialToolId && UTILITY_TOOL_MAP[initialToolId]) {
+      return UTILITY_TOOL_MAP[initialToolId].category;
+    }
+    return 'all';
+  });
+  const [activeToolId, setActiveToolId] = useState<string>(() => {
+    if (initialToolId && UTILITY_TOOL_MAP[initialToolId]) {
+      return UTILITY_TOOL_MAP[initialToolId].toolId;
+    }
+    return 'density';
+  });
+
+  useEffect(() => {
+    if (initialToolId) {
+      const resolved = UTILITY_TOOL_MAP[initialToolId];
+      if (resolved) {
+        setActiveToolId(resolved.toolId);
+        setActiveCategory(resolved.category);
+      } else {
+        setActiveToolId(initialToolId);
+      }
+    }
+  }, [initialToolId]);
+
+  // Exact Location Anchoring: Listen for window.location.hash and select active tool
+  useEffect(() => {
+    const handleHash = () => {
+      const hash = window.location.hash;
+      if (!hash) return;
+      const cleanHash = hash.replace(/^#/, '');
+
+      // Check if hash matches a utility tool (e.g. density, stock_weight, conv_press, etc.)
+      const matchedKey = Object.keys(UTILITY_TOOL_MAP).find(
+        (key) =>
+          cleanHash === key ||
+          cleanHash === `item-${key}` ||
+          cleanHash === `utility-${key}` ||
+          cleanHash === `u-${key}`
+      );
+      if (matchedKey) {
+        const resolved = UTILITY_TOOL_MAP[matchedKey];
+        setActiveToolId(resolved.toolId);
+        setActiveCategory(resolved.category);
+      }
+    };
+
+    handleHash();
+    window.addEventListener('hashchange', handleHash);
+    return () => window.removeEventListener('hashchange', handleHash);
+  }, []);
+
+  // Component-Level Auto-Scroll: Robust React-lifecycle scrolling on mount and hash changes
+  useEffect(() => {
+    const scrollOnHash = () => {
+      const hash = window.location.hash.replace('#', '');
+      if (hash) {
+        // Use requestAnimationFrame to ensure the map loop has painted the DOM
+        requestAnimationFrame(() => {
+          const element =
+            document.getElementById(hash) ||
+            document.getElementById(`item-${hash}`) ||
+            document.getElementById(`utility-${hash}`) ||
+            document.getElementById(`u-${hash}`) ||
+            document.getElementById(hash.replace(/^item-/, '')) ||
+            document.getElementById(hash.replace(/^utility-/, '')) ||
+            document.getElementById(`item-${activeToolId}`) ||
+            document.getElementById(`utility-${activeToolId}`);
+
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            element.classList.add('target-highlight');
+            setTimeout(() => element.classList.remove('target-highlight'), 2500);
+          }
+        });
+      }
+    };
+
+    scrollOnHash();
+    window.addEventListener('hashchange', scrollOnHash);
+    return () => window.removeEventListener('hashchange', scrollOnHash);
+  }, [activeToolId]);
 
   // ====================================================
   // 1. Density / Mass / Volume Calculator
@@ -643,6 +756,7 @@ export const Utilities: React.FC = () => {
           <button
             key={t.id}
             type="button"
+            id={`chip-${t.id}`}
             onClick={() => setActiveToolId(t.id)}
             className={`px-3 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all border cursor-pointer ${
               activeToolId === t.id
@@ -657,7 +771,11 @@ export const Utilities: React.FC = () => {
 
       {/* 1. Density / Mass / Volume */}
       {activeToolId === 'density' && (
-        <CalculatorShell
+        <div id="item-density">
+          <div id="utility-density">
+            <div id="u-density">
+              <div id="density" />
+              <CalculatorShell
           title="Density / Mass / Volume Calculator"
           category="General"
           badge="ρ = m / V"
@@ -835,11 +953,18 @@ Wrought steels attain theoretical density (≈7,850 kg/m³), whereas sand castin
             'Aluminum is approximately 1/3 the weight of steel (2,700 vs 7,850 kg/m³).',
           ]}
         />
+            </div>
+          </div>
+        </div>
       )}
 
       {/* 2. Material Stock Weight Calculator */}
       {activeToolId === 'stock_weight' && (
-        <CalculatorShell
+        <div id="item-stock_weight">
+          <div id="utility-stock_weight">
+            <div id="u-weight">
+              <div id="stock_weight" />
+              <CalculatorShell
           title="Material Stock Weight & Bill of Materials (BOM)"
           category="General"
           badge="Stock Profiles"
@@ -1043,6 +1168,9 @@ In workshop sawing, each cut consumes 2.5–3.5 mm of length (saw kerf). Always 
             'Hot rolled commercial bar stock carries mill rolling tolerance (+/- 3% on diameter/weight).',
           ]}
         />
+            </div>
+          </div>
+        </div>
       )}
 
       {/* 3-12. Individual Converters */}
@@ -1052,8 +1180,24 @@ In workshop sawing, each cut consumes 2.5–3.5 mm of length (saw kerf). Always 
         const computed = calculateConversion(spec, state.val, state.from, state.to);
 
         return (
-          <CalculatorShell
-            key={spec.id}
+          <div id={`item-${spec.id}`} key={spec.id}>
+            <div id={`utility-${spec.id}`}>
+              <div id={`u-${spec.id}`}>
+                <div id={spec.id} />
+                {spec.id === 'conv_press' && (
+                  <>
+                    <div id="u-univ" />
+                    <div id="u-conv" />
+                    <div id="item-univ" />
+                    <div id="item-conv" />
+                  </>
+                )}
+                {spec.id === 'conv_mass' && <div id="item-conv-mass" />}
+                {spec.id === 'conv_force' && <div id="item-conv-force" />}
+                {spec.id === 'conv_energy' && <div id="item-conv-energy" />}
+                {spec.id === 'conv_power' && <div id="item-conv-power" />}
+                <CalculatorShell
+              key={spec.id}
             title={spec.name}
             category="General"
             badge={spec.badge}
@@ -1109,6 +1253,9 @@ In workshop sawing, each cut consumes 2.5–3.5 mm of length (saw kerf). Always 
             }}
             swapTooltip={`Swap values and units (${state.from} ⇄ ${state.to})`}
           />
+              </div>
+            </div>
+          </div>
         );
       })()}
     </div>

@@ -62,6 +62,60 @@ export const LabCompanion: React.FC<LabCompanionProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [activePdfUrl]);
 
+  // Exact Location Anchoring: Listen for window.location.hash and auto-select tab + scroll
+  useEffect(() => {
+    const handleHash = () => {
+      const hash = window.location.hash;
+      if (!hash) return;
+      const cleanHash = hash.replace(/^#/, '');
+
+      if (
+        cleanHash.startsWith('l-boiler') ||
+        cleanHash.startsWith('tl-') ||
+        cleanHash.startsWith('item-tl-') ||
+        ['lancashire', 'cochran', 'babcock', 'thermal'].includes(cleanHash)
+      ) {
+        setActiveLabTab('Thermal');
+      } else if (cleanHash.includes('materialstesting') || cleanHash === 'l-utm' || cleanHash === 'item-utm') {
+        setActiveLabTab('MaterialsTesting');
+      } else if (cleanHash.includes('manufacturing') || cleanHash === 'l-mfg' || cleanHash === 'item-mfg') {
+        setActiveLabTab('Manufacturing');
+      } else if (cleanHash.includes('drawing') || cleanHash === 'l-drawing' || cleanHash === 'item-drawing') {
+        setActiveLabTab('Drawing');
+      }
+    };
+
+    handleHash();
+    window.addEventListener('hashchange', handleHash);
+    return () => window.removeEventListener('hashchange', handleHash);
+  }, []);
+
+  // Component-Level Auto-Scroll: Robust React-lifecycle scrolling on mount and hash changes
+  useEffect(() => {
+    const scrollOnHash = () => {
+      const hash = window.location.hash.replace('#', '');
+      if (hash) {
+        // Use requestAnimationFrame to ensure the map loop has painted the DOM
+        requestAnimationFrame(() => {
+          const element =
+            document.getElementById(hash) ||
+            document.getElementById(`item-${hash}`) ||
+            document.getElementById(hash.replace(/^item-/, ''));
+
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            element.classList.add('target-highlight');
+            setTimeout(() => element.classList.remove('target-highlight'), 2500);
+          }
+        });
+      }
+    };
+
+    scrollOnHash();
+    window.addEventListener('hashchange', scrollOnHash);
+    return () => window.removeEventListener('hashchange', scrollOnHash);
+  }, [activeLabTab]);
+
   const labCategories: { id: LabTab; label: string; code: string; icon: React.ComponentType<{ className?: string }> }[] = [
     { id: 'MaterialsTesting', label: 'Materials Testing Lab', code: 'MEPC 211', icon: Activity },
     { id: 'Thermal', label: 'Thermal Engg-I Lab', code: 'MEPC 215', icon: Flame },
@@ -175,8 +229,13 @@ export const LabCompanion: React.FC<LabCompanionProps> = ({
               {thermalExperiments.map((exp, idx) => (
                 <div
                   key={exp.id}
+                  id={`item-${exp.id}`}
                   className="rounded-2xl border border-neutral-200 dark:border-neutral-800/80 bg-white dark:bg-neutral-900/60 backdrop-blur-sm p-4 shadow-xs hover:border-orange-500/40 dark:hover:border-orange-500/40 transition-all flex flex-col justify-between space-y-3 group"
                 >
+                  <div id={`l-boiler${idx + 1}`}>
+                    <div id={exp.id} />
+                    <div id={`item-l-boiler${idx + 1}`} />
+                  </div>
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded-full bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-500/20">
@@ -332,7 +391,9 @@ export const LabCompanion: React.FC<LabCompanionProps> = ({
       {/* 2. MATERIALS TESTING LAB: Render placeholder         */}
       {/* ==================================================== */}
       {activeLabTab === 'MaterialsTesting' && (
-        <div className="p-8 sm:p-12 rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-700 bg-white dark:bg-[#1e293b] text-center space-y-4">
+        <div id="item-utm" className="p-8 sm:p-12 rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-700 bg-white dark:bg-[#1e293b] text-center space-y-4">
+          <div id="l-utm" />
+          <div id="item-l-utm" />
           <div className="w-14 h-14 mx-auto rounded-2xl bg-blue-500/10 text-mech-blue dark:text-blue-400 flex items-center justify-center">
             <UploadCloud className="w-7 h-7" />
           </div>
@@ -357,7 +418,9 @@ export const LabCompanion: React.FC<LabCompanionProps> = ({
       {/* 3. MANUFACTURING PRACTICE: Render placeholder        */}
       {/* ==================================================== */}
       {activeLabTab === 'Manufacturing' && (
-        <div className="p-8 sm:p-12 rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-700 bg-white dark:bg-[#1e293b] text-center space-y-4">
+        <div id="item-mfg" className="p-8 sm:p-12 rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-700 bg-white dark:bg-[#1e293b] text-center space-y-4">
+          <div id="l-mfg" />
+          <div id="item-l-mfg" />
           <div className="w-14 h-14 mx-auto rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center">
             <Wrench className="w-7 h-7" />
           </div>
@@ -382,7 +445,9 @@ export const LabCompanion: React.FC<LabCompanionProps> = ({
       {/* 4. DRAWING PRACTICE: Render placeholder              */}
       {/* ==================================================== */}
       {activeLabTab === 'Drawing' && (
-        <div className="p-8 sm:p-12 rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-700 bg-white dark:bg-[#1e293b] text-center space-y-4">
+        <div id="item-drawing" className="p-8 sm:p-12 rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-700 bg-white dark:bg-[#1e293b] text-center space-y-4">
+          <div id="l-drawing" />
+          <div id="item-l-drawing" />
           <div className="w-14 h-14 mx-auto rounded-2xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 flex items-center justify-center">
             <PenTool className="w-7 h-7" />
           </div>

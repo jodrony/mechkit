@@ -375,6 +375,65 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
     }
   }, [initialBoilerId]);
 
+  // Exact Location Anchoring: Listen for window.location.hash and scroll into view
+  useEffect(() => {
+    const handleHash = () => {
+      const hash = window.location.hash;
+      if (!hash) return;
+      const cleanHash = hash.replace(/^#/, '');
+
+      // 1. Check if hash targets a boiler component (e.g. safety-valve, pressure-gauge, stop-valve)
+      let foundComp = false;
+      for (const b of boilerExperiments) {
+        const compIdx = b.components.findIndex((c) => {
+          const slug = c.partName.replace(/\s+/g, '-').toLowerCase();
+          return (
+            slug === cleanHash ||
+            cleanHash === `item-${slug}` ||
+            cleanHash === `comp-${slug}` ||
+            cleanHash === c.partName ||
+            cleanHash === `viva-comp-${b.id}-${slug}` ||
+            cleanHash.includes(slug)
+          );
+        });
+        if (compIdx !== -1) {
+          setVivaMode('experiment');
+          setSelectedBoilerId(b.id);
+          setActiveComponentIndex(compIdx);
+          foundComp = true;
+          break;
+        }
+      }
+
+      // 2. Check if hash targets a boiler (e.g. boiler-babcock, boiler-lancashire, boiler-cochran)
+      if (
+        !foundComp &&
+        (cleanHash.startsWith('boiler-') || ['babcock', 'lancashire', 'cochran'].includes(cleanHash))
+      ) {
+        const boilerId = cleanHash.replace('boiler-', '');
+        const matched = boilerExperiments.find((b) => b.id === boilerId);
+        if (matched) {
+          setVivaMode('experiment');
+          setSelectedBoilerId(boilerId);
+        }
+      }
+
+      // 3. Check if hash targets a theory card (e.g. theory-card-1 or theory-som-1)
+      if (cleanHash.startsWith('theory-card-') || cleanHash.startsWith('theory-') || cleanHash.startsWith('item-theory-')) {
+        setVivaMode('semester');
+        const numPart = cleanHash.match(/\d+/);
+        if (numPart) {
+          const qId = Number(numPart[0]);
+          setRevealedAnswers((prev) => new Set(prev).add(qId));
+        }
+      }
+    };
+
+    handleHash();
+    window.addEventListener('hashchange', handleHash);
+    return () => window.removeEventListener('hashchange', handleHash);
+  }, []);
+
   // Active boiler experiment data
   const currentBoiler: BoilerVivaExperiment = useMemo(() => {
     return (
@@ -389,6 +448,36 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
     if (activeComponentIndex >= list.length) return list[0];
     return list[activeComponentIndex];
   }, [currentBoiler, activeComponentIndex]);
+
+  // Component-Level Auto-Scroll: Robust React-lifecycle scrolling on mount and hash changes
+  useEffect(() => {
+    const scrollOnHash = () => {
+      const hash = window.location.hash.replace('#', '');
+      if (hash) {
+        // Use requestAnimationFrame to ensure the map loop has painted the DOM
+        requestAnimationFrame(() => {
+          const element =
+            document.getElementById(hash) ||
+            document.getElementById(`item-${hash}`) ||
+            document.getElementById(hash.replace(/^item-/, '')) ||
+            document.getElementById(`boiler-${hash}`) ||
+            (currentComponent ? document.getElementById(`item-${currentComponent.partName.replace(/\s+/g, '-').toLowerCase()}`) : null) ||
+            (currentComponent ? document.getElementById(currentComponent.partName.replace(/\s+/g, '-').toLowerCase()) : null) ||
+            (currentComponent ? document.getElementById(currentComponent.partName) : null);
+
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            element.classList.add('target-highlight');
+            setTimeout(() => element.classList.remove('target-highlight'), 2500);
+          }
+        });
+      }
+    };
+
+    scrollOnHash();
+    window.addEventListener('hashchange', scrollOnHash);
+    return () => window.removeEventListener('hashchange', scrollOnHash);
+  }, [selectedBoilerId, activeComponentIndex, vivaMode, currentComponent]);
 
   const handleNextComponent = () => {
     if (!currentBoiler?.components || currentBoiler.components.length === 0) return;
@@ -526,7 +615,7 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
                   <button
                     key={boiler.id}
                     type="button"
-                    id={`tab-boiler-${boiler.id}`}
+                    id={`item-boiler-${boiler.id}`}
                     onClick={() => {
                       setSelectedBoilerId(boiler.id);
                       setActiveComponentIndex(0);
@@ -555,7 +644,10 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
           {/* Seamless Natural Vertical Stacking Flow */}
           <div className="max-w-3xl mx-auto space-y-3 sm:space-y-4">
             {/* [1] Boiler Diagram Card */}
-            <div className="rounded-2xl border border-neutral-200 dark:border-neutral-800/80 bg-white dark:bg-neutral-900/60 backdrop-blur-sm p-3 sm:p-4 shadow-xs space-y-2">
+            <div
+              id={`boiler-${currentBoiler.id}`}
+              className="rounded-2xl border border-neutral-200 dark:border-neutral-800/80 bg-white dark:bg-neutral-900/60 backdrop-blur-sm p-3 sm:p-4 shadow-xs space-y-2"
+            >
               <div className="flex items-center justify-between px-0.5">
                 <div className="flex items-center gap-1.5">
                   <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-500/20">
@@ -621,7 +713,15 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
 
             {/* [3] Component Answer Card */}
             {currentComponent ? (
-              <div className="rounded-2xl border border-neutral-200 dark:border-neutral-800/80 bg-white dark:bg-neutral-900/60 backdrop-blur-sm p-3.5 sm:p-4 shadow-xs space-y-3">
+              <div
+                id={`item-${currentComponent.partName.replace(/\s+/g, '-').toLowerCase()}`}
+                className="rounded-2xl border border-neutral-200 dark:border-neutral-800/80 bg-white dark:bg-neutral-900/60 backdrop-blur-sm p-3.5 sm:p-4 shadow-xs space-y-3"
+              >
+                <div id={currentComponent.partName.replace(/\s+/g, '-').toLowerCase()}>
+                  <div id={currentComponent.partName}>
+                    <div id={`viva-comp-${selectedBoilerId}-${currentComponent.partName.replace(/\s+/g, '-').toLowerCase()}`} />
+                  </div>
+                </div>
                 {/* Header row: Component Name + Category Tag */}
                 <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-neutral-100 dark:border-neutral-800">
                   <h3 className="font-semibold text-base text-slate-900 dark:text-white leading-tight">
@@ -689,11 +789,12 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
               <div className="flex gap-1.5 overflow-x-auto no-scrollbar py-2 px-0.5 scrollbar-none snap-x">
                 {currentBoiler.components.map((comp, idx) => {
                   const isSelected = activeComponentIndex === idx;
+                  const compSlug = comp.partName.replace(/\s+/g, '-').toLowerCase();
                   return (
                     <button
                       key={comp.partName}
                       type="button"
-                      id={`btn-component-pill-${idx}`}
+                      id={`item-${compSlug}`}
                       onClick={() => setActiveComponentIndex(idx)}
                       className={`px-2.5 py-1 rounded-lg text-[11px] font-medium whitespace-nowrap transition-all cursor-pointer snap-start active:scale-95 ${
                         isSelected
@@ -788,7 +889,7 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
                   <button
                     key={cat.id}
                     type="button"
-                    id={`tab-theory-${cat.id}`}
+                    id={`item-category-${cat.id}`}
                     onClick={() => {
                       setTheorySubject(cat.id);
                       setRevealedAnswers(new Set());
@@ -891,10 +992,13 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
                 return (
                   <div
                     key={item.id}
-                    id={`theory-card-${item.id}`}
+                    id={`item-${item.id}`}
                     style={{ contentVisibility: 'auto', containIntrinsicSize: '0 120px' }}
                     className="bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700/60 rounded-2xl p-4 sm:p-5 shadow-xs hover:shadow-md transition-all space-y-3 content-visibility-auto"
                   >
+                    <div id={`theory-card-${item.id}`}>
+                      <div id={`theory-${item.id}`} />
+                    </div>
                     {/* Card Header Bar */}
                     <div
                       onClick={() => toggleTheoryReveal(item.id)}

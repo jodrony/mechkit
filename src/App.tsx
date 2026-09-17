@@ -58,7 +58,9 @@ function AppContent() {
   const [activePdf, setActivePdf] = useState<ActivePdf | null>(null);
   const activePdfRef = useRef<ActivePdf | null>(null);
   const [activeCalculatorTool, setActiveCalculatorTool] = useState<string>('rpm');
+  const [activeUtilityTool, setActiveUtilityTool] = useState<string>('density');
   const [activeBoilerVivaId, setActiveBoilerVivaId] = useState<string>('babcock');
+  const [activeVivaMode, setActiveVivaMode] = useState<'experiment' | 'semester'>('experiment');
 
   // Keep refs synchronized for popstate callback without re-attaching listeners
   useEffect(() => {
@@ -140,8 +142,18 @@ function AppContent() {
     const initialTool = params.get('tool');
     const initialBoiler = params.get('boiler');
 
-    if (initialTool) setActiveCalculatorTool(initialTool);
-    if (initialBoiler) setActiveBoilerVivaId(initialBoiler);
+    if (initialTool) {
+      if (initialTab === 'calculators') setActiveCalculatorTool(initialTool);
+      if (initialTab === 'utilities') setActiveUtilityTool(initialTool);
+    }
+    if (initialBoiler) {
+      if (initialBoiler === 'theory' || initialBoiler === 'semester') {
+        setActiveVivaMode('semester');
+      } else {
+        setActiveVivaMode('experiment');
+        setActiveBoilerVivaId(initialBoiler);
+      }
+    }
 
     const initialUrl = window.location.search || '?tab=dashboard';
     window.history.replaceState(
@@ -194,8 +206,15 @@ function AppContent() {
         if (event.state.toolId) {
           if (targetTab === 'calculators') {
             setActiveCalculatorTool(event.state.toolId);
+          } else if (targetTab === 'utilities') {
+            setActiveUtilityTool(event.state.toolId);
           } else if (targetTab === 'viva') {
-            setActiveBoilerVivaId(event.state.toolId);
+            if (event.state.toolId === 'theory' || event.state.toolId === 'semester') {
+              setActiveVivaMode('semester');
+            } else {
+              setActiveVivaMode('experiment');
+              setActiveBoilerVivaId(event.state.toolId);
+            }
           }
         }
       } else {
@@ -243,10 +262,12 @@ function AppContent() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  const handleNavigate = (tab: ActiveTab | string, toolId?: string) => {
+  const handleNavigate = (tab: ActiveTab | string, toolId?: string, elementId?: string) => {
     const target = resolveTab(tab);
 
-    if (target === currentTab && !toolId) {
+    const cleanElementId = elementId ? elementId.replace(/^#/, '') : '';
+
+    if (target === currentTab && !toolId && !cleanElementId) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
@@ -255,24 +276,37 @@ function AppContent() {
     const searchParams = new URLSearchParams();
     searchParams.set('tab', target);
     if (toolId) {
-      if (target === 'calculators') {
+      if (target === 'calculators' || target === 'utilities') {
         searchParams.set('tool', toolId);
       } else if (target === 'viva') {
         searchParams.set('boiler', toolId);
       }
     }
-    const newUrl = `?${searchParams.toString()}`;
-    window.history.pushState({ tab: target, toolId }, '', newUrl);
+    const hash = cleanElementId ? `#${cleanElementId}` : window.location.hash;
+    const newUrl = `?${searchParams.toString()}${hash || ''}`;
+    window.history.pushState({ tab: target, toolId, elementId: cleanElementId }, '', newUrl);
+    if (cleanElementId) {
+      window.dispatchEvent(new HashChangeEvent('hashchange'));
+    }
 
     setCurrentTab(target);
     if (toolId) {
       if (target === 'calculators') {
         setActiveCalculatorTool(toolId);
+      } else if (target === 'utilities') {
+        setActiveUtilityTool(toolId);
       } else if (target === 'viva') {
-        setActiveBoilerVivaId(toolId);
+        if (toolId === 'theory' || toolId === 'semester') {
+          setActiveVivaMode('semester');
+        } else {
+          setActiveVivaMode('experiment');
+          setActiveBoilerVivaId(toolId);
+        }
       }
     }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (!elementId && !window.location.hash) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   const getModuleTitle = (tab: ActiveTab): string => {
@@ -331,13 +365,13 @@ function AppContent() {
           />
         )}
         {currentTab === 'calculators' && <Calculators initialToolId={activeCalculatorTool} />}
-        {currentTab === 'utilities' && <Utilities />}
+        {currentTab === 'utilities' && <Utilities initialToolId={activeUtilityTool} />}
         {currentTab === 'labs' && (
           <LabCompanion onNavigate={handleNavigate} onViewPdf={handleOpenPdf} />
         )}
         {currentTab === 'workshop' && <WorkshopReference />}
         {currentTab === 'formulas' && <FormulaLibrary onNavigate={handleNavigate} />}
-        {currentTab === 'viva' && <VivaCenter initialMode="experiment" initialBoilerId={activeBoilerVivaId} />}
+        {currentTab === 'viva' && <VivaCenter initialMode={activeVivaMode} initialBoilerId={activeBoilerVivaId} />}
         {(currentTab === 'resources' || currentTab === 'downloads') && (
           <ResourcesHub onViewPdf={handleOpenPdf} />
         )}
@@ -367,6 +401,7 @@ function AppContent() {
         isOpen={isSearchOpen}
         onClose={() => setIsSearchOpen(false)}
         onNavigate={handleNavigate}
+        onViewPdf={handleOpenPdf}
       />
 
       {/* Creator Profile Bottom Sheet / Modal */}

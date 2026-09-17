@@ -128,20 +128,33 @@ const CALCULATOR_TOOLS: CalculatorToolDef[] = [
 const TOOL_MAP: Record<string, { toolId: string; category: CalculatorCategory }> = {
   calc_rpm: { toolId: 'rpm', category: 'workshop' },
   rpm: { toolId: 'rpm', category: 'workshop' },
+  'c-rpm': { toolId: 'rpm', category: 'workshop' },
   calc_cutspeed: { toolId: 'cs', category: 'workshop' },
   cs: { toolId: 'cs', category: 'workshop' },
+  'c-cs': { toolId: 'cs', category: 'workshop' },
   calc_feed: { toolId: 'feed', category: 'workshop' },
   feed: { toolId: 'feed', category: 'workshop' },
+  'c-feed': { toolId: 'feed', category: 'workshop' },
+  'c-mtime': { toolId: 'feed', category: 'workshop' },
   calc_torque: { toolId: 'torque', category: 'workshop' },
   torque: { toolId: 'torque', category: 'workshop' },
+  'c-torque': { toolId: 'torque', category: 'workshop' },
   calc_power: { toolId: 'power', category: 'workshop' },
   power: { toolId: 'power', category: 'workshop' },
+  'c-power': { toolId: 'power', category: 'workshop' },
   calc_stress: { toolId: 'stress', category: 'som' },
   stress: { toolId: 'stress', category: 'som' },
+  'c-stress': { toolId: 'stress', category: 'som' },
+  'c-shear': { toolId: 'stress', category: 'som' },
   calc_strain: { toolId: 'strain', category: 'som' },
   strain: { toolId: 'strain', category: 'som' },
+  'c-strain': { toolId: 'strain', category: 'som' },
   calc_moi: { toolId: 'moi', category: 'som' },
   moi: { toolId: 'moi', category: 'som' },
+  'c-moi': { toolId: 'moi', category: 'som' },
+  converter: { toolId: 'converter', category: 'utilities' },
+  'c-converter': { toolId: 'converter', category: 'utilities' },
+  'c-thermal': { toolId: 'converter', category: 'utilities' },
 };
 
 const toNum = (val: string | number, fallback = 0): number => {
@@ -178,6 +191,62 @@ export const Calculators: React.FC<CalculatorsProps> = ({ initialToolId }) => {
       setActiveCategory(TOOL_MAP[initialToolId].category);
     }
   }, [initialToolId]);
+
+  // Exact Location Anchoring: Listen for window.location.hash and select active tool
+  useEffect(() => {
+    const handleHash = () => {
+      const hash = window.location.hash;
+      if (!hash) return;
+      const cleanHash = hash.replace(/^#/, '');
+
+      const matchedKey = Object.keys(TOOL_MAP).find(
+        (key) =>
+          cleanHash === key ||
+          cleanHash === `item-${key}` ||
+          cleanHash === `calc-${key}` ||
+          cleanHash === `c-${key}`
+      );
+      if (matchedKey) {
+        const resolved = TOOL_MAP[matchedKey];
+        setActiveToolId(resolved.toolId);
+        setActiveCategory(resolved.category);
+      }
+    };
+
+    handleHash();
+    window.addEventListener('hashchange', handleHash);
+    return () => window.removeEventListener('hashchange', handleHash);
+  }, []);
+
+  // Component-Level Auto-Scroll: Robust React-lifecycle scrolling on mount and hash changes
+  useEffect(() => {
+    const scrollOnHash = () => {
+      const hash = window.location.hash.replace('#', '');
+      if (hash) {
+        // Use requestAnimationFrame to ensure the map loop has painted the DOM
+        requestAnimationFrame(() => {
+          const element =
+            document.getElementById(hash) ||
+            document.getElementById(`item-${hash}`) ||
+            document.getElementById(`calc-${hash}`) ||
+            document.getElementById(hash.replace(/^item-/, '')) ||
+            document.getElementById(hash.replace(/^calc-/, '')) ||
+            document.getElementById(`item-${activeToolId}`) ||
+            document.getElementById(`calc-${activeToolId}`);
+
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            element.classList.add('target-highlight');
+            setTimeout(() => element.classList.remove('target-highlight'), 2500);
+          }
+        });
+      }
+    };
+
+    scrollOnHash();
+    window.addEventListener('hashchange', scrollOnHash);
+    return () => window.removeEventListener('hashchange', scrollOnHash);
+  }, [activeToolId]);
 
   // ====================================================
   // 1. Spindle Speed (RPM)
@@ -423,6 +492,7 @@ export const Calculators: React.FC<CalculatorsProps> = ({ initialToolId }) => {
           <button
             key={t.id}
             type="button"
+            id={`chip-${t.id}`}
             onClick={() => setActiveToolId(t.id)}
             className={`px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all border cursor-pointer ${
               activeToolId === t.id
@@ -435,8 +505,24 @@ export const Calculators: React.FC<CalculatorsProps> = ({ initialToolId }) => {
         ))}
       </div>
 
-      {/* 1. Spindle RPM Calculator */}
-      {activeToolId === 'rpm' && (
+      <div id={`item-${activeToolId}`} key={activeToolId}>
+        <div id={`calc-${activeToolId}`}>
+          <div id={`c-${activeToolId}`}>
+            <div id={activeToolId} />
+            {activeToolId === 'stress' && <div id="calc-stress" />}
+            {activeToolId === 'stress' && <div id="c-shear" />}
+            {activeToolId === 'feed' && <div id="calc-feed" />}
+            {activeToolId === 'feed' && <div id="c-mtime" />}
+            {activeToolId === 'converter' && <div id="calc-converter" />}
+            {activeToolId === 'converter' && <div id="c-thermal" />}
+            {activeToolId === 'rpm' && <div id="calc-rpm" />}
+            {activeToolId === 'cs' && <div id="calc-cs" />}
+            {activeToolId === 'torque' && <div id="calc-torque" />}
+            {activeToolId === 'power' && <div id="calc-power" />}
+            {activeToolId === 'strain' && <div id="calc-strain" />}
+            {activeToolId === 'moi' && <div id="calc-moi" />}
+            {/* 1. Spindle RPM Calculator */}
+        {activeToolId === 'rpm' && (
         <CalculatorShell
           title="Spindle Speed (RPM) Calculator"
           category="Workshop"
@@ -1290,6 +1376,9 @@ Because depth (d) is cubed in the rectangular formula (I_x = b·d³ / 12), doubl
           </div>
         </div>
       )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import {
   FileText,
   Download,
@@ -36,6 +36,83 @@ interface SubjectPYQGroup {
   sessions?: PYQSession[];
 }
 
+const PYQ_SUBJECTS: SubjectPYQGroup[] = [
+  {
+    id: 'som',
+    code: 'MEPC 205',
+    title: 'Strength of Materials (SOM)',
+    shortTitle: 'SOM',
+    masterArchiveUrl: '/pyq/som_pyq_all.pdf',
+    sessions: [
+      { sessionLabel: '2018', fileUrl: '/pyq/som_2018.pdf' },
+      { sessionLabel: '2021', fileUrl: '/pyq/som_2021.pdf' },
+      { sessionLabel: '2022', fileUrl: '/pyq/som_2022.pdf' },
+      { sessionLabel: '2023', fileUrl: '/pyq/som_2023.pdf' },
+      { sessionLabel: '2024 (Jan)', fileUrl: '/pyq/som_2024_jan.pdf' },
+      { sessionLabel: '2024 (Dec)', fileUrl: '/pyq/som_2024_dec.pdf' },
+      { sessionLabel: '2026', fileUrl: '/pyq/som_2026.pdf' },
+    ],
+  },
+  {
+    id: 'thermal',
+    code: 'MEPC 209',
+    title: 'Thermal Engineering-I',
+    shortTitle: 'Thermal-I',
+    masterArchiveUrl: '/pyq/thermal_pyq_all.pdf',
+    sessions: [
+      { sessionLabel: '2018', fileUrl: '/pyq/thermal_2018.pdf' },
+      { sessionLabel: '2019', fileUrl: '/pyq/thermal_2019.pdf' },
+      { sessionLabel: '2021', fileUrl: '/pyq/thermal_2021.pdf' },
+      { sessionLabel: '2022', fileUrl: '/pyq/thermal_2022.pdf' },
+      { sessionLabel: '2023', fileUrl: '/pyq/thermal_2023.pdf' },
+      { sessionLabel: '2024 (Jan)', fileUrl: '/pyq/thermal_2024_jan.pdf' },
+      { sessionLabel: '2024 (Dec)', fileUrl: '/pyq/thermal_2024_dec.pdf' },
+      { sessionLabel: '2026', fileUrl: '/pyq/thermal_2026.pdf' },
+    ],
+  },
+  {
+    id: 'mfg',
+    code: 'MEPC 207',
+    title: 'Manufacturing Processes-I',
+    shortTitle: 'Mfg Processes-I',
+    masterArchiveUrl: '/pyq/mfg1_pyq_all.pdf',
+    sessions: [
+      { sessionLabel: '2017', fileUrl: '/pyq/mfg1_2017.pdf' },
+      { sessionLabel: '2018', fileUrl: '/pyq/mfg1_2018.pdf' },
+      { sessionLabel: '2019', fileUrl: '/pyq/mfg1_2019.pdf' },
+      { sessionLabel: '2021', fileUrl: '/pyq/mfg1_2021.pdf' },
+      { sessionLabel: '2022', fileUrl: '/pyq/mfg1_2022.pdf' },
+      { sessionLabel: '2023', fileUrl: '/pyq/mfg1_2023.pdf' },
+      { sessionLabel: '2024 (Jan)', fileUrl: '/pyq/mfg1_2024_jan.pdf' },
+      { sessionLabel: '2024 (Dec)', fileUrl: '/pyq/mfg1_2024_dec.pdf' },
+      { sessionLabel: '2026', fileUrl: '/pyq/mfg1_2026.pdf' },
+    ],
+  },
+  {
+    id: 'materials',
+    code: 'MEPC 203',
+    title: 'Mechanical Engineering Materials',
+    shortTitle: 'Materials',
+    masterArchiveUrl: '/pyq/materials_pyq_all.pdf',
+    sessions: [
+      { sessionLabel: '2018', fileUrl: '/pyq/materials_2018.pdf' },
+      { sessionLabel: '2019', fileUrl: '/pyq/materials_2019.pdf' },
+      { sessionLabel: '2022', fileUrl: '/pyq/materials_2022.pdf' },
+      { sessionLabel: '2023', fileUrl: '/pyq/materials_2023.pdf' },
+      { sessionLabel: '2024 (Jan)', fileUrl: '/pyq/materials_2024_jan.pdf' },
+      { sessionLabel: '2024 (Dec)', fileUrl: '/pyq/materials_2024_dec.pdf' },
+      { sessionLabel: '2026', fileUrl: '/pyq/materials_2026.pdf' },
+    ],
+  },
+  {
+    id: 'drawing',
+    code: 'MEPC 201',
+    title: 'Mechanical Engineering Drawing',
+    shortTitle: 'Engg Drawing',
+    masterArchiveUrl: '/pyq/drawing_pyq_all.pdf',
+  },
+];
+
 export interface ResourcesHubProps {
   onViewPdf?: (url: string, title: string) => void;
 }
@@ -72,82 +149,83 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
     }
   };
 
-  const pyqSubjects: SubjectPYQGroup[] = [
-    {
-      id: 'som',
-      code: 'MEPC 205',
-      title: 'Strength of Materials (SOM)',
-      shortTitle: 'SOM',
-      masterArchiveUrl: '/pyq/som_pyq_all.pdf',
-      sessions: [
-        { sessionLabel: '2018', fileUrl: '/pyq/som_2018.pdf' },
-        { sessionLabel: '2021', fileUrl: '/pyq/som_2021.pdf' },
-        { sessionLabel: '2022', fileUrl: '/pyq/som_2022.pdf' },
-        { sessionLabel: '2023', fileUrl: '/pyq/som_2023.pdf' },
-        { sessionLabel: '2024 (Jan)', fileUrl: '/pyq/som_2024_jan.pdf' },
-        { sessionLabel: '2024 (Dec)', fileUrl: '/pyq/som_2024_dec.pdf' },
-        { sessionLabel: '2026', fileUrl: '/pyq/som_2026.pdf' },
-      ],
-    },
-    {
-      id: 'thermal',
-      code: 'MEPC 209',
-      title: 'Thermal Engineering-I',
-      shortTitle: 'Thermal-I',
-      masterArchiveUrl: '/pyq/thermal_pyq_all.pdf',
-      sessions: [
-        { sessionLabel: '2018', fileUrl: '/pyq/thermal_2018.pdf' },
-        { sessionLabel: '2019', fileUrl: '/pyq/thermal_2019.pdf' },
-        { sessionLabel: '2021', fileUrl: '/pyq/thermal_2021.pdf' },
-        { sessionLabel: '2022', fileUrl: '/pyq/thermal_2022.pdf' },
-        { sessionLabel: '2023', fileUrl: '/pyq/thermal_2023.pdf' },
-        { sessionLabel: '2024 (Jan)', fileUrl: '/pyq/thermal_2024_jan.pdf' },
-        { sessionLabel: '2024 (Dec)', fileUrl: '/pyq/thermal_2024_dec.pdf' },
-        { sessionLabel: '2026', fileUrl: '/pyq/thermal_2026.pdf' },
-      ],
-    },
-    {
-      id: 'mfg',
-      code: 'MEPC 207',
-      title: 'Manufacturing Processes-I',
-      shortTitle: 'Mfg Processes-I',
-      masterArchiveUrl: '/pyq/mfg1_pyq_all.pdf',
-      sessions: [
-        { sessionLabel: '2017', fileUrl: '/pyq/mfg1_2017.pdf' },
-        { sessionLabel: '2018', fileUrl: '/pyq/mfg1_2018.pdf' },
-        { sessionLabel: '2019', fileUrl: '/pyq/mfg1_2019.pdf' },
-        { sessionLabel: '2021', fileUrl: '/pyq/mfg1_2021.pdf' },
-        { sessionLabel: '2022', fileUrl: '/pyq/mfg1_2022.pdf' },
-        { sessionLabel: '2023', fileUrl: '/pyq/mfg1_2023.pdf' },
-        { sessionLabel: '2024 (Jan)', fileUrl: '/pyq/mfg1_2024_jan.pdf' },
-        { sessionLabel: '2024 (Dec)', fileUrl: '/pyq/mfg1_2024_dec.pdf' },
-        { sessionLabel: '2026', fileUrl: '/pyq/mfg1_2026.pdf' },
-      ],
-    },
-    {
-      id: 'materials',
-      code: 'MEPC 203',
-      title: 'Mechanical Engineering Materials',
-      shortTitle: 'Materials',
-      masterArchiveUrl: '/pyq/materials_pyq_all.pdf',
-      sessions: [
-        { sessionLabel: '2018', fileUrl: '/pyq/materials_2018.pdf' },
-        { sessionLabel: '2019', fileUrl: '/pyq/materials_2019.pdf' },
-        { sessionLabel: '2022', fileUrl: '/pyq/materials_2022.pdf' },
-        { sessionLabel: '2023', fileUrl: '/pyq/materials_2023.pdf' },
-        { sessionLabel: '2024 (Jan)', fileUrl: '/pyq/materials_2024_jan.pdf' },
-        { sessionLabel: '2024 (Dec)', fileUrl: '/pyq/materials_2024_dec.pdf' },
-        { sessionLabel: '2026', fileUrl: '/pyq/materials_2026.pdf' },
-      ],
-    },
-    {
-      id: 'drawing',
-      code: 'MEPC 201',
-      title: 'Mechanical Engineering Drawing',
-      shortTitle: 'Engg Drawing',
-      masterArchiveUrl: '/pyq/drawing_pyq_all.pdf',
-    },
-  ];
+  // Exact Location Anchoring: Listen for window.location.hash and scroll to card
+  useEffect(() => {
+    const handleHash = () => {
+      const hash = window.location.hash;
+      if (!hash) return;
+      const cleanHash = hash.replace(/^#/, '');
+
+      if (cleanHash.startsWith('pyq-') || cleanHash === 'pyq' || cleanHash === 'r-pyq') {
+        if (activeCategory === 'academic') {
+          setActiveCategory('all');
+        }
+        const matched = PYQ_SUBJECTS.find(
+          (s) =>
+            cleanHash === `pyq-${s.id}` ||
+            cleanHash === s.id ||
+            cleanHash.startsWith(`pyq-${s.id}-`)
+        );
+        if (matched && selectedSubject !== 'all' && selectedSubject !== matched.id) {
+          setSelectedSubject('all');
+        }
+      } else if (cleanHash.startsWith('r-') && cleanHash !== 'r-pyq') {
+        setActiveCategory('academic');
+      }
+    };
+
+    handleHash();
+    window.addEventListener('hashchange', handleHash);
+    return () => window.removeEventListener('hashchange', handleHash);
+  }, []);
+
+  // Component-Level Auto-Scroll: Robust React-lifecycle scrolling on mount and hash changes
+  useEffect(() => {
+    const hash = window.location.hash.replace('#', '');
+    if (hash) {
+      requestAnimationFrame(() => {
+        const element =
+          document.getElementById(hash) ||
+          document.getElementById(`pyq-${hash}`) ||
+          document.getElementById(`item-${hash}`) ||
+          document.getElementById(hash.replace(/^item-/, '')) ||
+          document.getElementById(hash.replace(/^pyq-/, ''));
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          element.classList.add('target-highlight');
+          setTimeout(() => element.classList.remove('target-highlight'), 2500);
+        }
+      });
+    }
+  }, []); // Ensure this runs when the PYQ component mounts
+
+  useEffect(() => {
+    const scrollOnHash = () => {
+      const hash = window.location.hash.replace('#', '');
+      if (hash) {
+        requestAnimationFrame(() => {
+          const element =
+            document.getElementById(hash) ||
+            document.getElementById(`pyq-${hash}`) ||
+            document.getElementById(`item-${hash}`) ||
+            document.getElementById(hash.replace(/^item-/, '')) ||
+            document.getElementById(hash.replace(/^pyq-/, ''));
+
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            element.classList.add('target-highlight');
+            setTimeout(() => element.classList.remove('target-highlight'), 2500);
+          }
+        });
+      }
+    };
+
+    scrollOnHash();
+    window.addEventListener('hashchange', scrollOnHash);
+    return () => window.removeEventListener('hashchange', scrollOnHash);
+  }, [activeCategory, selectedSubject]);
+
+  const pyqSubjects = PYQ_SUBJECTS;
 
   // Real-time query filtering across subjects and individual session papers
   const searchedSubjects = useMemo<SubjectPYQGroup[]>(() => {
@@ -289,8 +367,8 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
 
             {/* Vertically Stacked Mobile-First Cards */}
             <div className="space-y-2.5 sm:space-y-3">
-              {/* Card 1: Academic Calendar (2026–2027) */}
-              <div className="py-2.5 sm:py-3 px-3.5 sm:px-4 rounded-xl sm:rounded-2xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-800 shadow-xs hover:border-orange-500/40 dark:hover:border-orange-500/40 transition-all">
+              {/* Card 1: Official Academic Calendar 2026–2027 */}
+              <div id="r-calendar" className="py-2.5 sm:py-3 px-3.5 sm:px-4 rounded-xl sm:rounded-2xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-800 shadow-xs hover:border-orange-500/40 dark:hover:border-orange-500/40 transition-all">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div className="flex items-center gap-3">
                     <span className="p-2 rounded-xl bg-orange-500/10 text-mech-orange shrink-0">
@@ -334,7 +412,7 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
               </div>
 
               {/* Card 2: Master Syllabus (Revised 2022) */}
-              <div className="py-2.5 sm:py-3 px-3.5 sm:px-4 rounded-xl sm:rounded-2xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-800 shadow-xs hover:border-blue-500/40 dark:hover:border-blue-500/40 transition-all">
+              <div id="r-syllabus" className="py-2.5 sm:py-3 px-3.5 sm:px-4 rounded-xl sm:rounded-2xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-800 shadow-xs hover:border-blue-500/40 dark:hover:border-blue-500/40 transition-all">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div className="flex items-center gap-3">
                     <span className="p-2 rounded-xl bg-blue-500/10 text-mech-blue dark:text-blue-400 shrink-0">
@@ -380,7 +458,7 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
               {/* Card 3: Class Routine (Dual View) */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
                 {/* Routine A: Official College Routine */}
-                <div className="py-2.5 sm:py-3 px-3.5 sm:px-4 rounded-xl sm:rounded-2xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-800 shadow-xs hover:border-amber-500/40 dark:hover:border-amber-500/40 transition-all flex flex-col justify-between gap-3">
+                <div id="r-routine-college" className="py-2.5 sm:py-3 px-3.5 sm:px-4 rounded-xl sm:rounded-2xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-800 shadow-xs hover:border-amber-500/40 dark:hover:border-amber-500/40 transition-all flex flex-col justify-between gap-3">
                   <div className="flex items-center gap-3">
                     <span className="p-2 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 shrink-0">
                       <FileText className="w-5 h-5" />
@@ -420,7 +498,7 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
                 </div>
 
                 {/* Routine B: Simplified Student Routine */}
-                <div className="py-2.5 sm:py-3 px-3.5 sm:px-4 rounded-xl sm:rounded-2xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-800 shadow-xs hover:border-amber-500/40 dark:hover:border-amber-500/40 transition-all flex flex-col justify-between gap-3">
+                <div id="r-routine-simple" className="py-2.5 sm:py-3 px-3.5 sm:px-4 rounded-xl sm:rounded-2xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-800 shadow-xs hover:border-amber-500/40 dark:hover:border-amber-500/40 transition-all flex flex-col justify-between gap-3">
                   <div className="flex items-center gap-3">
                     <span className="p-2 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 shrink-0">
                       <Clock className="w-5 h-5" />
@@ -461,7 +539,7 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
               </div>
 
               {/* Card 4: Universal Assignment & Lab Record Kit */}
-              <div className="py-2.5 sm:py-3 px-3.5 sm:px-4 rounded-xl sm:rounded-2xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-800 shadow-xs hover:border-emerald-500/40 dark:hover:border-emerald-500/40 transition-all">
+              <div id="r-univ-template" className="py-2.5 sm:py-3 px-3.5 sm:px-4 rounded-xl sm:rounded-2xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-800 shadow-xs hover:border-emerald-500/40 dark:hover:border-emerald-500/40 transition-all">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div className="flex items-center gap-3">
                     <span className="p-2 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 shrink-0">
@@ -505,7 +583,7 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
               </div>
 
               {/* Card 5: Companion Lab Kit: Thermal Engineering-I */}
-              <div className="py-2.5 sm:py-3 px-3.5 sm:px-4 rounded-xl sm:rounded-2xl bg-white dark:bg-[#1e293b] border border-amber-300/80 dark:border-amber-700/60 shadow-xs hover:border-orange-500/40 dark:hover:border-orange-500/40 transition-all">
+              <div id="r-front-index" className="py-2.5 sm:py-3 px-3.5 sm:px-4 rounded-xl sm:rounded-2xl bg-white dark:bg-[#1e293b] border border-amber-300/80 dark:border-amber-700/60 shadow-xs hover:border-orange-500/40 dark:hover:border-orange-500/40 transition-all">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div className="flex items-center gap-3">
                     <span className="p-2 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 shrink-0">
@@ -570,7 +648,12 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
             </div>
 
             {/* Top Banner: All-Semester-3 Master Archive Mega Bundle */}
-            <div className="py-2.5 sm:py-3 px-3.5 sm:px-4 rounded-xl sm:rounded-2xl bg-gradient-to-r from-purple-900/40 via-indigo-900/30 to-slate-900/50 border-2 border-purple-500/40 shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div
+              id="pyq-mega-bundle"
+              className="py-2.5 sm:py-3 px-3.5 sm:px-4 rounded-xl sm:rounded-2xl bg-gradient-to-r from-purple-900/40 via-indigo-900/30 to-slate-900/50 border-2 border-purple-500/40 shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+            >
+              <div id="r-pyq" />
+              <div id="item-r-pyq" />
               <div className="flex items-center gap-3">
                 <span className="p-2 rounded-xl bg-purple-500/20 text-purple-300 shrink-0">
                   <Sparkles className="w-5 h-5" />
@@ -689,10 +772,15 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
                 searchedSubjects.map((sub) => (
                   <div
                     key={sub.id}
-                    id={`pyq-card-${sub.id}`}
+                    id={`pyq-${sub.id}`}
                     style={{ contentVisibility: 'auto', containIntrinsicSize: '0 120px' }}
                     className="bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700/60 rounded-xl sm:rounded-2xl p-3 sm:p-4 shadow-xs space-y-3 hover:border-purple-300/60 dark:hover:border-purple-800/60 transition-all content-visibility-auto"
                   >
+                    <div id={`pyq-card-${sub.id}`}>
+                      <div id={`item-pyq-${sub.id}`}>
+                        <div id={sub.id} />
+                      </div>
+                    </div>
                     {/* Subject Header & Master Archive Dual Actions */}
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2.5 border-b border-slate-100 dark:border-slate-800">
                       <div className="flex items-center gap-2 flex-wrap">
@@ -735,11 +823,18 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
                           Available Sessions ({sub.sessions.length} Papers):
                         </span>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5">
-                          {sub.sessions.map((sess) => (
-                            <div
-                              key={sess.fileUrl}
-                              className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 flex flex-col justify-between gap-2.5 transition-all hover:border-purple-300 dark:hover:border-purple-700 shadow-2xs"
-                            >
+                          {sub.sessions.map((sess) => {
+                            const sessSlug = sess.fileUrl
+                              .replace(/^\/pyq\//, '')
+                              .replace(/\.pdf$/, '')
+                              .replace(/_/g, '-');
+                            return (
+                              <div
+                                key={sess.fileUrl}
+                                id={`pyq-${sessSlug}`}
+                                className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 flex flex-col justify-between gap-2.5 transition-all hover:border-purple-300 dark:hover:border-purple-700 shadow-2xs"
+                              >
+                                <div id={`item-pyq-${sessSlug}`} />
                               <div className="flex items-center justify-between gap-1">
                                 <span className="text-xs font-mono font-bold text-slate-800 dark:text-slate-200 truncate">
                                   {sess.sessionLabel}
@@ -772,7 +867,8 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
                                 </a>
                               </div>
                             </div>
-                          ))}
+                          );
+                        })}
                         </div>
                       </div>
                     ) : sub.id === 'drawing' ? (

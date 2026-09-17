@@ -1137,4 +1137,33 @@ export const formulasData: FormulaItem[] = [
       answer: '78.96 kJ (78,957 J)',
     },
   },
+  {
+    id: 'bernoulli',
+    category: 'Mechanics',
+    title: "Bernoulli's Theorem & Conservation of Fluid Energy",
+    definition: 'For steady, incompressible, frictionless streamline flow of an ideal fluid, the total mechanical energy consisting of pressure head, velocity head, and elevation head remains constant along a streamline.',
+    formulaLatex: '\\frac{P}{\\rho g} + \\frac{v^2}{2g} + z = \\text{Constant}',
+    variables: [
+      { symbol: 'P / (\\rho g)', meaning: 'Pressure head of fluid', unit: 'm of fluid column' },
+      { symbol: 'v^2 / (2g)', meaning: 'Velocity (kinetic) head', unit: 'm' },
+      { symbol: 'z', meaning: 'Potential (datum / elevation) head', unit: 'm' },
+      { symbol: 'g', meaning: 'Acceleration due to gravity', unit: '9.81 m/s²' },
+    ],
+    siUnits: 'Metres (m) of fluid head • Energy per unit weight (N·m/N = m)',
+    solvedExample: {
+      problem: 'Water flows through a tapered pipe where at section 1 the pressure head is 25 m, velocity is 3 m/s, and elevation is 6 m above datum. Calculate the total fluid head.',
+      given: [
+        'Pressure Head (P / ρg) = 25 m',
+        'Flow Velocity (v) = 3 m/s',
+        'Elevation Head (z) = 6 m',
+        'Gravitational Acceleration (g) = 9.81 m/s²',
+      ],
+      steps: [
+        'Calculate velocity head: v² / (2g) = 3² / (2 × 9.81) = 9 / 19.62 = 0.459 m',
+        'Apply Bernoulli total head formula: H = P/(ρg) + v²/(2g) + z',
+        'Substitute all values: H = 25 + 0.459 + 6 = 31.459 m',
+      ],
+      answer: '31.46 m',
+    },
+  },
 ];
