@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { MathView } from '../components/MathView';
 import { formulasData, type FormulaItem } from '../data/formulasData';
+import { matchesMultiField } from '../utils/searchFilter';
 import {
   Search,
   X,
@@ -53,17 +54,16 @@ export const FormulaLibrary: React.FC<FormulaLibraryProps> = ({ onNavigate }) =>
     }
 
     if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase();
-      list = list.filter((f) => {
-        const titleMatch = f.title.toLowerCase().includes(q);
-        const defMatch = f.definition.toLowerCase().includes(q);
-        const categoryMatch = f.category.toLowerCase().includes(q);
-        const siMatch = f.siUnits.toLowerCase().includes(q);
-        const variableMatch = f.variables.some(
-          (v) => v.meaning.toLowerCase().includes(q) || v.symbol.toLowerCase().includes(q) || v.unit.toLowerCase().includes(q)
-        );
-        return titleMatch || defMatch || categoryMatch || siMatch || variableMatch;
-      });
+      list = list.filter((f) =>
+        matchesMultiField(
+          {
+            ...f,
+            units: f.siUnits,
+            subject: f.category,
+          },
+          searchQuery
+        )
+      );
     }
 
     return list;

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { CalculatorShell } from '../components/CalculatorShell';
-import { Scale, ArrowRightLeft, Weight } from 'lucide-react';
+import { Scale, ArrowRightLeft, Weight, Search, X } from 'lucide-react';
+import { matchesMultiField } from '../utils/searchFilter';
 
 const toNum = (val: string | number, fallback = 0): number => {
   if (val === '' || val === null || val === undefined) return fallback;
@@ -26,8 +27,428 @@ const MATERIALS = [
   { name: 'Water (Pure at 4°C)', density: 1000, badge: '1,000 kg/m³' },
 ];
 
+export type UtilityCategory = 'all' | 'stock' | 'converters';
+
+export interface UtilityToolDef {
+  id: string;
+  title: string;
+  category: 'stock' | 'converters';
+  subject: string;
+  icon: any;
+  units?: string[];
+  variables?: string[];
+  tags?: string[];
+}
+
+const CATEGORY_TABS: { id: UtilityCategory; label: string }[] = [
+  { id: 'all', label: 'All Utilities' },
+  { id: 'stock', label: 'Physical & Stock' },
+  { id: 'converters', label: '10 Unit Converters' },
+];
+
+export type ConverterConfig = {
+  id: string;
+  name: string;
+  badge: string;
+  units: { label: string; toBase: number }[];
+  defaultFrom: string;
+  defaultTo: string;
+  defaultVal: string | number;
+  explanation: string;
+  latex: string;
+  derivation: string;
+  dimensions: string;
+  siBase: string;
+  equivalences: string;
+};
+
+// Hoisted outside component to prevent massive object reallocation on every keystroke
+export const CONVERTER_SPECS: Record<string, ConverterConfig> = {
+  conv_press: {
+    id: 'conv_press',
+    name: 'Pressure & Stress Converter',
+    badge: 'M·L⁻¹·T⁻²',
+    units: [
+      { label: 'Pa (N/m²)', toBase: 1 },
+      { label: 'kPa', toBase: 1000 },
+      { label: 'MPa (N/mm²)', toBase: 1e6 },
+      { label: 'GPa', toBase: 1e9 },
+      { label: 'bar', toBase: 1e5 },
+      { label: 'mbar', toBase: 100 },
+      { label: 'psi (lbf/in²)', toBase: 6894.76 },
+      { label: 'ksi', toBase: 6.89476e6 },
+      { label: 'atm', toBase: 101325 },
+      { label: 'mmHg (Torr)', toBase: 133.322 },
+    ],
+    defaultFrom: 'MPa (N/mm²)',
+    defaultTo: 'bar',
+    defaultVal: 200,
+    explanation: `• Physical Significance:
+Pressure and stress describe normal force distributed per unit area. In fluid mechanics, pressure acts isotropically (Pascal's law). In solid mechanics, stress tensors resolve into normal (tensile/compressive) and shear components.
+
+• Variable Notation:
+- p = F / A: Pressure / Stress.
+- F: Normal force (N).
+- A: Surface area (m²).`,
+    latex: 'p = \\frac{F}{A}',
+    derivation: '1 Pa = 1 N/m² = (1 kg · m/s²) / m² = 1 kg · m⁻¹ · s⁻²',
+    dimensions: '[M¹ · L⁻¹ · T⁻²]',
+    siBase: 'kg · m⁻¹ · s⁻² (Pascal)',
+    equivalences: '1 MPa = 10 bar = 145.038 psi = 10⁶ Pa = 1 N/mm²',
+  },
+  conv_area: {
+    id: 'conv_area',
+    name: 'Cross-Section & Surface Area Converter',
+    badge: 'L²',
+    units: [
+      { label: 'mm²', toBase: 1e-6 },
+      { label: 'cm²', toBase: 1e-4 },
+      { label: 'm²', toBase: 1 },
+      { label: 'in²', toBase: 0.00064516 },
+      { label: 'ft²', toBase: 0.092903 },
+      { label: 'acres', toBase: 4046.86 },
+      { label: 'hectares', toBase: 10000 },
+    ],
+    defaultFrom: 'cm²',
+    defaultTo: 'mm²',
+    defaultVal: 25,
+    explanation: `• Physical Significance:
+Area quantifies 2D geometric surface extension. Essential in calculating load-bearing capacity (σ = P/A), heat transfer surface (Q = h·A·ΔT), and hydraulic cylinder bore force (F = p·A).`,
+    latex: 'A = \\int \\int dx \\, dy',
+    derivation: '1 m² = (100 cm)² = 10,000 cm² = (1,000 mm)² = 10⁶ mm²',
+    dimensions: '[M⁰ · L² · T⁰]',
+    siBase: 'm² (square metre)',
+    equivalences: '1 m² = 10⁶ mm² = 1,550 in² = 10.7639 ft²',
+  },
+  conv_vol: {
+    id: 'conv_vol',
+    name: 'Volume & Capacity Converter',
+    badge: 'L³',
+    units: [
+      { label: 'mm³', toBase: 1e-9 },
+      { label: 'cm³ (cc)', toBase: 1e-6 },
+      { label: 'm³', toBase: 1 },
+      { label: 'Liters', toBase: 1e-3 },
+      { label: 'mL', toBase: 1e-6 },
+      { label: 'in³', toBase: 1.6387e-5 },
+      { label: 'ft³', toBase: 0.0283168 },
+      { label: 'gal (US)', toBase: 0.00378541 },
+    ],
+    defaultFrom: 'Liters',
+    defaultTo: 'cm³ (cc)',
+    defaultVal: 5,
+    explanation: `• Physical Significance:
+Volume measures 3-dimensional spatial capacity. Governs engine cylinder displacement (V_d = (π/4)·D²·L_stroke), reservoir hydraulic fluid capacity, and hydrostatic buoyancy.`,
+    latex: 'V = \\int \\int \\int dx \\, dy \\, dz',
+    derivation: '1 m³ = (10 dm)³ = 1,000 dm³ = 1,000 Liters = 10⁶ cm³',
+    dimensions: '[M⁰ · L³ · T⁰]',
+    siBase: 'm³ (cubic metre)',
+    equivalences: '1 m³ = 1,000 Liters = 61,023.7 in³ = 264.172 gal (US)',
+  },
+  conv_mass: {
+    id: 'conv_mass',
+    name: 'Weight & Mass Converter',
+    badge: 'M',
+    units: [
+      { label: 'mg', toBase: 1e-6 },
+      { label: 'g', toBase: 1e-3 },
+      { label: 'kg', toBase: 1 },
+      { label: 'tonne (MT)', toBase: 1000 },
+      { label: 'lb', toBase: 0.45359237 },
+      { label: 'oz', toBase: 0.0283495 },
+      { label: 'ton (US)', toBase: 907.185 },
+    ],
+    defaultFrom: 'kg',
+    defaultTo: 'lb',
+    defaultVal: 50,
+    explanation: `• Physical Significance:
+Mass is an intrinsic measure of matter and inertia (resistance to acceleration: F = m·a). Distinct from gravitational weight, which varies with local gravitational field strength (W = m·g).`,
+    latex: 'm = \\int_V \\rho \\, dV',
+    derivation: '1 kg = 1,000 g = 10⁶ mg = 0.001 Metric Tonne',
+    dimensions: '[M¹ · L⁰ · T⁰]',
+    siBase: 'kg (kilogram)',
+    equivalences: '1 kg = 2.20462 lb = 35.274 oz = 0.001 tonne',
+  },
+  conv_temp: {
+    id: 'conv_temp',
+    name: 'Temperature Converter',
+    badge: 'Θ',
+    units: [
+      { label: '°C', toBase: 1 },
+      { label: '°F', toBase: 1 },
+      { label: 'K', toBase: 1 },
+      { label: '°R', toBase: 1 },
+    ],
+    defaultFrom: '°C',
+    defaultTo: '°F',
+    defaultVal: 100,
+    explanation: `• Physical Significance:
+Temperature measures average microscopic kinetic energy of particles. Thermodynamic heat engine efficiency (Carnot cycle η = 1 - T_L / T_H) strictly requires absolute temperature in Kelvin (K).`,
+    latex: 'T_K = T_C + 273.15, \\quad T_F = T_C \\times \\frac{9}{5} + 32',
+    derivation: 'Zero Kelvin (0 K) = -273.15 °C = Absolute Zero (zero kinetic enthalpy)',
+    dimensions: '[Θ¹]',
+    siBase: 'K (Kelvin)',
+    equivalences: '0 °C = 273.15 K = 32 °F = 491.67 °R',
+  },
+  conv_angle: {
+    id: 'conv_angle',
+    name: 'Angle Converter',
+    badge: 'rad',
+    units: [
+      { label: 'deg (°)', toBase: Math.PI / 180 },
+      { label: 'rad', toBase: 1 },
+      { label: 'grad', toBase: Math.PI / 200 },
+      { label: 'arcmin (′)', toBase: Math.PI / (180 * 60) },
+      { label: 'arcsec (″)', toBase: Math.PI / (180 * 3600) },
+    ],
+    defaultFrom: 'deg (°)',
+    defaultTo: 'rad',
+    defaultVal: 45,
+    explanation: `• Physical Significance:
+Planar angle measures circular sector subtended arc length divided by radius. Radian is the natural mathematical angle unit where arc length s = r·θ and angular velocity v = r·ω.`,
+    latex: '\\theta_{rad} = \\theta_{deg} \\times \\frac{\\pi}{180}',
+    derivation: '1 complete circle = 360° = 2π radians = 400 grad',
+    dimensions: '[M⁰ · L⁰ · T⁰] (Dimensionless ratio)',
+    siBase: 'rad (radian = m/m)',
+    equivalences: '1 rad = 180° / π ≈ 57.2958° = 3,437.75 arcmin',
+  },
+  conv_speed: {
+    id: 'conv_speed',
+    name: 'Speed & Velocity Converter',
+    badge: 'L·T⁻¹',
+    units: [
+      { label: 'm/s', toBase: 1 },
+      { label: 'km/h', toBase: 1 / 3.6 },
+      { label: 'ft/s', toBase: 0.3048 },
+      { label: 'ft/min', toBase: 0.3048 / 60 },
+      { label: 'mph', toBase: 0.44704 },
+      { label: 'knots', toBase: 0.514444 },
+    ],
+    defaultFrom: 'm/s',
+    defaultTo: 'km/h',
+    defaultVal: 20,
+    explanation: `• Physical Significance:
+Velocity is the time rate of change of position. In mechanical engineering, governs fluid pipe flow Reynolds number (Re = ρvD/μ), piston speeds, and machine tool rapid traverse.`,
+    latex: 'v = \\frac{ds}{dt}',
+    derivation: '1 km/h = (1,000 m) / (3,600 s) = 1/3.6 m/s ≈ 0.2778 m/s',
+    dimensions: '[M⁰ · L¹ · T⁻¹]',
+    siBase: 'm · s⁻¹ (metre per second)',
+    equivalences: '1 m/s = 3.6 km/h = 2.23694 mph = 196.85 ft/min',
+  },
+  conv_force: {
+    id: 'conv_force',
+    name: 'Force Converter',
+    badge: 'M·L·T⁻²',
+    units: [
+      { label: 'N', toBase: 1 },
+      { label: 'kN', toBase: 1000 },
+      { label: 'MN', toBase: 1e6 },
+      { label: 'dyn', toBase: 1e-5 },
+      { label: 'kgf (kp)', toBase: 9.80665 },
+      { label: 'lbf', toBase: 4.448222 },
+    ],
+    defaultFrom: 'kN',
+    defaultTo: 'N',
+    defaultVal: 25,
+    explanation: `• Physical Significance:
+Force is an interaction that accelerates mass according to Newton's second law (F = m·a). Structural design resolves static equilibrium (ΣF = 0) and dynamic cutting tool thrust forces.`,
+    latex: 'F = m \\cdot a = \\frac{dp}{dt}',
+    derivation: '1 Newton = 1 kg accelerated at 1 m/s² = 1 kg · m · s⁻²',
+    dimensions: '[M¹ · L¹ · T⁻²]',
+    siBase: 'kg · m · s⁻² (Newton)',
+    equivalences: '1 kN = 1,000 N = 101.972 kgf = 224.809 lbf',
+  },
+  conv_power: {
+    id: 'conv_power',
+    name: 'Power Converter',
+    badge: 'M·L²·T⁻³',
+    units: [
+      { label: 'W', toBase: 1 },
+      { label: 'kW', toBase: 1000 },
+      { label: 'MW', toBase: 1e6 },
+      { label: 'HP (Metric)', toBase: 735.49875 },
+      { label: 'HP (Imperial)', toBase: 745.69987 },
+      { label: 'ft·lbf/s', toBase: 1.355818 },
+      { label: 'BTU/h', toBase: 0.293071 },
+    ],
+    defaultFrom: 'kW',
+    defaultTo: 'HP (Metric)',
+    defaultVal: 15,
+    explanation: `• Physical Significance:
+Power is the rate of performing work or transferring energy per unit time. Metric Horsepower (PS / CV) is defined as lifting 75 kg against gravity by 1 metre in 1 second (75 × 9.80665 = 735.5 W).`,
+    latex: 'P = \\frac{dW}{dt} = F \\cdot v = \\tau \\cdot \\omega',
+    derivation: '1 Watt = 1 Joule/second = 1 (N · m) / s = 1 kg · m² · s⁻³',
+    dimensions: '[M¹ · L² · T⁻³]',
+    siBase: 'kg · m² · s⁻³ (Watt = J/s)',
+    equivalences: '1 kW = 1000 W = 1.341 HP (Imperial) = 1.3596 HP (Metric)',
+  },
+  conv_energy: {
+    id: 'conv_energy',
+    name: 'Energy & Work Converter',
+    badge: 'M·L²·T⁻²',
+    units: [
+      { label: 'J', toBase: 1 },
+      { label: 'kJ', toBase: 1000 },
+      { label: 'MJ', toBase: 1e6 },
+      { label: 'cal', toBase: 4.184 },
+      { label: 'kcal', toBase: 4184 },
+      { label: 'Wh', toBase: 3600 },
+      { label: 'kWh', toBase: 3.6e6 },
+      { label: 'BTU', toBase: 1055.06 },
+      { label: 'ft·lbf', toBase: 1.355818 },
+    ],
+    defaultFrom: 'kJ',
+    defaultTo: 'kcal',
+    defaultVal: 418.4,
+    explanation: `• Physical Significance:
+Energy is the capacity to perform mechanical work or transfer heat. According to the First Law of Thermodynamics, energy is conserved across kinetic, potential, internal, and enthalpy states.`,
+    latex: 'W = \\int F \\cdot ds, \\quad Q = m \\cdot c_p \\cdot \\Delta T',
+    derivation: '1 Joule = 1 N · m = 1 (kg · m/s²) · m = 1 kg · m² · s⁻²',
+    dimensions: '[M¹ · L² · T⁻²]',
+    siBase: 'kg · m² · s⁻² (Joule)',
+    equivalences: '1 kWh = 3.6 × 10⁶ J = 3.6 MJ = 860.42 kcal = 3,412.14 BTU',
+  },
+};
+
+export const calculateConversion = (spec: ConverterConfig, val: string | number, fromUnit: string, toUnit: string): number | null => {
+  if (isBlank(val)) return null;
+  const num = toNum(val);
+
+  if (spec.id === 'conv_temp') {
+    let kelvin = num;
+    if (fromUnit === '°C') kelvin = num + 273.15;
+    else if (fromUnit === '°F') kelvin = (num - 32) * (5 / 9) + 273.15;
+    else if (fromUnit === '°R') kelvin = num * (5 / 9);
+
+    if (toUnit === '°C') return kelvin - 273.15;
+    if (toUnit === '°F') return (kelvin - 273.15) * (9 / 5) + 32;
+    if (toUnit === '°R') return kelvin * 1.8;
+    return kelvin;
+  }
+
+  const fMap = spec.units.find((u) => u.label === fromUnit);
+  const tMap = spec.units.find((u) => u.label === toUnit);
+  if (!fMap || !tMap) return null;
+
+  const baseVal = num * fMap.toBase;
+  return baseVal / tMap.toBase;
+};
+
+export const UTILITY_TOOLS: UtilityToolDef[] = [
+  {
+    id: 'density',
+    title: 'Density / Mass / Volume',
+    category: 'stock',
+    subject: 'General',
+    icon: Scale,
+    units: ['kg/m³', 'kg', 'g', 'tonne', 'lb', 'm³', 'cm³', 'mm³', 'Liters'],
+    variables: ['ρ', 'm', 'V'],
+    tags: ['density', 'mass', 'volume', 'steel', 'aluminum', 'materials'],
+  },
+  {
+    id: 'stock_weight',
+    title: 'Material Stock Weight',
+    category: 'stock',
+    subject: 'Workshop',
+    icon: Weight,
+    units: ['kg', 'kg/m', 'mm', 'm', 'g', 'N'],
+    variables: ['mass', 'density', 'volume', 'length'],
+    tags: ['stock', 'weight', 'mass', 'round bar', 'flat plate', 'pipe', 'hex'],
+  },
+  {
+    id: 'conv_press',
+    title: 'Pressure & Stress',
+    category: 'converters',
+    subject: 'General',
+    icon: ArrowRightLeft,
+    units: ['Pa', 'kPa', 'MPa', 'GPa', 'bar', 'mbar', 'psi', 'ksi', 'atm', 'mmHg', 'Torr'],
+    tags: ['pressure', 'stress', 'bar', 'psi', 'pascal'],
+  },
+  {
+    id: 'conv_area',
+    title: 'Area Converter',
+    category: 'converters',
+    subject: 'General',
+    icon: ArrowRightLeft,
+    units: ['mm²', 'cm²', 'm²', 'in²', 'ft²', 'acres', 'hectares'],
+    tags: ['area', 'square meter', 'surface area'],
+  },
+  {
+    id: 'conv_vol',
+    title: 'Volume Converter',
+    category: 'converters',
+    subject: 'General',
+    icon: ArrowRightLeft,
+    units: ['mm³', 'cm³', 'm³', 'Liters', 'mL', 'gal', 'in³', 'ft³'],
+    tags: ['volume', 'liter', 'cubic meter', 'capacity'],
+  },
+  {
+    id: 'conv_mass',
+    title: 'Weight & Mass',
+    category: 'converters',
+    subject: 'General',
+    icon: ArrowRightLeft,
+    units: ['g', 'kg', 'tonne', 'lb', 'oz', 'mg'],
+    tags: ['weight', 'mass', 'kilogram', 'pound', 'gram'],
+  },
+  {
+    id: 'conv_force',
+    title: 'Force Converter',
+    category: 'converters',
+    subject: 'General',
+    icon: ArrowRightLeft,
+    units: ['N', 'kN', 'MN', 'kgf', 'lbf', 'dyne'],
+    tags: ['force', 'newton', 'kilonewton', 'pound force'],
+  },
+  {
+    id: 'conv_speed',
+    title: 'Speed & Velocity',
+    category: 'converters',
+    subject: 'General',
+    icon: ArrowRightLeft,
+    units: ['m/s', 'km/h', 'ft/s', 'mph', 'knot'],
+    tags: ['speed', 'velocity', 'meters per second'],
+  },
+  {
+    id: 'conv_power',
+    title: 'Power Converter',
+    category: 'converters',
+    subject: 'General',
+    icon: ArrowRightLeft,
+    units: ['W', 'kW', 'MW', 'HP', 'BTU/h'],
+    tags: ['power', 'watt', 'kilowatt', 'horsepower'],
+  },
+  {
+    id: 'conv_energy',
+    title: 'Energy & Work',
+    category: 'converters',
+    subject: 'General',
+    icon: ArrowRightLeft,
+    units: ['J', 'kJ', 'MJ', 'cal', 'kcal', 'kWh', 'BTU', 'eV'],
+    tags: ['energy', 'work', 'joule', 'calorie', 'kilowatt-hour'],
+  },
+  {
+    id: 'conv_temp',
+    title: 'Temperature',
+    category: 'converters',
+    subject: 'General',
+    icon: ArrowRightLeft,
+    units: ['°C', '°F', 'K', '°R'],
+    tags: ['temperature', 'celsius', 'fahrenheit', 'kelvin'],
+  },
+  {
+    id: 'conv_angle',
+    title: 'Angle Converter',
+    category: 'converters',
+    subject: 'General',
+    icon: ArrowRightLeft,
+    units: ['deg', 'rad', 'grad', 'arcmin', 'arcsec'],
+    tags: ['angle', 'degree', 'radian'],
+  },
+];
+
 export const Utilities: React.FC = () => {
-  const [activeCategory, setActiveCategory] = useState<'all' | 'stock' | 'converters'>('all');
+  const [activeCategory, setActiveCategory] = useState<UtilityCategory>('all');
   const [activeToolId, setActiveToolId] = useState<string>('density');
 
   // ====================================================
@@ -125,268 +546,6 @@ export const Utilities: React.FC = () => {
   // ====================================================
   // 3-12. Dedicated Unit Converters (10 Types)
   // ====================================================
-  type ConverterConfig = {
-    id: string;
-    name: string;
-    badge: string;
-    units: { label: string; toBase: number }[];
-    defaultFrom: string;
-    defaultTo: string;
-    defaultVal: string | number;
-    explanation: string;
-    latex: string;
-    derivation: string;
-    dimensions: string;
-    siBase: string;
-    equivalences: string;
-  };
-
-  const CONVERTER_SPECS: Record<string, ConverterConfig> = {
-    conv_press: {
-      id: 'conv_press',
-      name: 'Pressure & Stress Converter',
-      badge: 'M·L⁻¹·T⁻²',
-      units: [
-        { label: 'Pa (N/m²)', toBase: 1 },
-        { label: 'kPa', toBase: 1000 },
-        { label: 'MPa (N/mm²)', toBase: 1e6 },
-        { label: 'GPa', toBase: 1e9 },
-        { label: 'bar', toBase: 1e5 },
-        { label: 'mbar', toBase: 100 },
-        { label: 'psi (lbf/in²)', toBase: 6894.76 },
-        { label: 'ksi', toBase: 6.89476e6 },
-        { label: 'atm', toBase: 101325 },
-        { label: 'mmHg (Torr)', toBase: 133.322 },
-      ],
-      defaultFrom: 'MPa (N/mm²)',
-      defaultTo: 'bar',
-      defaultVal: 200,
-      explanation: `• Physical Significance:
-Pressure and stress describe normal force distributed per unit area. In fluid mechanics, pressure acts isotropically (Pascal's law). In solid mechanics, stress tensors resolve into normal (tensile/compressive) and shear components.
-
-• Variable Notation:
-- p = F / A: Pressure / Stress.
-- F: Normal force (N).
-- A: Surface area (m²).`,
-      latex: 'p = \\frac{F}{A}',
-      derivation: '1 Pa = 1 N/m² = (1 kg · m/s²) / m² = 1 kg · m⁻¹ · s⁻²',
-      dimensions: '[M¹ · L⁻¹ · T⁻²]',
-      siBase: 'kg · m⁻¹ · s⁻² (Pascal)',
-      equivalences: '1 MPa = 10 bar = 145.038 psi = 10⁶ Pa = 1 N/mm²',
-    },
-    conv_area: {
-      id: 'conv_area',
-      name: 'Cross-Section & Surface Area Converter',
-      badge: 'L²',
-      units: [
-        { label: 'mm²', toBase: 1e-6 },
-        { label: 'cm²', toBase: 1e-4 },
-        { label: 'm²', toBase: 1 },
-        { label: 'in²', toBase: 0.00064516 },
-        { label: 'ft²', toBase: 0.092903 },
-        { label: 'acres', toBase: 4046.86 },
-        { label: 'hectares', toBase: 10000 },
-      ],
-      defaultFrom: 'cm²',
-      defaultTo: 'mm²',
-      defaultVal: 25,
-      explanation: `• Physical Significance:
-Area quantifies 2D geometric surface extension. Essential in calculating load-bearing capacity (σ = P/A), heat transfer surface (Q = h·A·ΔT), and hydraulic cylinder bore force (F = p·A).`,
-      latex: 'A = \\int \\int dx \\, dy',
-      derivation: '1 m² = (100 cm)² = 10,000 cm² = (1,000 mm)² = 10⁶ mm²',
-      dimensions: '[M⁰ · L² · T⁰]',
-      siBase: 'm² (square metre)',
-      equivalences: '1 m² = 10⁶ mm² = 1,550 in² = 10.7639 ft²',
-    },
-    conv_vol: {
-      id: 'conv_vol',
-      name: 'Volume & Capacity Converter',
-      badge: 'L³',
-      units: [
-        { label: 'mm³', toBase: 1e-9 },
-        { label: 'cm³ (cc)', toBase: 1e-6 },
-        { label: 'm³', toBase: 1 },
-        { label: 'Liters', toBase: 1e-3 },
-        { label: 'mL', toBase: 1e-6 },
-        { label: 'in³', toBase: 1.6387e-5 },
-        { label: 'ft³', toBase: 0.0283168 },
-        { label: 'gal (US)', toBase: 0.00378541 },
-      ],
-      defaultFrom: 'Liters',
-      defaultTo: 'cm³ (cc)',
-      defaultVal: 5,
-      explanation: `• Physical Significance:
-Volume measures 3-dimensional spatial capacity. Governs engine cylinder displacement (V_d = (π/4)·D²·L_stroke), reservoir hydraulic fluid capacity, and hydrostatic buoyancy.`,
-      latex: 'V = \\int \\int \\int dx \\, dy \\, dz',
-      derivation: '1 m³ = (10 dm)³ = 1,000 dm³ = 1,000 Liters = 10⁶ cm³',
-      dimensions: '[M⁰ · L³ · T⁰]',
-      siBase: 'm³ (cubic metre)',
-      equivalences: '1 m³ = 1,000 Liters = 61,023.7 in³ = 264.172 gal (US)',
-    },
-    conv_mass: {
-      id: 'conv_mass',
-      name: 'Weight & Mass Converter',
-      badge: 'M',
-      units: [
-        { label: 'mg', toBase: 1e-6 },
-        { label: 'g', toBase: 1e-3 },
-        { label: 'kg', toBase: 1 },
-        { label: 'tonne (MT)', toBase: 1000 },
-        { label: 'lb', toBase: 0.45359237 },
-        { label: 'oz', toBase: 0.0283495 },
-        { label: 'ton (US)', toBase: 907.185 },
-      ],
-      defaultFrom: 'kg',
-      defaultTo: 'lb',
-      defaultVal: 50,
-      explanation: `• Physical Significance:
-Mass is an intrinsic measure of matter and inertia (resistance to acceleration: F = m·a). Distinct from gravitational weight, which varies with local gravitational field strength (W = m·g).`,
-      latex: 'm = \\int_V \\rho \\, dV',
-      derivation: '1 kg = 1,000 g = 10⁶ mg = 0.001 Metric Tonne',
-      dimensions: '[M¹ · L⁰ · T⁰]',
-      siBase: 'kg (kilogram)',
-      equivalences: '1 kg = 2.20462 lb = 35.274 oz = 0.001 tonne',
-    },
-    conv_temp: {
-      id: 'conv_temp',
-      name: 'Temperature Converter',
-      badge: 'Θ',
-      units: [
-        { label: '°C', toBase: 1 },
-        { label: '°F', toBase: 1 },
-        { label: 'K', toBase: 1 },
-        { label: '°R', toBase: 1 },
-      ],
-      defaultFrom: '°C',
-      defaultTo: '°F',
-      defaultVal: 100,
-      explanation: `• Physical Significance:
-Temperature measures average microscopic kinetic energy of particles. Thermodynamic heat engine efficiency (Carnot cycle η = 1 - T_L / T_H) strictly requires absolute temperature in Kelvin (K).`,
-      latex: 'T_K = T_C + 273.15, \\quad T_F = T_C \\times \\frac{9}{5} + 32',
-      derivation: 'Zero Kelvin (0 K) = -273.15 °C = Absolute Zero (zero kinetic enthalpy)',
-      dimensions: '[Θ¹]',
-      siBase: 'K (Kelvin)',
-      equivalences: '0 °C = 273.15 K = 32 °F = 491.67 °R',
-    },
-    conv_angle: {
-      id: 'conv_angle',
-      name: 'Angle Converter',
-      badge: 'rad',
-      units: [
-        { label: 'deg (°)', toBase: Math.PI / 180 },
-        { label: 'rad', toBase: 1 },
-        { label: 'grad', toBase: Math.PI / 200 },
-        { label: 'arcmin (′)', toBase: Math.PI / (180 * 60) },
-        { label: 'arcsec (″)', toBase: Math.PI / (180 * 3600) },
-      ],
-      defaultFrom: 'deg (°)',
-      defaultTo: 'rad',
-      defaultVal: 45,
-      explanation: `• Physical Significance:
-Planar angle measures circular sector subtended arc length divided by radius. Radian is the natural mathematical angle unit where arc length s = r·θ and angular velocity v = r·ω.`,
-      latex: '\\theta_{rad} = \\theta_{deg} \\times \\frac{\\pi}{180}',
-      derivation: '1 complete circle = 360° = 2π radians = 400 grad',
-      dimensions: '[M⁰ · L⁰ · T⁰] (Dimensionless ratio)',
-      siBase: 'rad (radian = m/m)',
-      equivalences: '1 rad = 180° / π ≈ 57.2958° = 3,437.75 arcmin',
-    },
-    conv_speed: {
-      id: 'conv_speed',
-      name: 'Speed & Velocity Converter',
-      badge: 'L·T⁻¹',
-      units: [
-        { label: 'm/s', toBase: 1 },
-        { label: 'km/h', toBase: 1 / 3.6 },
-        { label: 'ft/s', toBase: 0.3048 },
-        { label: 'ft/min', toBase: 0.3048 / 60 },
-        { label: 'mph', toBase: 0.44704 },
-        { label: 'knots', toBase: 0.514444 },
-      ],
-      defaultFrom: 'm/s',
-      defaultTo: 'km/h',
-      defaultVal: 20,
-      explanation: `• Physical Significance:
-Velocity is the time rate of change of position. In mechanical engineering, governs fluid pipe flow Reynolds number (Re = ρvD/μ), piston speeds, and machine tool rapid traverse.`,
-      latex: 'v = \\frac{ds}{dt}',
-      derivation: '1 km/h = (1,000 m) / (3,600 s) = 1/3.6 m/s ≈ 0.2778 m/s',
-      dimensions: '[M⁰ · L¹ · T⁻¹]',
-      siBase: 'm · s⁻¹ (metre per second)',
-      equivalences: '1 m/s = 3.6 km/h = 2.23694 mph = 196.85 ft/min',
-    },
-    conv_force: {
-      id: 'conv_force',
-      name: 'Force Converter',
-      badge: 'M·L·T⁻²',
-      units: [
-        { label: 'N', toBase: 1 },
-        { label: 'kN', toBase: 1000 },
-        { label: 'MN', toBase: 1e6 },
-        { label: 'dyn', toBase: 1e-5 },
-        { label: 'kgf (kp)', toBase: 9.80665 },
-        { label: 'lbf', toBase: 4.448222 },
-      ],
-      defaultFrom: 'kN',
-      defaultTo: 'N',
-      defaultVal: 25,
-      explanation: `• Physical Significance:
-Force is an interaction that accelerates mass according to Newton's second law (F = m·a). Structural design resolves static equilibrium (ΣF = 0) and dynamic cutting tool thrust forces.`,
-      latex: 'F = m \\cdot a = \\frac{dp}{dt}',
-      derivation: '1 Newton = 1 kg accelerated at 1 m/s² = 1 kg · m · s⁻²',
-      dimensions: '[M¹ · L¹ · T⁻²]',
-      siBase: 'kg · m · s⁻² (Newton)',
-      equivalences: '1 kN = 1,000 N = 101.972 kgf = 224.809 lbf',
-    },
-    conv_power: {
-      id: 'conv_power',
-      name: 'Power Converter',
-      badge: 'M·L²·T⁻³',
-      units: [
-        { label: 'W', toBase: 1 },
-        { label: 'kW', toBase: 1000 },
-        { label: 'MW', toBase: 1e6 },
-        { label: 'HP (Metric)', toBase: 735.49875 },
-        { label: 'HP (Imperial)', toBase: 745.69987 },
-        { label: 'ft·lbf/s', toBase: 1.355818 },
-        { label: 'BTU/h', toBase: 0.293071 },
-      ],
-      defaultFrom: 'kW',
-      defaultTo: 'HP (Metric)',
-      defaultVal: 15,
-      explanation: `• Physical Significance:
-Power is the rate of performing work or transferring energy per unit time. Metric Horsepower (PS / CV) is defined as lifting 75 kg against gravity by 1 metre in 1 second (75 × 9.80665 = 735.5 W).`,
-      latex: 'P = \\frac{dW}{dt} = F \\cdot v = \\tau \\cdot \\omega',
-      derivation: '1 Watt = 1 Joule/second = 1 (N · m) / s = 1 kg · m² · s⁻³',
-      dimensions: '[M¹ · L² · T⁻³]',
-      siBase: 'kg · m² · s⁻³ (Watt = J/s)',
-      equivalences: '1 kW = 1000 W = 1.341 HP (Imperial) = 1.3596 HP (Metric)',
-    },
-    conv_energy: {
-      id: 'conv_energy',
-      name: 'Energy & Work Converter',
-      badge: 'M·L²·T⁻²',
-      units: [
-        { label: 'J', toBase: 1 },
-        { label: 'kJ', toBase: 1000 },
-        { label: 'MJ', toBase: 1e6 },
-        { label: 'cal', toBase: 4.184 },
-        { label: 'kcal', toBase: 4184 },
-        { label: 'Wh', toBase: 3600 },
-        { label: 'kWh', toBase: 3.6e6 },
-        { label: 'BTU', toBase: 1055.06 },
-        { label: 'ft·lbf', toBase: 1.355818 },
-      ],
-      defaultFrom: 'kJ',
-      defaultTo: 'kcal',
-      defaultVal: 418.4,
-      explanation: `• Physical Significance:
-Energy is the capacity to perform mechanical work or transfer heat. According to the First Law of Thermodynamics, energy is conserved across kinetic, potential, internal, and enthalpy states.`,
-      latex: 'W = \\int F \\cdot ds, \\quad Q = m \\cdot c_p \\cdot \\Delta T',
-      derivation: '1 Joule = 1 N · m = 1 (kg · m/s²) · m = 1 kg · m² · s⁻²',
-      dimensions: '[M¹ · L² · T⁻²]',
-      siBase: 'kg · m² · s⁻² (Joule)',
-      equivalences: '1 kWh = 3.6 × 10⁶ J = 3.6 MJ = 860.42 kcal = 3,412.14 BTU',
-    },
-  };
 
   const [convStates, setConvStates] = useState<Record<string, { val: string | number; from: string; to: string }>>(() => {
     const init: Record<string, { val: string | number; from: string; to: string }> = {};
@@ -416,69 +575,31 @@ Energy is the capacity to perform mechanical work or transfer heat. According to
     }));
   };
 
-  const calculateConversion = (spec: ConverterConfig, val: string | number, fromUnit: string, toUnit: string): number | null => {
-    if (isBlank(val)) return null;
-    const num = toNum(val);
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
-    if (spec.id === 'conv_temp') {
-      let kelvin = num;
-      if (fromUnit === '°C') kelvin = num + 273.15;
-      else if (fromUnit === '°F') kelvin = (num - 32) * (5 / 9) + 273.15;
-      else if (fromUnit === '°R') kelvin = num * (5 / 9);
-
-      if (toUnit === '°C') return kelvin - 273.15;
-      if (toUnit === '°F') return (kelvin - 273.15) * (9 / 5) + 32;
-      if (toUnit === '°R') return kelvin * 1.8;
-      return kelvin;
-    }
-
-    const fMap = spec.units.find((u) => u.label === fromUnit);
-    const tMap = spec.units.find((u) => u.label === toUnit);
-    if (!fMap || !tMap) return null;
-
-    const baseVal = num * fMap.toBase;
-    return baseVal / tMap.toBase;
-  };
-
-  // Tools list for navigation chips
-  const tools = [
-    { id: 'density', title: 'Density / Mass / Volume', category: 'stock', icon: Scale },
-    { id: 'stock_weight', title: 'Material Stock Weight', category: 'stock', icon: Weight },
-    { id: 'conv_press', title: 'Pressure & Stress', category: 'converters', icon: ArrowRightLeft },
-    { id: 'conv_area', title: 'Area Converter', category: 'converters', icon: ArrowRightLeft },
-    { id: 'conv_vol', title: 'Volume Converter', category: 'converters', icon: ArrowRightLeft },
-    { id: 'conv_mass', title: 'Weight & Mass', category: 'converters', icon: ArrowRightLeft },
-    { id: 'conv_force', title: 'Force Converter', category: 'converters', icon: ArrowRightLeft },
-    { id: 'conv_speed', title: 'Speed & Velocity', category: 'converters', icon: ArrowRightLeft },
-    { id: 'conv_power', title: 'Power Converter', category: 'converters', icon: ArrowRightLeft },
-    { id: 'conv_energy', title: 'Energy & Work', category: 'converters', icon: ArrowRightLeft },
-    { id: 'conv_temp', title: 'Temperature', category: 'converters', icon: ArrowRightLeft },
-    { id: 'conv_angle', title: 'Angle Converter', category: 'converters', icon: ArrowRightLeft },
-  ];
-
-  const filteredTools = tools.filter(
-    (t) => activeCategory === 'all' || t.category === activeCategory
-  );
+  const filteredTools = useMemo(() => {
+    return UTILITY_TOOLS.filter((t) => {
+      const categoryMatch = activeCategory === 'all' || t.category === activeCategory;
+      if (!categoryMatch) return false;
+      return matchesMultiField(t, searchQuery);
+    });
+  }, [activeCategory, searchQuery]);
 
   return (
     <div className="max-w-5xl mx-auto px-3 sm:px-6 py-4 space-y-4">
-      {/* Category Tabs */}
-      <div className="flex items-center justify-between gap-2 overflow-x-auto pb-1">
-        <div className="flex items-center gap-1.5 p-1 bg-slate-100 dark:bg-[#1e293b] rounded-xl border border-slate-200 dark:border-slate-700/60 shrink-0">
-          {[
-            { id: 'all', label: 'All Utilities' },
-            { id: 'stock', label: 'Physical & Stock' },
-            { id: 'converters', label: '10 Unit Converters' },
-          ].map((cat) => (
+      {/* Category Tabs & Multi-Field Search */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+        <div className="flex items-center gap-1.5 p-1 bg-slate-100 dark:bg-[#1e293b] rounded-xl border border-slate-200 dark:border-slate-700/60 overflow-x-auto shrink-0">
+          {CATEGORY_TABS.map((cat) => (
             <button
               key={cat.id}
               type="button"
               onClick={() => {
-                setActiveCategory(cat.id as any);
-                const first = tools.find((t) => cat.id === 'all' || t.category === cat.id);
+                setActiveCategory(cat.id);
+                const first = UTILITY_TOOLS.find((t) => cat.id === 'all' || t.category === cat.id);
                 if (first) setActiveToolId(first.id);
               }}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
                 activeCategory === cat.id
                   ? 'bg-white dark:bg-slate-900 text-mech-blue dark:text-blue-400 shadow-xs'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -489,9 +610,31 @@ Energy is the capacity to perform mechanical work or transfer heat. According to
           ))}
         </div>
 
-        <span className="text-xs font-mono font-bold text-slate-500 shrink-0">
-          {filteredTools.length} Utilities
-        </span>
+        <div className="flex items-center gap-2">
+          <div className="relative flex-1 sm:w-56 flex items-center">
+            <Search className="w-3.5 h-3.5 absolute left-2.5 text-slate-400 pointer-events-none" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search utilities, units..."
+              className="w-full py-1.5 pl-8 pr-7 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1e293b] text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-mech-blue"
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery('')}
+                aria-label="Clear search"
+                className="absolute right-2 text-slate-400 hover:text-slate-600 dark:hover:text-white cursor-pointer"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
+          </div>
+          <span className="text-xs font-mono font-bold text-slate-500 shrink-0">
+            {filteredTools.length} Utilities
+          </span>
+        </div>
       </div>
 
       {/* Tool Selector Chips */}

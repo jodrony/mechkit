@@ -4,6 +4,7 @@ import {
   type BoilerVivaExperiment,
   type ComponentQuestion
 } from '../data/vivaThermalData';
+import { matchesMultiField } from '../utils/searchFilter';
 import {
   TestTube2,
   GraduationCap,
@@ -345,6 +346,22 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
   const [activeComponentIndex, setActiveComponentIndex] = useState<number>(0);
   const [isLightboxOpen, setIsLightboxOpen] = useState<boolean>(false);
 
+  // Close lightbox on Escape key and prevent background scroll
+  useEffect(() => {
+    if (!isLightboxOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsLightboxOpen(false);
+      }
+    };
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isLightboxOpen]);
+
   useEffect(() => {
     if (initialMode) {
       setVivaMode(initialMode);
@@ -366,22 +383,26 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
     );
   }, [selectedBoilerId]);
 
-  const currentComponent: ComponentQuestion = useMemo(() => {
-    const list = currentBoiler.components;
+  const currentComponent: ComponentQuestion | null = useMemo(() => {
+    const list = currentBoiler?.components;
+    if (!list || list.length === 0) return null;
     if (activeComponentIndex >= list.length) return list[0];
     return list[activeComponentIndex];
   }, [currentBoiler, activeComponentIndex]);
 
   const handleNextComponent = () => {
+    if (!currentBoiler?.components || currentBoiler.components.length === 0) return;
     setActiveComponentIndex((prev) => (prev + 1) % currentBoiler.components.length);
   };
 
   const handlePrevComponent = () => {
+    if (!currentBoiler?.components || currentBoiler.components.length === 0) return;
     setActiveComponentIndex((prev) => (prev - 1 + currentBoiler.components.length) % currentBoiler.components.length);
   };
 
   const handleRandomComponent = () => {
-    const total = currentBoiler.components.length;
+    const total = currentBoiler?.components?.length || 0;
+    if (total === 0) return;
     let nextIdx = Math.floor(Math.random() * total);
     if (nextIdx === activeComponentIndex && total > 1) {
       nextIdx = (nextIdx + 1) % total;
@@ -408,13 +429,7 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
   const filteredTheoryQuestions = useMemo(() => {
     const list = semesterVivaData[theorySubject] || [];
     if (!theorySearch.trim()) return list;
-    const q = theorySearch.toLowerCase();
-    return list.filter(
-      (item) =>
-        item.question.toLowerCase().includes(q) ||
-        item.answer.toLowerCase().includes(q) ||
-        item.topic.toLowerCase().includes(q)
-    );
+    return list.filter((item) => matchesMultiField(item, theorySearch));
   }, [theorySubject, theorySearch]);
 
   const toggleTheoryReveal = (id: number) => {
@@ -597,7 +612,7 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
                 className="w-full py-2 px-3 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-sm text-slate-800 dark:text-slate-200 focus:outline-none focus:border-orange-500 transition-colors cursor-pointer"
               >
                 {currentBoiler.components.map((comp, idx) => (
-                  <option key={idx} value={idx} className="bg-white dark:bg-neutral-900 text-slate-900 dark:text-slate-100">
+                  <option key={comp.partName} value={idx} className="bg-white dark:bg-neutral-900 text-slate-900 dark:text-slate-100">
                     {String(idx + 1).padStart(2, '0')}. {comp.partName} ({comp.category})
                   </option>
                 ))}
@@ -605,61 +620,69 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
             </div>
 
             {/* [3] Component Answer Card */}
-            <div className="rounded-2xl border border-neutral-200 dark:border-neutral-800/80 bg-white dark:bg-neutral-900/60 backdrop-blur-sm p-3.5 sm:p-4 shadow-xs space-y-3">
-              {/* Header row: Component Name + Category Tag */}
-              <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-neutral-100 dark:border-neutral-800">
-                <h3 className="font-semibold text-base text-slate-900 dark:text-white leading-tight">
-                  {currentComponent.partName}
-                </h3>
-                <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-500/20 shrink-0">
-                  {currentComponent.category === 'Mounting'
-                    ? 'Boiler Mounting'
-                    : currentComponent.category === 'Accessory'
-                    ? 'Boiler Accessory'
-                    : currentComponent.category}
-                </span>
-              </div>
+            {currentComponent ? (
+              <div className="rounded-2xl border border-neutral-200 dark:border-neutral-800/80 bg-white dark:bg-neutral-900/60 backdrop-blur-sm p-3.5 sm:p-4 shadow-xs space-y-3">
+                {/* Header row: Component Name + Category Tag */}
+                <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-neutral-100 dark:border-neutral-800">
+                  <h3 className="font-semibold text-base text-slate-900 dark:text-white leading-tight">
+                    {currentComponent.partName}
+                  </h3>
+                  <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-500/20 shrink-0">
+                    {currentComponent.category === 'Mounting'
+                      ? 'Boiler Mounting'
+                      : currentComponent.category === 'Accessory'
+                      ? 'Boiler Accessory'
+                      : currentComponent.category}
+                  </span>
+                </div>
 
-              {/* Body: Direct function/answer without quotes or artificial roleplay */}
-              <div className="py-1">
-                <p className="text-xs sm:text-sm text-slate-800 dark:text-slate-200 leading-relaxed font-normal">
-                  {currentComponent.examinerAnswer || currentComponent.answer}
+                {/* Body: Direct function/answer without quotes or artificial roleplay */}
+                <div className="py-1">
+                  <p className="text-xs sm:text-sm text-slate-800 dark:text-slate-200 leading-relaxed font-normal">
+                    {currentComponent.examinerAnswer || currentComponent.answer}
+                  </p>
+                </div>
+
+                {/* Compact bottom navigation: [< Prev] [Random] [Next >] */}
+                <div className="grid grid-cols-3 gap-2 pt-2 border-t border-neutral-100 dark:border-neutral-800">
+                  <button
+                    type="button"
+                    id="btn-prev-part"
+                    onClick={handlePrevComponent}
+                    className="py-1.5 px-3 rounded-lg text-xs font-semibold border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-slate-700 dark:text-slate-200 hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors flex items-center justify-center gap-1 cursor-pointer active:scale-95"
+                  >
+                    <ChevronLeft className="w-3.5 h-3.5 shrink-0" />
+                    <span>Prev</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    id="btn-random-part"
+                    onClick={handleRandomComponent}
+                    className="py-1.5 px-3 rounded-lg text-xs font-semibold bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-slate-700 dark:text-slate-200 border border-neutral-200/60 dark:border-neutral-700/60 transition-colors flex items-center justify-center gap-1 cursor-pointer active:scale-95"
+                  >
+                    <Shuffle className="w-3 h-3 shrink-0" />
+                    <span>Random</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    id="btn-next-part"
+                    onClick={handleNextComponent}
+                    className="py-1.5 px-3 rounded-lg text-xs font-semibold bg-orange-500 hover:bg-orange-600 text-white transition-all shadow-2xs flex items-center justify-center gap-1 cursor-pointer active:scale-95"
+                  >
+                    <span>Next</span>
+                    <ChevronRight className="w-3.5 h-3.5 shrink-0" />
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="rounded-2xl border border-neutral-200 dark:border-neutral-800/80 bg-white dark:bg-neutral-900/60 backdrop-blur-sm p-6 shadow-xs text-center">
+                <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
+                  No component data for this experiment
                 </p>
               </div>
-
-              {/* Compact bottom navigation: [< Prev] [Random] [Next >] */}
-              <div className="grid grid-cols-3 gap-2 pt-2 border-t border-neutral-100 dark:border-neutral-800">
-                <button
-                  type="button"
-                  id="btn-prev-part"
-                  onClick={handlePrevComponent}
-                  className="py-1.5 px-3 rounded-lg text-xs font-semibold border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-slate-700 dark:text-slate-200 hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors flex items-center justify-center gap-1 cursor-pointer active:scale-95"
-                >
-                  <ChevronLeft className="w-3.5 h-3.5 shrink-0" />
-                  <span>Prev</span>
-                </button>
-
-                <button
-                  type="button"
-                  id="btn-random-part"
-                  onClick={handleRandomComponent}
-                  className="py-1.5 px-3 rounded-lg text-xs font-semibold bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-slate-700 dark:text-slate-200 border border-neutral-200/60 dark:border-neutral-700/60 transition-colors flex items-center justify-center gap-1 cursor-pointer active:scale-95"
-                >
-                  <Shuffle className="w-3 h-3 shrink-0" />
-                  <span>Random</span>
-                </button>
-
-                <button
-                  type="button"
-                  id="btn-next-part"
-                  onClick={handleNextComponent}
-                  className="py-1.5 px-3 rounded-lg text-xs font-semibold bg-orange-500 hover:bg-orange-600 text-white transition-all shadow-2xs flex items-center justify-center gap-1 cursor-pointer active:scale-95"
-                >
-                  <span>Next</span>
-                  <ChevronRight className="w-3.5 h-3.5 shrink-0" />
-                </button>
-              </div>
-            </div>
+            )}
 
             {/* [4] Quick Component Selector (Bottom Ribbon) */}
             <div className="pt-1">
@@ -668,7 +691,7 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
                   const isSelected = activeComponentIndex === idx;
                   return (
                     <button
-                      key={idx}
+                      key={comp.partName}
                       type="button"
                       id={`btn-component-pill-${idx}`}
                       onClick={() => setActiveComponentIndex(idx)}
@@ -707,6 +730,7 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
                   <button
                     type="button"
                     onClick={() => setIsLightboxOpen(false)}
+                    aria-label="Close diagram"
                     className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors cursor-pointer"
                   >
                     <X className="w-5 h-5" />

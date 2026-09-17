@@ -193,19 +193,20 @@ export const Home: React.FC<HomeProps> = ({ onNavigate, onOpenCreator, onShare, 
         </div>
 
         {/* Instant Search Bar */}
-        <div
+        <button
           id="btn-hero-search"
+          type="button"
           onClick={onOpenSearch}
-          className="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl bg-slate-100/90 dark:bg-neutral-800/80 border border-neutral-200 dark:border-neutral-700/80 hover:border-orange-500/50 text-slate-400 dark:text-neutral-400 text-xs sm:text-sm cursor-pointer transition-colors shadow-2xs group"
+          className="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl bg-slate-100/90 dark:bg-neutral-800/80 border border-neutral-200 dark:border-neutral-700/80 hover:border-orange-500/50 text-slate-400 dark:text-neutral-400 text-xs sm:text-sm cursor-pointer transition-colors shadow-2xs group text-left"
         >
-          <Search className="w-4 h-4 text-slate-400 group-hover:text-orange-500 transition-colors shrink-0" />
+          <Search aria-hidden="true" className="w-4 h-4 text-slate-400 group-hover:text-orange-500 transition-colors shrink-0" />
           <span className="flex-1 font-medium text-slate-500 dark:text-neutral-400 truncate">
             Search PYQs, lab manuals, formulas, calculators...
           </span>
           <kbd className="hidden sm:inline text-[10px] font-mono px-1.5 py-0.5 rounded bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 text-slate-500">
             ⌘K
           </kbd>
-        </div>
+        </button>
       </div>
 
       {/* 2. Official Academic Countdown & Milestones Card */}

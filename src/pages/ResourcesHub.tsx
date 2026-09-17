@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { useToast } from '../components/Toast';
 import { isPdfAvailable } from '../utils/pdfRegistry';
+import { matchesMultiField } from '../utils/searchFilter';
 
 interface PYQSession {
   sessionLabel: string;
@@ -46,14 +47,8 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   const matchesSearch = useCallback(
-    (item: { year?: number | string; session?: string; title?: string; filename?: string }) => {
-      if (!searchQuery.trim()) return true;
-      const q = searchQuery.toLowerCase().trim();
-      const titleMatch = item.title?.toLowerCase().includes(q);
-      const yearMatch = String(item.year || '').toLowerCase().includes(q);
-      const sessionMatch = item.session?.toLowerCase().includes(q);
-      const fileMatch = item.filename?.toLowerCase().includes(q);
-      return Boolean(titleMatch || yearMatch || sessionMatch || fileMatch);
+    (item: Parameters<typeof matchesMultiField>[0]) => {
+      return matchesMultiField(item, searchQuery);
     },
     [searchQuery]
   );
@@ -168,26 +163,34 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
       const masterFilename = sub.masterArchiveUrl.split('/').pop() || '';
       const subjectTitleMatches =
         matchesSearch({
+          ...sub,
           title: sub.title,
+          name: sub.shortTitle,
           filename: masterFilename,
-        }) ||
-        matchesSearch({
-          title: sub.shortTitle,
-          filename: masterFilename,
-        }) ||
-        matchesSearch({
-          title: sub.code,
-          filename: masterFilename,
+          masterArchiveUrl: sub.masterArchiveUrl,
+          subject: sub.title,
+          category: sub.shortTitle,
+          code: sub.code,
+          tags: [sub.code, sub.shortTitle, sub.title],
         });
 
       const matchingSessions = sub.sessions?.filter((sess) => {
-        const year = sess.sessionLabel.match(/\d{4}/)?.[0] || '';
+        const yearMatch = sess.sessionLabel.match(/\d{4}/)?.[0] || '';
+        const effectiveYear = sess.year !== undefined && sess.year !== null ? sess.year.toString() : yearMatch;
         const filename = sess.fileUrl.split('/').pop() || '';
         return matchesSearch({
-          year: sess.year || year,
+          ...sess,
+          year: effectiveYear,
           session: sess.session || sess.sessionLabel,
+          sessionLabel: sess.sessionLabel,
           title: sess.title || `${sub.title} ${sess.sessionLabel}`,
+          name: `${sub.shortTitle} ${sess.sessionLabel}`,
           filename: sess.filename || filename,
+          fileUrl: sess.fileUrl,
+          subject: sub.title,
+          category: sub.shortTitle,
+          code: sub.code,
+          tags: [sub.code, sub.shortTitle, sub.title, sess.sessionLabel, effectiveYear],
         });
       });
 

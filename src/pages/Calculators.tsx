@@ -1,8 +1,131 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { CalculatorShell } from '../components/CalculatorShell';
-import { ArrowRightLeft, Copy, Check, RotateCcw } from 'lucide-react';
+import { ArrowRightLeft, Copy, Check, RotateCcw, Search, X } from 'lucide-react';
+import { matchesMultiField } from '../utils/searchFilter';
 
-const TOOL_MAP: Record<string, { toolId: string; category: 'all' | 'workshop' | 'som' | 'utilities' }> = {
+export type CalculatorCategory = 'all' | 'workshop' | 'som' | 'utilities';
+
+export interface CalculatorToolDef {
+  id: string;
+  title: string;
+  category: 'workshop' | 'som' | 'utilities';
+  formula: string;
+  units?: string[];
+  variables?: string[];
+  tags?: string[];
+  subject?: string;
+}
+
+const CATEGORY_TABS: { id: CalculatorCategory; label: string }[] = [
+  { id: 'all', label: 'All' },
+  { id: 'workshop', label: 'Workshop' },
+  { id: 'som', label: 'SOM' },
+  { id: 'utilities', label: 'Utilities' },
+];
+
+const STANDARD_LATHE_RPMS = [45, 71, 112, 160, 224, 315, 450, 710, 1000, 1400, 2000];
+
+const CONVERSION_FACTORS: Record<string, Record<string, number>> = {
+  length: { mm: 0.001, cm: 0.01, m: 1, inch: 0.0254, ft: 0.3048 },
+  pressure: { Pa: 1, kPa: 1000, 'MPa (N/mm²)': 1e6, GPa: 1e9, bar: 1e5, psi: 6894.76 },
+  force: { N: 1, kN: 1000, kgf: 9.80665, lbf: 4.44822 },
+  torque: { 'N·m': 1, 'kN·m': 1000, 'N·mm': 0.001, 'lbf·ft': 1.35582 },
+  power: { W: 1, kW: 1000, 'HP (Metric)': 735.499, 'HP (Imperial)': 745.7 },
+};
+
+const CALCULATOR_TOOLS: CalculatorToolDef[] = [
+  {
+    id: 'rpm',
+    title: 'Spindle RPM',
+    category: 'workshop',
+    subject: 'Workshop',
+    formula: 'N = 1000V / (πD)',
+    units: ['RPM', 'm/min', 'mm', 'ft/min', 'mm/s'],
+    variables: ['N', 'V', 'D'],
+    tags: ['spindle', 'speed', 'lathe', 'turning', 'gear'],
+  },
+  {
+    id: 'cs',
+    title: 'Cutting Speed',
+    category: 'workshop',
+    subject: 'Workshop',
+    formula: 'V = πDN / 1000',
+    units: ['m/min', 'm/s', 'mm', 'RPM'],
+    variables: ['V', 'D', 'N'],
+    tags: ['cutting speed', 'surface speed', 'velocity'],
+  },
+  {
+    id: 'feed',
+    title: 'Feed Rate',
+    category: 'workshop',
+    subject: 'Workshop',
+    formula: 'f_m = f_t · z · N',
+    units: ['mm/min', 'mm/tooth', 'RPM'],
+    variables: ['f_m', 'f_t', 'z', 'N'],
+    tags: ['feed rate', 'table feed', 'milling', 'teeth'],
+  },
+  {
+    id: 'torque',
+    title: 'Torque from Power',
+    category: 'workshop',
+    subject: 'Workshop',
+    formula: 'T = 60000P / (2πN)',
+    units: ['N·m', 'kW', 'RPM', 'W'],
+    variables: ['T', 'P', 'N'],
+    tags: ['torque', 'shaft', 'power', 'motor'],
+  },
+  {
+    id: 'power',
+    title: 'Power from Torque',
+    category: 'workshop',
+    subject: 'Workshop',
+    formula: 'P = 2πNT / 60000',
+    units: ['kW', 'W', 'N·m', 'RPM', 'HP'],
+    variables: ['P', 'T', 'N'],
+    tags: ['power', 'motor', 'torque'],
+  },
+  {
+    id: 'stress',
+    title: 'Direct Stress',
+    category: 'som',
+    subject: 'SOM',
+    formula: 'σ = P / A',
+    units: ['MPa', 'N/mm²', 'Pa', 'N', 'kN', 'mm²', 'm²'],
+    variables: ['σ', 'P', 'A'],
+    tags: ['direct stress', 'normal stress', 'axial load', 'tension', 'compression'],
+  },
+  {
+    id: 'strain',
+    title: 'Strain & Hooke',
+    category: 'som',
+    subject: 'SOM',
+    formula: 'ε = ΔL / L',
+    units: ['mm', 'm', 'MPa', 'GPa'],
+    variables: ['ε', 'ΔL', 'L', 'E', 'σ'],
+    tags: ['strain', 'hookes law', 'youngs modulus', 'elongation'],
+  },
+  {
+    id: 'moi',
+    title: 'Moment of Inertia',
+    category: 'som',
+    subject: 'SOM',
+    formula: 'I_x, I_y, Z',
+    units: ['mm⁴', 'm⁴', 'mm³'],
+    variables: ['I_x', 'I_y', 'Z'],
+    tags: ['moment of inertia', 'section modulus', 'beam bending'],
+  },
+  {
+    id: 'converter',
+    title: 'Universal SI Converter',
+    category: 'utilities',
+    subject: 'Utilities',
+    formula: 'SI / Metric / Imperial',
+    units: ['mm', 'm', 'g', 'kg', 'Pa', 'kPa', 'MPa', 'GPa', 'bar', 'psi', 'N', 'kN', 'kgf', 'lbf', 'N·m', 'W', 'kW', 'HP', '°C', '°F', 'K'],
+    tags: ['converter', 'si', 'units', 'pressure', 'force', 'torque', 'power', 'mass', 'weight'],
+  },
+];
+
+const TOOL_MAP: Record<string, { toolId: string; category: CalculatorCategory }> = {
   calc_rpm: { toolId: 'rpm', category: 'workshop' },
   rpm: { toolId: 'rpm', category: 'workshop' },
   calc_cutspeed: { toolId: 'cs', category: 'workshop' },
@@ -36,7 +159,7 @@ export interface CalculatorsProps {
 }
 
 export const Calculators: React.FC<CalculatorsProps> = ({ initialToolId }) => {
-  const [activeCategory, setActiveCategory] = useState<'all' | 'workshop' | 'som' | 'utilities'>(() => {
+  const [activeCategory, setActiveCategory] = useState<CalculatorCategory>(() => {
     if (initialToolId && TOOL_MAP[initialToolId]) {
       return TOOL_MAP[initialToolId].category;
     }
@@ -79,9 +202,8 @@ export const Calculators: React.FC<CalculatorsProps> = ({ initialToolId }) => {
   const computedRPM = (!isBlank(rpmDiameter) && !isBlank(rpmCuttingSpeed) && getDiaInMM() > 0 && getSpeedInMMin() > 0)
     ? (1000 * getSpeedInMMin()) / (Math.PI * getDiaInMM())
     : null;
-  const standardLatheRPMs = [45, 71, 112, 160, 224, 315, 450, 710, 1000, 1400, 2000];
   const nearestLatheRPM = computedRPM !== null
-    ? standardLatheRPMs.reduce((prev, curr) =>
+    ? STANDARD_LATHE_RPMS.reduce((prev, curr) =>
         Math.abs(curr - computedRPM) < Math.abs(prev - computedRPM) ? curr : prev
       )
     : null;
@@ -196,14 +318,7 @@ export const Calculators: React.FC<CalculatorsProps> = ({ initialToolId }) => {
       if (to === '°F') return (kelvin - 273.15) * (9 / 5) + 32;
       return kelvin;
     }
-    const factors: Record<string, Record<string, number>> = {
-      length: { mm: 0.001, cm: 0.01, m: 1, inch: 0.0254, ft: 0.3048 },
-      pressure: { Pa: 1, kPa: 1000, 'MPa (N/mm²)': 1e6, GPa: 1e9, bar: 1e5, psi: 6894.76 },
-      force: { N: 1, kN: 1000, kgf: 9.80665, lbf: 4.44822 },
-      torque: { 'N·m': 1, 'kN·m': 1000, 'N·mm': 0.001, 'lbf·ft': 1.35582 },
-      power: { W: 1, kW: 1000, 'HP (Metric)': 735.499, 'HP (Imperial)': 745.7 },
-    };
-    const fMap = factors[type] || {};
+    const fMap = CONVERSION_FACTORS[type] || {};
     const base = val * (fMap[from] || 1);
     return base / (fMap[to] || 1);
   };
@@ -219,51 +334,52 @@ export const Calculators: React.FC<CalculatorsProps> = ({ initialToolId }) => {
     setConvTo(prevFrom);
   };
 
+  const copyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (copyTimeoutRef.current) {
+        clearTimeout(copyTimeoutRef.current);
+      }
+    };
+  }, []);
+
   const handleCopyConv = () => {
     if (computedConv !== null) {
       navigator.clipboard.writeText(`${computedConv} ${convTo}`);
       setConvCopied(true);
-      setTimeout(() => setConvCopied(false), 2000);
+      if (copyTimeoutRef.current) {
+        clearTimeout(copyTimeoutRef.current);
+      }
+      copyTimeoutRef.current = setTimeout(() => setConvCopied(false), 2000);
     }
   };
 
-  // Filter tools
-  const tools = [
-    { id: 'rpm', title: 'Spindle RPM', category: 'workshop', formula: 'N = 1000V / (πD)' },
-    { id: 'cs', title: 'Cutting Speed', category: 'workshop', formula: 'V = πDN / 1000' },
-    { id: 'feed', title: 'Feed Rate', category: 'workshop', formula: 'f_m = f_t · z · N' },
-    { id: 'torque', title: 'Torque from Power', category: 'workshop', formula: 'T = 60000P / (2πN)' },
-    { id: 'power', title: 'Power from Torque', category: 'workshop', formula: 'P = 2πNT / 60000' },
-    { id: 'stress', title: 'Direct Stress', category: 'som', formula: 'σ = P / A' },
-    { id: 'strain', title: 'Strain & Hooke', category: 'som', formula: 'ε = ΔL / L' },
-    { id: 'moi', title: 'Moment of Inertia', category: 'som', formula: 'I_x, I_y, Z' },
-    { id: 'converter', title: 'Universal SI Converter', category: 'utilities', formula: 'SI / Metric / Imperial' },
-  ];
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
-  const filteredTools = tools.filter(
-    (t) => activeCategory === 'all' || t.category === activeCategory
-  );
+  const filteredTools = useMemo(() => {
+    return CALCULATOR_TOOLS.filter((t) => {
+      const categoryMatch = activeCategory === 'all' || t.category === activeCategory;
+      if (!categoryMatch) return false;
+      return matchesMultiField(t, searchQuery);
+    });
+  }, [activeCategory, searchQuery]);
 
   return (
     <div className="max-w-5xl mx-auto px-3 sm:px-6 py-4 space-y-4">
-      {/* Category Tabs */}
-      <div className="flex items-center justify-between gap-2 overflow-x-auto pb-1">
-        <div className="flex items-center gap-1.5 p-1 bg-slate-100 dark:bg-[#1e293b] rounded-xl border border-slate-200 dark:border-slate-700/60 shrink-0">
-          {[
-            { id: 'all', label: 'All' },
-            { id: 'workshop', label: 'Workshop' },
-            { id: 'som', label: 'SOM' },
-            { id: 'utilities', label: 'Utilities' },
-          ].map((cat) => (
+      {/* Category Tabs & Multi-Field Search */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+        <div className="flex items-center gap-1.5 p-1 bg-slate-100 dark:bg-[#1e293b] rounded-xl border border-slate-200 dark:border-slate-700/60 overflow-x-auto shrink-0">
+          {CATEGORY_TABS.map((cat) => (
             <button
               key={cat.id}
               type="button"
               onClick={() => {
-                setActiveCategory(cat.id as any);
-                const first = tools.find((t) => cat.id === 'all' || t.category === cat.id);
+                setActiveCategory(cat.id);
+                const first = CALCULATOR_TOOLS.find((t) => cat.id === 'all' || t.category === cat.id);
                 if (first) setActiveToolId(first.id);
               }}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
                 activeCategory === cat.id
                   ? 'bg-white dark:bg-slate-900 text-mech-blue dark:text-blue-400 shadow-xs'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -274,9 +390,31 @@ export const Calculators: React.FC<CalculatorsProps> = ({ initialToolId }) => {
           ))}
         </div>
 
-        <span className="text-[11px] font-mono text-slate-500 shrink-0">
-          {filteredTools.length} Tools
-        </span>
+        <div className="flex items-center gap-2">
+          <div className="relative flex-1 sm:w-56 flex items-center">
+            <Search className="w-3.5 h-3.5 absolute left-2.5 text-slate-400 pointer-events-none" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search tools, units..."
+              className="w-full py-1.5 pl-8 pr-7 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1e293b] text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-mech-blue"
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery('')}
+                aria-label="Clear search"
+                className="absolute right-2 text-slate-400 hover:text-slate-600 dark:hover:text-white cursor-pointer"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
+          </div>
+          <span className="text-[11px] font-mono text-slate-500 shrink-0">
+            {filteredTools.length} Tools
+          </span>
+        </div>
       </div>
 
       {/* Tool Selector Chips */}
