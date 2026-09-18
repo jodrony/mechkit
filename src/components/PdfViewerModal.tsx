@@ -247,20 +247,20 @@ export const PdfViewerModal: React.FC<PdfViewerModalProps> = ({ activePdf, onClo
       className="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md flex flex-col animate-in fade-in duration-200 transform-gpu gpu-accelerated"
     >
       {/* 1. Sticky Top Navigation & Action Bar */}
-      <header className="sticky top-0 z-30 flex items-center justify-between px-3 sm:px-6 py-2.5 bg-slate-900 border-b border-slate-800 shadow-xl shrink-0 gap-2">
+      <header className="sticky top-0 z-30 flex items-center justify-between px-3 sm:px-6 py-2.5 bg-zinc-950/95 border-b border-white/10 shadow-xl backdrop-blur-md shrink-0 gap-2">
         {/* Document Identity & Page Indicator */}
         <div className="flex items-center gap-2.5 min-w-0 pr-2">
-          <div className="p-1.5 rounded-lg bg-orange-500/10 text-mech-orange shrink-0">
+          <div className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shrink-0">
             <FileText className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
           <div className="min-w-0">
-            <h3 className="font-bold text-slate-100 text-xs sm:text-sm md:text-base truncate max-w-[200px] sm:max-w-xs md:max-w-md">
+            <h3 className="font-bold text-slate-100 text-xs sm:text-sm md:text-base truncate max-w-[200px] sm:max-w-xs md:max-w-md font-sans">
               {activePdf.title}
             </h3>
             <div className="flex items-center gap-2 text-[10px] sm:text-xs font-mono text-slate-400">
               <span className="truncate">{downloadFilename}</span>
               {totalPages > 0 && (
-                <span className="px-1.5 py-0.2 rounded bg-slate-800 text-mech-orange font-bold border border-slate-700">
+                <span className="px-1.5 py-0.2 rounded bg-white/[0.06] text-emerald-400 font-bold border border-white/10">
                   Page {currentPage} of {totalPages}
                 </span>
               )}
@@ -271,12 +271,12 @@ export const PdfViewerModal: React.FC<PdfViewerModalProps> = ({ activePdf, onClo
         {/* Action Controls & Zoom Controls */}
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
           {/* Zoom Controls (Desktop / Tablet) */}
-          <div className="hidden sm:flex items-center gap-1 bg-slate-800/80 border border-slate-700/80 rounded-xl px-1.5 py-1">
+          <div className="hidden sm:flex items-center gap-1 bg-white/[0.04] border border-white/10 rounded-xl px-1.5 py-1">
             <button
               type="button"
               onClick={() => setZoom((prev) => Math.max(0.7, Number((prev - 0.15).toFixed(2))))}
               title="Zoom Out"
-              className="p-1 text-slate-300 hover:text-white rounded-lg hover:bg-slate-700 transition-colors cursor-pointer"
+              className="p-1 text-slate-300 hover:text-white rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
             >
               <ZoomOut className="w-3.5 h-3.5" />
             </button>
@@ -287,7 +287,7 @@ export const PdfViewerModal: React.FC<PdfViewerModalProps> = ({ activePdf, onClo
               type="button"
               onClick={() => setZoom((prev) => Math.min(2.0, Number((prev + 0.15).toFixed(2))))}
               title="Zoom In"
-              className="p-1 text-slate-300 hover:text-white rounded-lg hover:bg-slate-700 transition-colors cursor-pointer"
+              className="p-1 text-slate-300 hover:text-white rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
             >
               <ZoomIn className="w-3.5 h-3.5" />
             </button>
@@ -296,7 +296,7 @@ export const PdfViewerModal: React.FC<PdfViewerModalProps> = ({ activePdf, onClo
                 type="button"
                 onClick={() => setZoom(1.0)}
                 title="Reset Zoom"
-                className="p-1 text-slate-400 hover:text-white rounded-lg hover:bg-slate-700 transition-colors cursor-pointer ml-0.5"
+                className="p-1 text-slate-400 hover:text-white rounded-lg hover:bg-white/10 transition-colors cursor-pointer ml-0.5"
               >
                 <RotateCcw className="w-3 h-3" />
               </button>
@@ -310,7 +310,7 @@ export const PdfViewerModal: React.FC<PdfViewerModalProps> = ({ activePdf, onClo
             download={downloadFilename}
             target="_blank"
             rel="noopener noreferrer"
-            className="min-h-[44px] px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-mech-orange hover:bg-orange-600 text-white transition-all shadow-md flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 shrink-0"
+            className="min-h-[40px] px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-emerald-600 hover:bg-emerald-500 text-white transition-all shadow-sm flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 shrink-0"
           >
             <Download className="w-4 h-4 shrink-0" />
             <span className="hidden xs:inline">Save PDF</span>
@@ -322,7 +322,7 @@ export const PdfViewerModal: React.FC<PdfViewerModalProps> = ({ activePdf, onClo
             type="button"
             onClick={onClose}
             aria-label="Close PDF viewer"
-            className="min-h-[44px] min-w-[44px] p-2 text-slate-400 hover:text-white rounded-xl hover:bg-slate-800 transition-colors flex items-center justify-center cursor-pointer active:scale-95 shrink-0"
+            className="min-h-[40px] min-w-[40px] p-2 text-slate-400 hover:text-white rounded-xl hover:bg-white/10 transition-colors flex items-center justify-center cursor-pointer active:scale-95 shrink-0"
           >
             <X className="w-5 h-5" />
           </button>
@@ -364,13 +364,13 @@ export const PdfViewerModal: React.FC<PdfViewerModalProps> = ({ activePdf, onClo
         {isAvailable && loading && (
           <div className="min-h-[50vh] flex flex-col items-center justify-center p-6 text-center space-y-4">
             <div className="relative">
-              <div className="w-12 h-12 rounded-full border-2 border-orange-500/20 border-t-mech-orange animate-spin" />
+              <div className="w-12 h-12 rounded-full border-2 border-emerald-500/20 border-t-emerald-400 animate-spin" />
               <div className="absolute inset-0 flex items-center justify-center">
-                <Loader2 className="w-5 h-5 text-mech-orange animate-pulse" />
+                <Loader2 className="w-5 h-5 text-emerald-400 animate-pulse" />
               </div>
             </div>
             <div className="space-y-1">
-              <p className="text-sm font-bold text-white">
+              <p className="text-sm font-bold text-white font-sans">
                 Rendering document pages...
               </p>
               <p className="text-xs font-mono text-slate-400">
@@ -389,10 +389,10 @@ export const PdfViewerModal: React.FC<PdfViewerModalProps> = ({ activePdf, onClo
               <AlertCircle className="w-8 h-8" />
             </div>
             <div className="space-y-1.5">
-              <h4 className="text-lg font-bold text-white">
+              <h4 className="text-lg font-bold text-white font-sans">
                 Document Render Interrupted
               </h4>
-              <p className="text-xs text-slate-400 leading-relaxed">
+              <p className="text-xs text-slate-400 leading-relaxed font-sans">
                 {error}
               </p>
             </div>
@@ -400,7 +400,7 @@ export const PdfViewerModal: React.FC<PdfViewerModalProps> = ({ activePdf, onClo
               <button
                 type="button"
                 onClick={() => renderPdfDocument()}
-                className="min-h-[44px] px-4 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 flex items-center gap-2 cursor-pointer active:scale-95"
+                className="min-h-[40px] px-4 py-2 rounded-xl text-xs font-semibold bg-white/[0.06] hover:bg-white/[0.1] text-slate-200 border border-white/10 flex items-center gap-2 cursor-pointer active:scale-95"
               >
                 <RefreshCw className="w-3.5 h-3.5" />
                 <span>Retry Rendering</span>
@@ -409,7 +409,7 @@ export const PdfViewerModal: React.FC<PdfViewerModalProps> = ({ activePdf, onClo
                 href={activePdf.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="min-h-[44px] px-4 py-2 rounded-xl text-xs font-bold bg-mech-orange hover:bg-orange-600 text-white flex items-center gap-2 cursor-pointer active:scale-95"
+                className="min-h-[40px] px-4 py-2 rounded-xl text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white flex items-center gap-2 cursor-pointer active:scale-95"
               >
                 <ExternalLink className="w-3.5 h-3.5" />
                 <span>Open in Tab</span>

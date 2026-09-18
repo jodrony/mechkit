@@ -177,10 +177,10 @@ export const FormulaLibrary: React.FC<FormulaLibraryProps> = ({ onNavigate }) =>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
         <div>
           <div className="flex items-center gap-2">
-            <span className="p-1.5 rounded-lg bg-orange-500/10 text-mech-orange font-bold">
+            <span className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold">
               <BookOpen className="w-5 h-5" />
             </span>
-            <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white">
+            <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white font-sans">
               Formula Reference Library
             </h2>
           </div>
@@ -221,15 +221,15 @@ export const FormulaLibrary: React.FC<FormulaLibraryProps> = ({ onNavigate }) =>
                 onClick={() => setActiveCategory(cat.id)}
                 className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all cursor-pointer snap-start active:scale-95 ${
                   isActive
-                    ? 'bg-mech-orange text-white shadow-md ring-2 ring-orange-500/30'
-                    : 'bg-white dark:bg-[#1e293b] text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700/60 hover:border-slate-300 dark:hover:border-slate-600'
+                    ? 'bg-emerald-500 text-slate-950 shadow-sm ring-1 ring-emerald-500/50'
+                    : 'bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-white/10 hover:border-emerald-500/40'
                 }`}
               >
                 <Icon className="w-4 h-4 shrink-0" />
                 <span>{cat.label}</span>
                 <span
                   className={`px-1.5 py-0.5 rounded-full text-[10px] font-mono font-bold ${
-                    isActive ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
+                    isActive ? 'bg-slate-950/20 text-slate-950' : 'bg-slate-100 dark:bg-white/[0.06] text-slate-600 dark:text-slate-400'
                   }`}
                 >
                   {cat.count}
@@ -251,7 +251,7 @@ export const FormulaLibrary: React.FC<FormulaLibraryProps> = ({ onNavigate }) =>
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search formulas by name, symbol (σ, E, Q, MRR), unit (MPa, kW, RPM), or application..."
-          className="w-full pl-10 pr-10 py-2.5 bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700/70 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-hidden focus:ring-2 focus:ring-mech-orange focus:border-transparent transition-all shadow-xs"
+          className="w-full pl-10 pr-10 py-2.5 bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md border border-slate-200 dark:border-white/10 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all shadow-xs"
         />
         {searchQuery && (
           <button
@@ -267,14 +267,14 @@ export const FormulaLibrary: React.FC<FormulaLibraryProps> = ({ onNavigate }) =>
       {/* Formulas List (Card Accordion Architecture) */}
       <div className="space-y-4">
         {filteredFormulas.length === 0 ? (
-          <div className="p-8 sm:p-12 rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-700 bg-white dark:bg-[#1e293b] text-center space-y-3">
-            <div className="w-12 h-12 mx-auto rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">
+          <div className="p-8 sm:p-12 rounded-2xl border-2 border-dashed border-slate-200 dark:border-white/10 bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md text-center space-y-3">
+            <div className="w-12 h-12 mx-auto rounded-full bg-slate-100 dark:bg-white/[0.04] flex items-center justify-center text-slate-400">
               <Search className="w-6 h-6" />
             </div>
-            <h3 className="font-bold text-sm sm:text-base text-slate-800 dark:text-slate-200">
+            <h3 className="font-bold text-sm sm:text-base text-slate-800 dark:text-slate-200 font-sans">
               No matching formulas found
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
+            <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto font-sans">
               No formulas matched your search "{searchQuery}" under the {activeCategory} category.
             </p>
             <button
@@ -283,7 +283,7 @@ export const FormulaLibrary: React.FC<FormulaLibraryProps> = ({ onNavigate }) =>
                 setSearchQuery('');
                 setActiveCategory('All');
               }}
-              className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-mech-orange text-white hover:bg-orange-700 transition-colors cursor-pointer"
+              className="px-4 py-2 rounded-xl text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white transition-all cursor-pointer active:scale-95 shadow-xs"
             >
               Reset Filters
             </button>
@@ -296,7 +296,7 @@ export const FormulaLibrary: React.FC<FormulaLibraryProps> = ({ onNavigate }) =>
               <div
                 key={formula.id}
                 id={`item-${formula.id}`}
-                className="bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700/60 rounded-2xl shadow-xs hover:shadow-md transition-all overflow-hidden"
+                className="bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md border border-slate-200 dark:border-white/10 rounded-2xl shadow-sm hover:shadow-md transition-all overflow-hidden"
               >
                 <div id={`f-${formula.id}`}>
                   <div id={`formula-${formula.id}`}>
@@ -308,13 +308,13 @@ export const FormulaLibrary: React.FC<FormulaLibraryProps> = ({ onNavigate }) =>
                 {/* Collapsed State Header: Clickable Card Bar */}
                 <div
                   onClick={() => toggleExpand(formula.id)}
-                  className="py-2.5 sm:py-3 px-3.5 sm:px-4 cursor-pointer select-none hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors"
+                  className="py-2.5 sm:py-3 px-3.5 sm:px-4 cursor-pointer select-none hover:bg-slate-50/70 dark:hover:bg-white/[0.02] transition-colors"
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                     <div className="space-y-1.5 flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         {/* Index Badge */}
-                        <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
+                        <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-slate-100 dark:bg-white/[0.06] text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-white/10">
                           <Hash className="w-2.5 h-2.5" />
                           {String(index + 1).padStart(2, '0')}
                         </span>
@@ -330,7 +330,7 @@ export const FormulaLibrary: React.FC<FormulaLibraryProps> = ({ onNavigate }) =>
 
                         {/* Interactive Tool Pill */}
                         {formula.relatedCalculatorId && (
-                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900/40">
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
                             <Calculator className="w-3 h-3" />
                             Interactive Tool
                           </span>
@@ -338,7 +338,7 @@ export const FormulaLibrary: React.FC<FormulaLibraryProps> = ({ onNavigate }) =>
                       </div>
 
                       {/* Formula Title */}
-                      <h3 className="font-bold text-base sm:text-lg text-slate-900 dark:text-white truncate">
+                      <h3 className="font-bold text-base sm:text-lg text-slate-900 dark:text-white truncate font-sans">
                         {formula.title}
                       </h3>
                     </div>
@@ -346,14 +346,14 @@ export const FormulaLibrary: React.FC<FormulaLibraryProps> = ({ onNavigate }) =>
                     {/* Right side: KaTeX equation snippet + Expansion toggle */}
                     <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0">
                       {/* Formula Equation Box */}
-                      <div className="px-3.5 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 max-w-[260px] sm:max-w-xs overflow-x-auto scrollbar-none">
+                      <div className="px-3.5 py-1.5 rounded-xl bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-slate-100 max-w-[260px] sm:max-w-xs overflow-x-auto scrollbar-none">
                         <MathView math={formula.formulaLatex} displayMode={false} className="text-sm font-semibold" />
                       </div>
 
                       {/* Expansion Chevron */}
-                      <div className="p-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 transition-transform duration-200">
+                      <div className="p-1.5 rounded-lg bg-slate-100 dark:bg-white/[0.06] text-slate-500 dark:text-slate-400 transition-transform duration-200">
                         {isExpanded ? (
-                          <ChevronUp className="w-4 h-4 text-mech-orange" />
+                          <ChevronUp className="w-4 h-4 text-emerald-500" />
                         ) : (
                           <ChevronDown className="w-4 h-4" />
                         )}
@@ -364,26 +364,26 @@ export const FormulaLibrary: React.FC<FormulaLibraryProps> = ({ onNavigate }) =>
 
                 {/* Expanded State: Full Pedagogical Breakdown */}
                 {isExpanded && (
-                  <div className="border-t border-slate-100 dark:border-slate-800 p-4 sm:p-6 bg-slate-50/40 dark:bg-slate-900/30 space-y-5 animate-fadeIn">
+                  <div className="border-t border-slate-100 dark:border-white/10 p-4 sm:p-6 bg-slate-50/40 dark:bg-white/[0.01] space-y-5 animate-fadeIn">
                     {/* 1. Definition & Principle */}
                     <div className="space-y-1.5">
                       <div className="flex items-center gap-2">
-                        <BookOpen className="w-4 h-4 text-mech-orange" />
+                        <BookOpen className="w-4 h-4 text-emerald-500" />
                         <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                           Definition & Engineering Principle
                         </h4>
                       </div>
-                      <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed pl-6">
+                      <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed pl-6 font-sans">
                         {formula.definition}
                       </p>
                     </div>
 
                     {/* 2. Display KaTeX Equation */}
-                    <div className="p-4 rounded-xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700/80 text-center overflow-x-auto">
+                    <div className="p-4 rounded-xl bg-white/80 dark:bg-zinc-950/70 border border-slate-200 dark:border-white/10 text-center overflow-x-auto">
                       <span className="text-[11px] font-mono text-slate-400 block mb-1 text-left">
                         Governing Equation:
                       </span>
-                      <div className="py-2">
+                      <div className="py-2 font-mono">
                         <MathView math={formula.formulaLatex} displayMode={true} className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white" />
                       </div>
                     </div>
@@ -393,22 +393,22 @@ export const FormulaLibrary: React.FC<FormulaLibraryProps> = ({ onNavigate }) =>
                       <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                         Variable Legend
                       </h4>
-                      <div className="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-700/70 bg-white dark:bg-[#1e293b]">
+                      <div className="overflow-x-auto rounded-xl border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-zinc-950/70">
                         <table className="w-full text-left text-xs border-collapse">
                           <thead>
-                            <tr className="border-b border-slate-200 dark:border-slate-700 bg-slate-100/70 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 font-mono font-bold">
+                            <tr className="border-b border-slate-200 dark:border-white/10 bg-slate-100/70 dark:bg-white/[0.04] text-slate-600 dark:text-slate-300 font-mono font-bold">
                               <th className="py-2.5 px-3 sm:px-4 w-28">Symbol</th>
-                              <th className="py-2.5 px-3 sm:px-4">Meaning / Parameter</th>
-                              <th className="py-2.5 px-3 sm:px-4 w-36">Standard Unit</th>
+                              <th className="py-2.5 px-3 sm:px-4 font-sans">Meaning / Parameter</th>
+                              <th className="py-2.5 px-3 sm:px-4 w-36 font-mono">Standard Unit</th>
                             </tr>
                           </thead>
-                          <tbody className="divide-y divide-slate-100 dark:divide-slate-800 font-medium">
+                          <tbody className="divide-y divide-slate-100 dark:divide-white/[0.06] font-medium">
                             {formula.variables.map((v, vIdx) => (
-                              <tr key={vIdx} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30">
-                                <td className="py-2 px-3 sm:px-4 font-mono font-bold text-mech-blue dark:text-blue-400">
+                              <tr key={vIdx} className="hover:bg-slate-50/50 dark:hover:bg-white/[0.02]">
+                                <td className="py-2 px-3 sm:px-4 font-mono font-bold text-emerald-600 dark:text-emerald-400">
                                   <MathView math={v.symbol} displayMode={false} />
                                 </td>
-                                <td className="py-2 px-3 sm:px-4 text-slate-700 dark:text-slate-300">
+                                <td className="py-2 px-3 sm:px-4 text-slate-700 dark:text-slate-300 font-sans">
                                   {v.meaning}
                                 </td>
                                 <td className="py-2 px-3 sm:px-4 font-mono text-slate-500 dark:text-slate-400">
@@ -422,8 +422,8 @@ export const FormulaLibrary: React.FC<FormulaLibraryProps> = ({ onNavigate }) =>
                     </div>
 
                     {/* 4. SI Unit Breakdown */}
-                    <div className="flex items-center gap-2 p-3 rounded-xl bg-blue-50/60 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900/40 text-xs">
-                      <span className="font-mono font-bold text-mech-blue dark:text-blue-400 shrink-0">
+                    <div className="flex items-center gap-2 p-3 rounded-xl bg-emerald-500/5 dark:bg-emerald-500/10 border border-emerald-500/20 dark:border-emerald-500/30 text-xs">
+                      <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400 shrink-0">
                         SI Units:
                       </span>
                       <span className="text-slate-700 dark:text-slate-300 font-mono">
@@ -444,11 +444,11 @@ export const FormulaLibrary: React.FC<FormulaLibraryProps> = ({ onNavigate }) =>
                       </div>
 
                       {/* Problem Statement */}
-                      <div className="p-3 rounded-lg bg-white dark:bg-[#1e293b] border border-amber-200 dark:border-amber-900/40">
+                      <div className="p-3 rounded-lg bg-white/80 dark:bg-zinc-950/70 border border-amber-300/60 dark:border-amber-900/40">
                         <span className="text-[11px] font-mono font-bold text-slate-400 block mb-1">
                           PROBLEM STATEMENT
                         </span>
-                        <p className="text-xs sm:text-sm text-slate-800 dark:text-slate-200 leading-relaxed font-medium">
+                        <p className="text-xs sm:text-sm text-slate-800 dark:text-slate-200 leading-relaxed font-medium font-sans">
                           {formula.solvedExample.problem}
                         </p>
                       </div>
@@ -472,19 +472,19 @@ export const FormulaLibrary: React.FC<FormulaLibraryProps> = ({ onNavigate }) =>
                         </span>
                         <ol className="list-decimal list-inside text-xs text-slate-700 dark:text-slate-300 space-y-1 pl-1">
                           {formula.solvedExample.steps.map((step, sIdx) => (
-                            <li key={sIdx} className="leading-relaxed">
+                            <li key={sIdx} className="leading-relaxed font-sans">
                               {step}
                             </li>
                           ))}
                         </ol>
                       </div>
 
-                      {/* Final Answer in Bold Orange */}
+                      {/* Final Answer in Bold Emerald */}
                       <div className="pt-2 border-t border-amber-200 dark:border-amber-900/50 flex items-center justify-between">
                         <span className="text-xs font-mono font-bold uppercase text-slate-600 dark:text-slate-400">
                           Final Calculated Answer:
                         </span>
-                        <span className="text-sm sm:text-base font-extrabold font-mono text-mech-orange bg-orange-500/10 px-3 py-1 rounded-lg border border-orange-500/20">
+                        <span className="text-sm sm:text-base font-extrabold font-mono text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-lg border border-emerald-500/20">
                           {formula.solvedExample.answer}
                         </span>
                       </div>
@@ -502,7 +502,7 @@ export const FormulaLibrary: React.FC<FormulaLibraryProps> = ({ onNavigate }) =>
                               onNavigate('calculators', formula.relatedCalculatorId);
                             }
                           }}
-                          className="min-h-[44px] px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-mech-orange hover:bg-orange-700 text-white transition-all flex items-center gap-2 shadow-xs cursor-pointer active:scale-95"
+                          className="min-h-[44px] px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-emerald-500 hover:bg-emerald-400 text-slate-950 transition-all flex items-center gap-2 shadow-sm cursor-pointer active:scale-95 font-sans"
                         >
                           <Calculator className="w-4 h-4" />
                           <span>Launch Interactive Calculator</span>

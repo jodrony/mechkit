@@ -799,24 +799,24 @@ export const SearchModal: React.FC<SearchModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-start justify-center p-4 sm:p-6 pt-16 sm:pt-24 search-modal gpu-accelerated">
-      <div className="w-full max-w-2xl bg-white dark:bg-mech-card rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden animate-fadeIn transform-gpu gpu-accelerated">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-sm flex items-start justify-center p-4 sm:p-6 pt-16 sm:pt-24 search-modal gpu-accelerated">
+      <div className="w-full max-w-2xl bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-200 dark:border-white/10 overflow-hidden animate-in fade-in zoom-in-95 duration-150 transform-gpu gpu-accelerated">
         {/* Input Bar */}
-        <div className="relative flex items-center px-4 border-b border-slate-200 dark:border-slate-800">
-          <Search className="w-5 h-5 text-slate-400 shrink-0" />
+        <div className="relative flex items-center px-4 border-b border-slate-200 dark:border-white/10">
+          <Search className="w-5 h-5 text-emerald-500 dark:text-emerald-400 shrink-0" />
           <input
             type="text"
             autoFocus
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search calculators, formulas, lab guides, or viva questions..."
-            className="w-full h-14 pl-3 pr-10 text-base bg-transparent text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none font-medium"
+            className="w-full h-14 pl-3 pr-10 text-base bg-transparent text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none font-medium"
           />
           <button
             type="button"
             onClick={onClose}
             aria-label="Close search"
-            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer active:scale-95"
           >
             <X className="w-5 h-5" />
           </button>
@@ -845,18 +845,18 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                   key={item.id}
                   type="button"
                   onClick={() => handleItemClick(item)}
-                  className="w-full flex items-center justify-between p-3 sm:p-3.5 rounded-xl border border-slate-200/60 dark:border-slate-800/80 bg-white dark:bg-slate-900/40 hover:bg-orange-500/5 dark:hover:bg-orange-500/10 hover:border-orange-500/40 dark:hover:border-orange-500/40 cursor-pointer transition-all duration-150 active:scale-[0.99] group shadow-2xs hover:shadow-xs text-left"
+                  className="w-full flex items-center justify-between p-3 sm:p-3.5 rounded-xl border border-slate-200/80 dark:border-white/10 bg-white/80 dark:bg-zinc-900/60 hover:bg-emerald-500/[0.04] dark:hover:bg-emerald-500/[0.08] hover:border-emerald-500/40 dark:hover:border-emerald-500/40 cursor-pointer transition-all duration-150 active:scale-[0.99] group shadow-xs text-left"
                 >
                   <div className="flex items-center gap-3 min-w-0 pr-2">
-                    <div className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-mech-blue dark:text-blue-400 group-hover:text-orange-500 dark:group-hover:text-orange-400 group-hover:scale-105 transition-all shrink-0">
+                    <div className="p-2.5 rounded-xl bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-slate-300 group-hover:text-emerald-500 dark:group-hover:text-emerald-400 group-hover:scale-105 transition-all shrink-0">
                       <Icon className="w-4 h-4" />
                     </div>
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors truncate">
+                        <span className="text-sm font-semibold text-slate-900 dark:text-slate-100 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors truncate">
                           {item.title}
                         </span>
-                        <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700/60 shrink-0">
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-medium bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-white/10 shrink-0">
                           {item.category}
                         </span>
                       </div>
@@ -868,37 +868,37 @@ export const SearchModal: React.FC<SearchModalProps> = ({
 
                   {/* Right-Hand Direct Action Indicator */}
                   {isPyq && (
-                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-purple-500/10 dark:bg-purple-500/20 text-purple-600 dark:text-purple-300 border border-purple-500/20 shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-all">
+                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold bg-purple-500/10 dark:bg-purple-500/20 text-purple-600 dark:text-purple-300 border border-purple-500/20 shrink-0 group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600 transition-all">
                       <span className="hidden sm:inline">View in Archive</span>
                       <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                     </div>
                   )}
                   {isViva && !isPyq && (
-                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-rose-500/10 dark:bg-rose-500/20 text-rose-600 dark:text-rose-300 border border-rose-500/20 shrink-0 group-hover:bg-rose-600 group-hover:text-white transition-all">
+                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold bg-rose-500/10 dark:bg-rose-500/20 text-rose-600 dark:text-rose-300 border border-rose-500/20 shrink-0 group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600 transition-all">
                       <span className="hidden sm:inline">Practice Viva</span>
                       <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                     </div>
                   )}
                   {isFormula && !isPyq && (
-                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-500/10 dark:bg-amber-500/20 text-amber-600 dark:text-amber-300 border border-amber-500/20 shrink-0 group-hover:bg-amber-600 group-hover:text-white transition-all">
+                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold bg-amber-500/10 dark:bg-amber-500/20 text-amber-600 dark:text-amber-300 border border-amber-500/20 shrink-0 group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600 transition-all">
                       <span className="hidden sm:inline">View Formula</span>
                       <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                     </div>
                   )}
                   {isLab && !isPyq && (
-                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 border border-emerald-500/20 shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-all">
+                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 shrink-0 group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600 transition-all">
                       <span className="hidden sm:inline">View Lab</span>
                       <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                     </div>
                   )}
                   {isTool && !isPyq && (
-                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-blue-500/10 dark:bg-blue-500/20 text-blue-600 dark:text-blue-300 border border-blue-500/20 shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-all">
+                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold bg-blue-500/10 dark:bg-blue-500/20 text-blue-600 dark:text-blue-300 border border-blue-500/20 shrink-0 group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600 transition-all">
                       <span className="hidden sm:inline">Open Tool</span>
                       <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                     </div>
                   )}
                   {!isPyq && !isTool && !isViva && !isFormula && !isLab && (
-                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700/60 shrink-0 group-hover:bg-orange-500 group-hover:text-white transition-all">
+                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-white/10 shrink-0 group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600 transition-all">
                       <span className="hidden sm:inline">View</span>
                       <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                     </div>
@@ -914,7 +914,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
         </div>
 
         {/* Footer tip */}
-        <div className="p-3 bg-slate-50 dark:bg-slate-900/60 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+        <div className="p-3 bg-slate-50 dark:bg-zinc-950/60 border-t border-slate-200 dark:border-white/10 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
           <span>Click to jump directly to anchored in-app component</span>
           <span>Press ESC to close</span>
         </div>

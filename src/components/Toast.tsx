@@ -58,19 +58,25 @@ export const ToastProvider: React.FC<{ children: ReactNode }> = ({ children }) =
           <div
             key={t.id}
             role="status"
-            className="pointer-events-auto flex items-center gap-3 px-5 py-3.5 rounded-2xl bg-slate-900 border-2 border-orange-500/80 shadow-2xl shadow-orange-950/40 text-xs sm:text-sm font-bold text-mech-orange backdrop-blur-md animate-in slide-in-from-bottom duration-200 transform-gpu gpu-accelerated max-w-full ring-1 ring-orange-500/30"
+            className="pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-2xl bg-zinc-900/95 backdrop-blur-xl border border-white/10 shadow-2xl text-xs sm:text-sm text-slate-100 animate-in slide-in-from-bottom duration-200 transform-gpu gpu-accelerated max-w-full font-sans"
           >
-            <span className="p-1 rounded-lg bg-orange-500/15 text-mech-orange shrink-0">
+            <span className="p-1 rounded-lg shrink-0">
               {t.type === 'success' ? (
-                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                <div className="p-1 rounded-lg bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                  <CheckCircle2 className="w-4 h-4" />
+                </div>
               ) : t.type === 'warning' ? (
-                <AlertTriangle className="w-4 h-4 text-amber-400" />
+                <div className="p-1 rounded-lg bg-amber-500/15 text-amber-400 border border-amber-500/30">
+                  <AlertTriangle className="w-4 h-4" />
+                </div>
               ) : (
-                <Info className="w-4 h-4 text-mech-orange" />
+                <div className="p-1 rounded-lg bg-cyan-500/15 text-cyan-400 border border-cyan-500/30">
+                  <Info className="w-4 h-4" />
+                </div>
               )}
             </span>
 
-            <span className="leading-snug text-mech-orange font-bold flex-1">{t.text}</span>
+            <span className="leading-snug font-medium flex-1 text-slate-200">{t.text}</span>
 
             <button
               type="button"

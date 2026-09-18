@@ -289,34 +289,40 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
   }, [pyqSubjects, selectedSubject, searchQuery, matchesSearch]);
 
   return (
-    <div className="max-w-5xl mx-auto px-3 sm:px-6 py-5 space-y-6">
+    <div className="max-w-5xl mx-auto px-3 sm:px-6 py-4 sm:py-6 space-y-6">
       {/* Header Banner */}
-      <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div className="flex items-center gap-2">
-          <span className="p-2 rounded-xl bg-orange-500/10 text-mech-orange">
+      <div className="p-4 sm:p-5 rounded-2xl bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md border border-slate-200 dark:border-white/10 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex items-center gap-2.5">
+          <span className="p-2 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
             <FolderArchive className="w-5 h-5" />
           </span>
-          <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
-            Resources Hub
-          </h2>
+          <div>
+            <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+              Resources &amp; PYQ Vault
+            </h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              Official curriculum archives, session question papers, and lab templates
+            </p>
+          </div>
         </div>
 
         <div className="flex items-center gap-2 self-start sm:self-auto shrink-0">
-          <span className="px-3 py-1 rounded-full text-xs font-mono font-bold bg-orange-500/10 text-orange-700 dark:text-orange-300 border border-orange-200 dark:border-orange-800">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
             Module 7 • Sem 3 ME
           </span>
         </div>
       </div>
 
       {/* Top Segmented Filter Controls */}
-      <div className="flex items-center bg-slate-200/80 dark:bg-slate-800/80 p-1.5 rounded-2xl gap-1">
+      <div className="flex items-center bg-slate-200/60 dark:bg-zinc-900/80 backdrop-blur-md border border-slate-200 dark:border-white/10 p-1.5 rounded-2xl gap-1">
         <button
           type="button"
           onClick={() => setActiveCategory('all')}
-          className={`flex-1 min-h-[40px] px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap active:scale-95 ${
+          className={`flex-1 min-h-[40px] px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer whitespace-nowrap active:scale-95 ${
             activeCategory === 'all'
-              ? 'bg-white dark:bg-[#1e293b] text-mech-orange shadow-xs font-black'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-sm'
+              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
           }`}
         >
           All Resources
@@ -324,10 +330,10 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
         <button
           type="button"
           onClick={() => setActiveCategory('academic')}
-          className={`flex-1 min-h-[40px] px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap active:scale-95 ${
+          className={`flex-1 min-h-[40px] px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer whitespace-nowrap active:scale-95 ${
             activeCategory === 'academic'
-              ? 'bg-white dark:bg-[#1e293b] text-mech-orange shadow-xs font-black'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-sm'
+              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
           }`}
         >
           Academic Utilities (5 PDFs)
@@ -335,10 +341,10 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
         <button
           type="button"
           onClick={() => setActiveCategory('pyq')}
-          className={`flex-1 min-h-[40px] px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap active:scale-95 ${
+          className={`flex-1 min-h-[40px] px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer whitespace-nowrap active:scale-95 ${
             activeCategory === 'pyq'
-              ? 'bg-white dark:bg-[#1e293b] text-mech-orange shadow-xs font-black'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-sm'
+              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
           }`}
         >
           PYQ Archives (37 Papers)
@@ -354,31 +360,31 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
           <section className="space-y-3.5">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-mech-orange" />
-                <h3 className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white uppercase tracking-wider font-mono">
+                <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                <h3 className="font-semibold text-xs sm:text-sm text-slate-900 dark:text-slate-100 uppercase tracking-wider font-mono">
                   A. Core Academic Utilities &amp; Submission Kits
                 </h3>
               </div>
-              <span className="inline-flex items-center gap-1 text-[11px] font-mono text-emerald-600 dark:text-emerald-400">
+              <span className="inline-flex items-center gap-1.5 text-xs font-mono text-emerald-600 dark:text-emerald-400">
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 <span>5 Core PDFs Ready</span>
               </span>
             </div>
 
             {/* Vertically Stacked Mobile-First Cards */}
-            <div className="space-y-2.5 sm:space-y-3">
+            <div className="space-y-3">
               {/* Card 1: Official Academic Calendar 2026–2027 */}
-              <div id="r-calendar" className="py-2.5 sm:py-3 px-3.5 sm:px-4 rounded-xl sm:rounded-2xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-800 shadow-xs hover:border-orange-500/40 dark:hover:border-orange-500/40 transition-all">
+              <div id="r-calendar" className="py-3 px-4 sm:px-5 rounded-2xl bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md border border-slate-200 dark:border-white/10 shadow-sm hover:border-slate-300 dark:hover:border-white/20 transition-all">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div className="flex items-center gap-3">
-                    <span className="p-2 rounded-xl bg-orange-500/10 text-mech-orange shrink-0">
+                    <span className="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 shrink-0">
                       <Calendar className="w-5 h-5" />
                     </span>
                     <div className="flex items-center gap-2 flex-wrap">
-                      <h4 className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white">
+                      <h4 className="font-semibold text-sm sm:text-base text-slate-900 dark:text-slate-100">
                         Academic Calendar 2026–2027
                       </h4>
-                      <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-orange-500/10 text-orange-700 dark:text-orange-400 border border-orange-200 dark:border-orange-900/60">
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
                         Official
                       </span>
                     </div>
@@ -390,9 +396,9 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
                       id="btn-view-calendar"
                       type="button"
                       onClick={() => handleView('/academic/academic_calendar_2026_2027.pdf', 'Academic Calendar 2026–2027')}
-                      className="flex-1 sm:flex-initial min-h-[40px] px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95 shadow-xs"
+                      className="flex-1 sm:flex-initial min-h-[38px] px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-white/10 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95"
                     >
-                      <Eye className="w-4 h-4 text-mech-orange shrink-0" />
+                      <Eye className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400 shrink-0" />
                       <span>View PDF</span>
                     </button>
                     <a
@@ -402,9 +408,9 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={(e) => handleDownloadClick(e, '/academic/academic_calendar_2026_2027.pdf')}
-                      className="flex-1 sm:flex-initial min-h-[40px] px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-mech-orange hover:bg-orange-600 text-white transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer active:scale-95"
+                      className="flex-1 sm:flex-initial min-h-[38px] px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold bg-emerald-600 hover:bg-emerald-500 text-white transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer active:scale-95"
                     >
-                      <Download className="w-4 h-4 shrink-0" />
+                      <Download className="w-3.5 h-3.5 shrink-0" />
                       <span>Download</span>
                     </a>
                   </div>
@@ -412,17 +418,17 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
               </div>
 
               {/* Card 2: Master Syllabus (Revised 2022) */}
-              <div id="r-syllabus" className="py-2.5 sm:py-3 px-3.5 sm:px-4 rounded-xl sm:rounded-2xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-800 shadow-xs hover:border-blue-500/40 dark:hover:border-blue-500/40 transition-all">
+              <div id="r-syllabus" className="py-3 px-4 sm:px-5 rounded-2xl bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md border border-slate-200 dark:border-white/10 shadow-sm hover:border-slate-300 dark:hover:border-white/20 transition-all">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div className="flex items-center gap-3">
-                    <span className="p-2 rounded-xl bg-blue-500/10 text-mech-blue dark:text-blue-400 shrink-0">
+                    <span className="p-2.5 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 shrink-0">
                       <BookOpen className="w-5 h-5" />
                     </span>
                     <div className="flex items-center gap-2 flex-wrap">
-                      <h4 className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white">
+                      <h4 className="font-semibold text-sm sm:text-base text-slate-900 dark:text-slate-100">
                         Master Syllabus (Revised 2022)
                       </h4>
-                      <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-500/10 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-900/60">
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-medium bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
                         Official
                       </span>
                     </div>
@@ -434,9 +440,9 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
                       id="btn-view-syllabus"
                       type="button"
                       onClick={() => handleView('/syllabus/DME_3rd_Semester_Syllabus.pdf', 'Master Syllabus (Revised 2022)')}
-                      className="flex-1 sm:flex-initial min-h-[40px] px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95 shadow-xs"
+                      className="flex-1 sm:flex-initial min-h-[38px] px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-white/10 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95"
                     >
-                      <Eye className="w-4 h-4 text-blue-400 shrink-0" />
+                      <Eye className="w-3.5 h-3.5 text-blue-500 dark:text-blue-400 shrink-0" />
                       <span>View PDF</span>
                     </button>
                     <a
@@ -446,9 +452,9 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
                       rel="noopener noreferrer"
                       download="DME_3rd_Semester_Syllabus.pdf"
                       onClick={(e) => handleDownloadClick(e, '/syllabus/DME_3rd_Semester_Syllabus.pdf')}
-                      className="flex-1 sm:flex-initial min-h-[40px] px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-mech-orange hover:bg-orange-600 text-white transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer active:scale-95"
+                      className="flex-1 sm:flex-initial min-h-[38px] px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold bg-emerald-600 hover:bg-emerald-500 text-white transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer active:scale-95"
                     >
-                      <Download className="w-4 h-4 shrink-0" />
+                      <Download className="w-3.5 h-3.5 shrink-0" />
                       <span>Download</span>
                     </a>
                   </div>
@@ -456,18 +462,18 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
               </div>
 
               {/* Card 3: Class Routine (Dual View) */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {/* Routine A: Official College Routine */}
-                <div id="r-routine-college" className="py-2.5 sm:py-3 px-3.5 sm:px-4 rounded-xl sm:rounded-2xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-800 shadow-xs hover:border-amber-500/40 dark:hover:border-amber-500/40 transition-all flex flex-col justify-between gap-3">
+                <div id="r-routine-college" className="py-3 px-4 sm:px-5 rounded-2xl bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md border border-slate-200 dark:border-white/10 shadow-sm hover:border-slate-300 dark:hover:border-white/20 transition-all flex flex-col justify-between gap-3">
                   <div className="flex items-center gap-3">
-                    <span className="p-2 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 shrink-0">
+                    <span className="p-2.5 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 shrink-0">
                       <FileText className="w-5 h-5" />
                     </span>
                     <div className="flex items-center gap-2 flex-wrap">
-                      <h4 className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white">
+                      <h4 className="font-semibold text-sm sm:text-base text-slate-900 dark:text-slate-100">
                         Official College Routine
                       </h4>
-                      <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-900/60">
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-medium bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
                         Timetable
                       </span>
                     </div>
@@ -477,9 +483,9 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
                       id="btn-view-college-routine"
                       type="button"
                       onClick={() => handleView('/routine/college_routine_sem3.pdf', 'Official College Routine')}
-                      className="flex-1 min-h-[40px] px-3 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 transition-colors flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 shadow-xs"
+                      className="flex-1 min-h-[38px] px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-white/10 transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
                     >
-                      <Eye className="w-4 h-4 text-mech-orange shrink-0" />
+                      <Eye className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400 shrink-0" />
                       <span>View PDF</span>
                     </button>
                     <a
@@ -489,25 +495,25 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={(e) => handleDownloadClick(e, '/routine/college_routine_sem3.pdf')}
-                      className="flex-1 min-h-[40px] px-3 py-2 rounded-xl text-xs sm:text-sm font-bold bg-mech-orange hover:bg-orange-600 text-white transition-colors flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 shadow-xs"
+                      className="flex-1 min-h-[38px] px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold bg-emerald-600 hover:bg-emerald-500 text-white transition-all shadow-sm flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
                     >
-                      <Download className="w-4 h-4 shrink-0" />
+                      <Download className="w-3.5 h-3.5 shrink-0" />
                       <span>Download</span>
                     </a>
                   </div>
                 </div>
 
                 {/* Routine B: Simplified Student Routine */}
-                <div id="r-routine-simple" className="py-2.5 sm:py-3 px-3.5 sm:px-4 rounded-xl sm:rounded-2xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-800 shadow-xs hover:border-amber-500/40 dark:hover:border-amber-500/40 transition-all flex flex-col justify-between gap-3">
+                <div id="r-routine-simple" className="py-3 px-4 sm:px-5 rounded-2xl bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md border border-slate-200 dark:border-white/10 shadow-sm hover:border-slate-300 dark:hover:border-white/20 transition-all flex flex-col justify-between gap-3">
                   <div className="flex items-center gap-3">
-                    <span className="p-2 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 shrink-0">
+                    <span className="p-2.5 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 shrink-0">
                       <Clock className="w-5 h-5" />
                     </span>
                     <div className="flex items-center gap-2 flex-wrap">
-                      <h4 className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white">
+                      <h4 className="font-semibold text-sm sm:text-base text-slate-900 dark:text-slate-100">
                         Simplified Student Routine
                       </h4>
-                      <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-900/60">
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-medium bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
                         Student View
                       </span>
                     </div>
@@ -517,9 +523,9 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
                       id="btn-view-simplified-routine"
                       type="button"
                       onClick={() => handleView('/routine/simplified_routine_sem3.pdf', 'Simplified Student Routine')}
-                      className="flex-1 min-h-[40px] px-3 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 transition-colors flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 shadow-xs"
+                      className="flex-1 min-h-[38px] px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-white/10 transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
                     >
-                      <Eye className="w-4 h-4 text-amber-400 shrink-0" />
+                      <Eye className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400 shrink-0" />
                       <span>View PDF</span>
                     </button>
                     <a
@@ -529,9 +535,9 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={(e) => handleDownloadClick(e, '/routine/simplified_routine_sem3.pdf')}
-                      className="flex-1 min-h-[40px] px-3 py-2 rounded-xl text-xs sm:text-sm font-bold bg-mech-orange hover:bg-orange-600 text-white transition-colors flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 shadow-xs"
+                      className="flex-1 min-h-[38px] px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold bg-emerald-600 hover:bg-emerald-500 text-white transition-all shadow-sm flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
                     >
-                      <Download className="w-4 h-4 shrink-0" />
+                      <Download className="w-3.5 h-3.5 shrink-0" />
                       <span>Download</span>
                     </a>
                   </div>
@@ -539,17 +545,17 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
               </div>
 
               {/* Card 4: Universal Assignment & Lab Record Kit */}
-              <div id="r-univ-template" className="py-2.5 sm:py-3 px-3.5 sm:px-4 rounded-xl sm:rounded-2xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-800 shadow-xs hover:border-emerald-500/40 dark:hover:border-emerald-500/40 transition-all">
+              <div id="r-univ-template" className="py-3 px-4 sm:px-5 rounded-2xl bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md border border-slate-200 dark:border-white/10 shadow-sm hover:border-slate-300 dark:hover:border-white/20 transition-all">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div className="flex items-center gap-3">
-                    <span className="p-2 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 shrink-0">
+                    <span className="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 shrink-0">
                       <FileSpreadsheet className="w-5 h-5" />
                     </span>
                     <div className="flex items-center gap-2 flex-wrap">
-                      <h4 className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white">
+                      <h4 className="font-semibold text-sm sm:text-base text-slate-900 dark:text-slate-100">
                         Universal Assignment &amp; Lab Record Kit
                       </h4>
-                      <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800">
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
                         Universal
                       </span>
                     </div>
@@ -561,9 +567,9 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
                       id="btn-view-universal-kit"
                       type="button"
                       onClick={() => handleView('/templates/universal_assignment_lab_master.pdf', 'Universal Lab & Assignment Kit')}
-                      className="flex-1 sm:flex-initial min-h-[40px] px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95 shadow-xs"
+                      className="flex-1 sm:flex-initial min-h-[38px] px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-white/10 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95"
                     >
-                      <Eye className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <Eye className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400 shrink-0" />
                       <span>View PDF</span>
                     </button>
                     <a
@@ -573,9 +579,9 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
                       rel="noopener noreferrer"
                       download="universal_assignment_lab_master.pdf"
                       onClick={(e) => handleDownloadClick(e, '/templates/universal_assignment_lab_master.pdf')}
-                      className="flex-1 sm:flex-initial min-h-[40px] px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-mech-orange hover:bg-orange-600 text-white transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer active:scale-95"
+                      className="flex-1 sm:flex-initial min-h-[38px] px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold bg-emerald-600 hover:bg-emerald-500 text-white transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer active:scale-95"
                     >
-                      <Download className="w-4 h-4 shrink-0" />
+                      <Download className="w-3.5 h-3.5 shrink-0" />
                       <span>Download</span>
                     </a>
                   </div>
@@ -583,17 +589,17 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
               </div>
 
               {/* Card 5: Companion Lab Kit: Thermal Engineering-I */}
-              <div id="r-front-index" className="py-2.5 sm:py-3 px-3.5 sm:px-4 rounded-xl sm:rounded-2xl bg-white dark:bg-[#1e293b] border border-amber-300/80 dark:border-amber-700/60 shadow-xs hover:border-orange-500/40 dark:hover:border-orange-500/40 transition-all">
+              <div id="r-front-index" className="py-3 px-4 sm:px-5 rounded-2xl bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md border border-slate-200 dark:border-white/10 shadow-sm hover:border-slate-300 dark:hover:border-white/20 transition-all">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div className="flex items-center gap-3">
-                    <span className="p-2 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 shrink-0">
+                    <span className="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 shrink-0">
                       <FileText className="w-5 h-5" />
                     </span>
                     <div className="flex items-center gap-2 flex-wrap">
-                      <h4 className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white">
+                      <h4 className="font-semibold text-sm sm:text-base text-slate-900 dark:text-slate-100">
                         Thermal Engineering-I Lab Report Kit
                       </h4>
-                      <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-800">
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
                         MEPC 215
                       </span>
                     </div>
@@ -605,9 +611,9 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
                       id="btn-view-thermal-kit"
                       type="button"
                       onClick={() => handleView('/labs/thermal_front_index.pdf', 'Thermal Engineering-I Lab Report Kit')}
-                      className="flex-1 sm:flex-initial min-h-[40px] px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95 shadow-xs"
+                      className="flex-1 sm:flex-initial min-h-[38px] px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-white/10 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95"
                     >
-                      <Eye className="w-4 h-4 text-amber-400 shrink-0" />
+                      <Eye className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400 shrink-0" />
                       <span>View PDF</span>
                     </button>
                     <a
@@ -617,9 +623,9 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
                       rel="noopener noreferrer"
                       download="thermal_front_index.pdf"
                       onClick={(e) => handleDownloadClick(e, '/labs/thermal_front_index.pdf')}
-                      className="flex-1 sm:flex-initial min-h-[40px] px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-mech-orange hover:bg-orange-600 text-white transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer active:scale-95"
+                      className="flex-1 sm:flex-initial min-h-[38px] px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold bg-emerald-600 hover:bg-emerald-500 text-white transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer active:scale-95"
                     >
-                      <Download className="w-4 h-4 shrink-0" />
+                      <Download className="w-3.5 h-3.5 shrink-0" />
                       <span>Download</span>
                     </a>
                   </div>
@@ -636,12 +642,12 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
           <section className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-purple-500" />
-                <h3 className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white uppercase tracking-wider font-mono">
+                <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                <h3 className="font-semibold text-xs sm:text-sm text-slate-900 dark:text-slate-100 uppercase tracking-wider font-mono">
                   B. Previous Year Questions (PYQs)
                 </h3>
               </div>
-              <span className="inline-flex items-center gap-1 text-[11px] font-mono text-emerald-600 dark:text-emerald-400">
+              <span className="inline-flex items-center gap-1.5 text-xs font-mono text-emerald-600 dark:text-emerald-400">
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 <span>37 Official PDF Archives Ready</span>
               </span>
@@ -650,19 +656,19 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
             {/* Top Banner: All-Semester-3 Master Archive Mega Bundle */}
             <div
               id="pyq-mega-bundle"
-              className="py-2.5 sm:py-3 px-3.5 sm:px-4 rounded-xl sm:rounded-2xl bg-gradient-to-r from-purple-900/40 via-indigo-900/30 to-slate-900/50 border-2 border-purple-500/40 shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+              className="py-3 px-4 sm:px-5 rounded-2xl bg-gradient-to-r from-emerald-950/30 via-zinc-900/60 to-zinc-900/40 backdrop-blur-md border border-emerald-500/30 shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-3"
             >
               <div id="r-pyq" />
               <div id="item-r-pyq" />
               <div className="flex items-center gap-3">
-                <span className="p-2 rounded-xl bg-purple-500/20 text-purple-300 shrink-0">
+                <span className="p-2.5 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 shrink-0">
                   <Sparkles className="w-5 h-5" />
                 </span>
                 <div className="flex items-center gap-2 flex-wrap">
-                  <h4 className="font-black text-base sm:text-lg text-white">
+                  <h4 className="font-bold text-base sm:text-lg text-slate-100">
                     3rd Sem Complete PYQ Mega Bundle
                   </h4>
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-extrabold bg-purple-500/20 text-purple-300 border border-purple-500/40">
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
                     2017–2026
                   </span>
                 </div>
@@ -674,9 +680,9 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
                   id="btn-view-mega-bundle"
                   type="button"
                   onClick={() => handleView('/pyq/sem3_pyq_master_all.pdf', '3rd Sem Complete PYQ Mega Bundle')}
-                  className="flex-1 sm:flex-initial min-h-[40px] px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-800 hover:bg-slate-700 text-purple-300 border border-purple-500/40 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95 shadow-xs"
+                  className="flex-1 sm:flex-initial min-h-[38px] px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold bg-white/10 hover:bg-white/20 text-slate-100 border border-white/10 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95 shadow-sm"
                 >
-                  <Eye className="w-4 h-4 text-purple-400 shrink-0" />
+                  <Eye className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
                   <span>View PDF</span>
                 </button>
                 <a
@@ -686,16 +692,16 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
                   rel="noopener noreferrer"
                   download="sem3_pyq_master_all.pdf"
                   onClick={(e) => handleDownloadClick(e, '/pyq/sem3_pyq_master_all.pdf')}
-                  className="flex-1 sm:flex-initial min-h-[40px] px-4 py-2 rounded-xl text-xs sm:text-sm font-black bg-purple-600 hover:bg-purple-500 text-white transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer active:scale-95"
+                  className="flex-1 sm:flex-initial min-h-[38px] px-4 py-1.5 rounded-xl text-xs sm:text-sm font-semibold bg-emerald-600 hover:bg-emerald-500 text-white transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer active:scale-95"
                 >
-                  <Download className="w-4 h-4 shrink-0" />
+                  <Download className="w-3.5 h-3.5 shrink-0" />
                   <span>Download</span>
                 </a>
               </div>
             </div>
 
             {/* Instant In-Page PYQ Search & Filter Bar */}
-            <div className="sticky top-0 z-20 py-2.5 bg-slate-50/95 dark:bg-[#0f172a]/95 backdrop-blur-md">
+            <div className="sticky top-0 z-20 py-2.5 bg-slate-50/90 dark:bg-[#06090e]/90 backdrop-blur-md">
               <div className="relative flex items-center">
                 <Search className="w-4 h-4 absolute left-3.5 text-slate-400 pointer-events-none" />
                 <input
@@ -704,7 +710,7 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Filter sessions or years (e.g. 2024, Jan, Dec, 2026)..."
-                  className="w-full min-h-[44px] pl-10 pr-10 text-xs sm:text-sm rounded-xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700/80 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 shadow-xs"
+                  className="w-full min-h-[44px] pl-10 pr-10 text-xs sm:text-sm rounded-xl bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md border border-slate-200 dark:border-white/10 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm"
                 />
                 {searchQuery && (
                   <button
@@ -712,7 +718,7 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
                     type="button"
                     onClick={() => setSearchQuery('')}
                     aria-label="Clear filter"
-                    className="absolute right-2 p-1.5 min-h-[36px] min-w-[36px] flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-white rounded-lg cursor-pointer active:scale-95"
+                    className="absolute right-2 p-1.5 min-h-[36px] min-w-[36px] flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg cursor-pointer active:scale-95"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -725,10 +731,10 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
               <button
                 type="button"
                 onClick={() => setSelectedSubject('all')}
-                className={`px-3.5 py-2 min-h-[44px] rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer active:scale-95 ${
+                className={`px-3.5 py-2 min-h-[40px] rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer snap-start active:scale-95 ${
                   selectedSubject === 'all'
-                    ? 'bg-purple-600 text-white shadow-xs ring-2 ring-purple-500/30'
-                    : 'bg-white dark:bg-[#1e293b] text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700/60 hover:border-slate-300'
+                    ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-sm ring-1 ring-emerald-400/30'
+                    : 'bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20'
                 }`}
               >
                 All Subjects ({pyqSubjects.length})
@@ -738,10 +744,10 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
                   key={sub.id}
                   type="button"
                   onClick={() => setSelectedSubject(sub.id)}
-                  className={`px-3.5 py-2 min-h-[44px] rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer active:scale-95 ${
+                  className={`px-3.5 py-2 min-h-[40px] rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer snap-start active:scale-95 ${
                     selectedSubject === sub.id
-                      ? 'bg-purple-600 text-white shadow-xs ring-2 ring-purple-500/30'
-                      : 'bg-white dark:bg-[#1e293b] text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700/60 hover:border-slate-300'
+                      ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-sm ring-1 ring-emerald-400/30'
+                      : 'bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20'
                   }`}
                 >
                   {sub.shortTitle}
@@ -752,9 +758,9 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
             {/* Subject Cards Grid */}
             <div className="space-y-4">
               {searchedSubjects.length === 0 ? (
-                <div className="p-8 sm:p-12 rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-700 bg-white dark:bg-[#1e293b] text-center space-y-4">
+                <div className="p-8 sm:p-12 rounded-2xl border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md text-center space-y-4 shadow-sm">
                   <div className="flex items-center justify-center">
-                    <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-mono font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-300 dark:border-amber-800">
+                    <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-mono font-medium bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
                       No papers matching &apos;{searchQuery}&apos;
                     </span>
                   </div>
@@ -762,7 +768,7 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
                     <button
                       type="button"
                       onClick={() => setSearchQuery('')}
-                      className="min-h-[44px] px-4 py-2 text-xs font-bold rounded-xl bg-purple-600 hover:bg-purple-500 text-white transition-all cursor-pointer active:scale-95 shadow-xs"
+                      className="min-h-[40px] px-4 py-2 text-xs font-semibold rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white transition-all cursor-pointer active:scale-95 shadow-sm"
                     >
                       Reset Filter
                     </button>
@@ -774,7 +780,7 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
                     key={sub.id}
                     id={`pyq-${sub.id}`}
                     style={{ contentVisibility: 'auto', containIntrinsicSize: '0 120px' }}
-                    className="bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700/60 rounded-xl sm:rounded-2xl p-3 sm:p-4 shadow-xs space-y-3 hover:border-purple-300/60 dark:hover:border-purple-800/60 transition-all content-visibility-auto"
+                    className="bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md border border-slate-200 dark:border-white/10 rounded-2xl p-4 sm:p-5 shadow-sm space-y-3.5 hover:border-slate-300 dark:hover:border-white/20 transition-all content-visibility-auto"
                   >
                     <div id={`pyq-card-${sub.id}`}>
                       <div id={`item-pyq-${sub.id}`}>
@@ -782,12 +788,12 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
                       </div>
                     </div>
                     {/* Subject Header & Master Archive Dual Actions */}
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2.5 border-b border-slate-100 dark:border-slate-800">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-3 border-b border-slate-200 dark:border-white/10">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-purple-500/10 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-900/60">
+                        <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
                           {sub.code}
                         </span>
-                        <h4 className="font-bold text-sm sm:text-base text-slate-900 dark:text-white">
+                        <h4 className="font-semibold text-sm sm:text-base text-slate-900 dark:text-slate-100">
                           {sub.title}
                         </h4>
                       </div>
@@ -797,9 +803,9 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
                         <button
                           type="button"
                           onClick={() => handleView(sub.masterArchiveUrl, `${sub.title} — Master Archive`)}
-                          className="flex-1 sm:flex-initial min-h-[38px] px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 flex items-center justify-center gap-1.5 transition-all active:scale-95 cursor-pointer"
+                          className="flex-1 sm:flex-initial min-h-[38px] px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-white/10 flex items-center justify-center gap-1.5 transition-all active:scale-95 cursor-pointer"
                         >
-                          <Eye className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400 shrink-0" />
+                          <Eye className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400 shrink-0" />
                           <span>View Master PDF</span>
                         </button>
                         <a
@@ -808,7 +814,7 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
                           rel="noopener noreferrer"
                           download={`${sub.id}_pyq_all.pdf`}
                           onClick={(e) => handleDownloadClick(e, sub.masterArchiveUrl)}
-                          className="flex-1 sm:flex-initial min-h-[38px] px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-purple-600 hover:bg-purple-500 text-white transition-all flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer shadow-xs"
+                          className="flex-1 sm:flex-initial min-h-[38px] px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold bg-emerald-600 hover:bg-emerald-500 text-white transition-all flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer shadow-sm"
                         >
                           <FileDown className="w-3.5 h-3.5 shrink-0" />
                           <span>Download Archive</span>
@@ -819,7 +825,7 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
                     {/* Sessions Grid (or Single Master Note for Drawing) */}
                     {sub.sessions && sub.sessions.length > 0 ? (
                       <div className="space-y-2">
-                        <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 block">
+                        <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 dark:text-slate-500 block">
                           Available Sessions ({sub.sessions.length} Papers):
                         </span>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5">
@@ -832,57 +838,57 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
                               <div
                                 key={sess.fileUrl}
                                 id={`pyq-${sessSlug}`}
-                                className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 flex flex-col justify-between gap-2.5 transition-all hover:border-purple-300 dark:hover:border-purple-700 shadow-2xs"
+                                className="p-3 rounded-xl bg-slate-50/80 dark:bg-zinc-950/50 border border-slate-200 dark:border-white/10 flex flex-col justify-between gap-2.5 transition-all hover:border-emerald-500/30 dark:hover:border-emerald-500/30 shadow-xs"
                               >
                                 <div id={`item-pyq-${sessSlug}`} />
-                              <div className="flex items-center justify-between gap-1">
-                                <span className="text-xs font-mono font-bold text-slate-800 dark:text-slate-200 truncate">
-                                  {sess.sessionLabel}
-                                </span>
-                                <span className="px-1.5 py-0.2 rounded text-[10px] font-mono text-purple-600 dark:text-purple-400 bg-purple-500/10 font-bold uppercase">
-                                  PDF
-                                </span>
+                                <div className="flex items-center justify-between gap-1">
+                                  <span className="text-xs font-mono font-semibold text-slate-800 dark:text-slate-200 truncate">
+                                    {sess.sessionLabel}
+                                  </span>
+                                  <span className="px-1.5 py-0.5 rounded text-[10px] font-mono text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 font-medium">
+                                    PDF
+                                  </span>
+                                </div>
+                                <div className="flex items-center gap-1.5 pt-1 border-t border-slate-200/60 dark:border-white/5">
+                                  <button
+                                    type="button"
+                                    onClick={() => handleView(sess.fileUrl, `${sub.shortTitle} — ${sess.sessionLabel}`)}
+                                    className="flex-1 min-h-[36px] px-2 py-1 text-xs font-semibold rounded-lg bg-slate-200 hover:bg-slate-300 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-slate-700 dark:text-slate-200 transition-all flex items-center justify-center gap-1 cursor-pointer active:scale-95"
+                                    title={`View ${sub.shortTitle} ${sess.sessionLabel}`}
+                                  >
+                                    <Eye className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400 shrink-0" />
+                                    <span>View</span>
+                                  </button>
+                                  <a
+                                    href={sess.fileUrl}
+                                    download={sess.fileUrl.replace('/pyq/', '')}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    onClick={(e) => handleDownloadClick(e, sess.fileUrl)}
+                                    className="flex-1 min-h-[36px] px-2 py-1 text-xs font-semibold rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white transition-all flex items-center justify-center gap-1 cursor-pointer active:scale-95 shadow-xs"
+                                    title={`Download ${sub.shortTitle} ${sess.sessionLabel}`}
+                                  >
+                                    <Download className="w-3.5 h-3.5 shrink-0" />
+                                    <span>Download</span>
+                                  </a>
+                                </div>
                               </div>
-                              <div className="flex items-center gap-1.5 pt-1 border-t border-slate-200/60 dark:border-slate-800">
-                                <button
-                                  type="button"
-                                  onClick={() => handleView(sess.fileUrl, `${sub.shortTitle} — ${sess.sessionLabel}`)}
-                                  className="flex-1 min-h-[40px] px-2 py-1.5 text-xs font-bold rounded-lg bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition-colors flex items-center justify-center gap-1 cursor-pointer active:scale-95"
-                                  title={`View ${sub.shortTitle} ${sess.sessionLabel}`}
-                                >
-                                  <Eye className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400 shrink-0" />
-                                  <span>View</span>
-                                </button>
-                                <a
-                                  href={sess.fileUrl}
-                                  download={sess.fileUrl.replace('/pyq/', '')}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  onClick={(e) => handleDownloadClick(e, sess.fileUrl)}
-                                  className="flex-1 min-h-[40px] px-2 py-1.5 text-xs font-bold rounded-lg bg-purple-600 hover:bg-purple-500 text-white transition-colors flex items-center justify-center gap-1 cursor-pointer active:scale-95 shadow-2xs"
-                                  title={`Download ${sub.shortTitle} ${sess.sessionLabel}`}
-                                >
-                                  <Download className="w-3.5 h-3.5 shrink-0" />
-                                  <span>Download</span>
-                                </a>
-                              </div>
-                            </div>
-                          );
-                        })}
+                            );
+                          })}
                         </div>
                       </div>
                     ) : sub.id === 'drawing' ? (
-                      <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-2">
-                        <span className="text-xs font-mono font-bold text-slate-700 dark:text-slate-300">
+                      <div className="p-3.5 rounded-xl bg-slate-50/80 dark:bg-zinc-950/50 border border-slate-200 dark:border-white/10 flex items-center justify-between gap-2">
+                        <span className="text-xs font-mono text-slate-700 dark:text-slate-300">
                           Complete Master Drawing Question Archive
                         </span>
-                        <span className="px-2.5 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-800 shrink-0">
+                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 shrink-0">
                           Consolidated PDF
                         </span>
                       </div>
                     ) : (
-                      <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 flex items-center justify-center">
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-300 dark:border-amber-800">
+                      <div className="p-3.5 rounded-xl bg-slate-50/80 dark:bg-zinc-950/50 border border-slate-200 dark:border-white/10 flex items-center justify-center">
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono font-medium bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
                           No papers matching &apos;{searchQuery}&apos;
                         </span>
                       </div>

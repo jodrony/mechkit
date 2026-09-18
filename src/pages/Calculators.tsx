@@ -438,7 +438,7 @@ export const Calculators: React.FC<CalculatorsProps> = ({ initialToolId }) => {
     <div className="max-w-5xl mx-auto px-3 sm:px-6 py-4 space-y-4">
       {/* Category Tabs & Multi-Field Search */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-        <div className="flex items-center gap-1.5 p-1 bg-slate-100 dark:bg-[#1e293b] rounded-xl border border-slate-200 dark:border-slate-700/60 overflow-x-auto shrink-0">
+        <div className="flex items-center gap-1.5 p-1 bg-slate-200/50 dark:bg-white/[0.04] rounded-xl border border-slate-200 dark:border-white/10 overflow-x-auto shrink-0">
           {CATEGORY_TABS.map((cat) => (
             <button
               key={cat.id}
@@ -448,9 +448,9 @@ export const Calculators: React.FC<CalculatorsProps> = ({ initialToolId }) => {
                 const first = CALCULATOR_TOOLS.find((t) => cat.id === 'all' || t.category === cat.id);
                 if (first) setActiveToolId(first.id);
               }}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap active:scale-95 ${
                 activeCategory === cat.id
-                  ? 'bg-white dark:bg-slate-900 text-mech-blue dark:text-blue-400 shadow-xs'
+                  ? 'bg-emerald-500 text-slate-950 font-bold shadow-xs'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
@@ -467,7 +467,7 @@ export const Calculators: React.FC<CalculatorsProps> = ({ initialToolId }) => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search tools, units..."
-              className="w-full py-1.5 pl-8 pr-7 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1e293b] text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-mech-blue"
+              className="w-full py-1.5 pl-8 pr-7 text-xs rounded-xl border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-emerald-500"
             />
             {searchQuery && (
               <button
@@ -494,10 +494,10 @@ export const Calculators: React.FC<CalculatorsProps> = ({ initialToolId }) => {
             type="button"
             id={`chip-${t.id}`}
             onClick={() => setActiveToolId(t.id)}
-            className={`px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all border cursor-pointer ${
+            className={`px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all border cursor-pointer active:scale-95 ${
               activeToolId === t.id
-                ? 'bg-mech-blue text-white border-mech-blue shadow-xs'
-                : 'bg-white dark:bg-[#1e293b] text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700/60 hover:border-slate-300'
+                ? 'bg-emerald-500 text-slate-950 border-emerald-500 font-bold shadow-xs'
+                : 'bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md text-slate-700 dark:text-slate-300 border-slate-200 dark:border-white/10 hover:border-emerald-500/40'
             }`}
           >
             {t.title}
@@ -997,10 +997,10 @@ Beyond a distance equal to the largest cross-sectional dimension from load appli
                     key={g.id}
                     type="button"
                     onClick={() => setStressGeom(g.id as any)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer active:scale-95 ${
                       stressGeom === g.id
-                        ? 'bg-mech-blue text-white shadow-xs'
-                        : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
+                        ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-sm ring-1 ring-emerald-400/30 font-bold'
+                        : 'bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-zinc-700 border border-slate-200 dark:border-white/10'
                     }`}
                   >
                     {g.label}
@@ -1180,10 +1180,10 @@ Because depth (d) is cubed in the rectangular formula (I_x = b·d³ / 12), doubl
               <button
                 type="button"
                 onClick={() => setMoiShape('rect')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer active:scale-95 transition-all ${
                   moiShape === 'rect'
-                    ? 'bg-mech-blue text-white shadow-xs'
-                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
+                    ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-sm ring-1 ring-emerald-400/30 font-bold'
+                    : 'bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-zinc-700 border border-slate-200 dark:border-white/10'
                 }`}
               >
                 Rectangular Section
@@ -1191,10 +1191,10 @@ Because depth (d) is cubed in the rectangular formula (I_x = b·d³ / 12), doubl
               <button
                 type="button"
                 onClick={() => setMoiShape('circ')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer active:scale-95 transition-all ${
                   moiShape === 'circ'
-                    ? 'bg-mech-blue text-white shadow-xs'
-                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
+                    ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-sm ring-1 ring-emerald-400/30 font-bold'
+                    : 'bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-zinc-700 border border-slate-200 dark:border-white/10'
                 }`}
               >
                 Circular Section
@@ -1238,29 +1238,31 @@ Because depth (d) is cubed in the rectangular formula (I_x = b·d³ / 12), doubl
 
       {/* 9. Universal SI Unit Converter */}
       {activeToolId === 'converter' && (
-        <div className="bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700/60 rounded-2xl p-5 shadow-xs space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-700/60">
+        <div className="bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md border border-slate-200 dark:border-white/10 rounded-2xl p-5 shadow-sm space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-white/10">
             <div className="flex items-center gap-2">
-              <ArrowRightLeft className="w-5 h-5 text-mech-blue" />
-              <h3 className="text-base font-bold text-slate-900 dark:text-white">Universal Engineering Unit Converter</h3>
+              <div className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                <ArrowRightLeft className="w-5 h-5" />
+              </div>
+              <h3 className="text-base font-bold text-slate-900 dark:text-white font-sans">Universal Engineering Unit Converter</h3>
             </div>
             <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={handleSwapConv}
                 title="Swap values and units (⇄)"
-                className="min-h-[44px] px-3.5 py-2 rounded-xl text-xs font-bold bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/50 dark:hover:bg-blue-900/60 text-mech-blue dark:text-blue-300 border border-blue-200 dark:border-blue-800/80 transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 shadow-xs"
+                className="min-h-[40px] px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20 transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 shadow-xs"
               >
-                <ArrowRightLeft className="w-4 h-4 text-mech-blue dark:text-blue-400" />
+                <ArrowRightLeft className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                 <span>Swap ⇄</span>
               </button>
               <button
                 type="button"
                 onClick={() => setConvVal('')}
                 title="Clear input"
-                className="min-h-[44px] px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 shadow-xs"
+                className="min-h-[40px] px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-white/10 transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 shadow-xs"
               >
-                <RotateCcw className="w-4 h-4 text-slate-500" />
+                <RotateCcw className="w-4 h-4 text-slate-400" />
                 <span>Reset</span>
               </button>
             </div>
@@ -1292,10 +1294,10 @@ Because depth (d) is cubed in the rectangular formula (I_x = b·d³ / 12), doubl
                   setConvFrom(defMap[t.id][0]);
                   setConvTo(defMap[t.id][1]);
                 }}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer active:scale-95 ${
                   convType === t.id
-                    ? 'bg-mech-blue text-white shadow-xs'
-                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+                    ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-sm ring-1 ring-emerald-400/30 font-bold'
+                    : 'bg-slate-100 dark:bg-zinc-800/80 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-white/10'
                 }`}
               >
                 {t.label}
@@ -1305,20 +1307,20 @@ Because depth (d) is cubed in the rectangular formula (I_x = b·d³ / 12), doubl
 
           {/* Conversion Input / Output Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-            <div className="p-4 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-200 dark:border-slate-700/60 space-y-2">
-              <label className="text-xs font-bold text-slate-500 dark:text-slate-400">From Input Value & Unit</label>
+            <div className="p-4 bg-slate-50 dark:bg-zinc-950/50 rounded-xl border border-slate-200 dark:border-white/10 space-y-2">
+              <label className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 font-sans">From Input Value &amp; Unit</label>
               <div className="flex gap-2">
                 <input
                   type="number"
                   value={convVal}
                   onChange={(e) => setConvVal(e.target.value)}
                   placeholder="Enter value..."
-                  className="flex-1 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#1e293b] px-3.5 py-2.5 text-base font-mono text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-mech-blue"
+                  className="flex-1 rounded-xl border border-slate-300 dark:border-white/10 bg-white dark:bg-zinc-900 px-3.5 py-2 text-base font-mono text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 />
                 <select
                   value={convFrom}
                   onChange={(e) => setConvFrom(e.target.value)}
-                  className="rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#1e293b] px-3 py-2.5 text-xs font-bold text-slate-700 dark:text-slate-200 cursor-pointer"
+                  className="rounded-xl border border-slate-300 dark:border-white/10 bg-white dark:bg-zinc-900 px-3 py-2 text-xs font-semibold text-slate-700 dark:text-slate-200 cursor-pointer"
                 >
                   {convType === 'pressure' && ['Pa', 'kPa', 'MPa (N/mm²)', 'GPa', 'bar', 'psi'].map((u) => <option key={u} value={u}>{u}</option>)}
                   {convType === 'length' && ['mm', 'cm', 'm', 'inch', 'ft'].map((u) => <option key={u} value={u}>{u}</option>)}
@@ -1330,15 +1332,15 @@ Because depth (d) is cubed in the rectangular formula (I_x = b·d³ / 12), doubl
               </div>
             </div>
 
-            <div className="p-4 bg-blue-50/50 dark:bg-slate-900/60 rounded-xl border border-blue-200 dark:border-blue-900/50 space-y-2 flex flex-col justify-between">
+            <div className="p-4 bg-emerald-500/[0.03] dark:bg-zinc-950/50 rounded-xl border border-emerald-500/20 dark:border-white/10 space-y-2 flex flex-col justify-between">
               <div>
                 <div className="flex justify-between items-center mb-1">
-                  <label className="text-xs font-bold text-slate-500 dark:text-slate-400">Target Output Unit</label>
+                  <label className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 font-sans">Target Output Unit</label>
                   <div className="flex items-center gap-1">
                     <select
                       value={convTo}
                       onChange={(e) => setConvTo(e.target.value)}
-                      className="rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#1e293b] px-2.5 py-1 text-xs font-bold text-slate-700 dark:text-slate-200 cursor-pointer shadow-2xs"
+                      className="rounded-lg border border-slate-300 dark:border-white/10 bg-white dark:bg-zinc-900 px-2.5 py-1 text-xs font-semibold text-slate-700 dark:text-slate-200 cursor-pointer shadow-2xs"
                     >
                       {convType === 'pressure' && ['Pa', 'kPa', 'MPa (N/mm²)', 'GPa', 'bar', 'psi'].map((u) => <option key={u} value={u}>{u}</option>)}
                       {convType === 'length' && ['mm', 'cm', 'm', 'inch', 'ft'].map((u) => <option key={u} value={u}>{u}</option>)}

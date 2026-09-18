@@ -46,20 +46,20 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({ isOpen, onClose })
         role="dialog"
         aria-modal="true"
         aria-labelledby="feedback-modal-title"
-        className="fixed bottom-0 md:bottom-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 w-full max-w-md bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-t-2xl md:rounded-2xl p-5 sm:p-6 z-50 shadow-2xl space-y-4 animate-in slide-in-from-bottom duration-200"
+        className="fixed bottom-0 md:bottom-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 w-full max-w-md bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl border border-slate-200 dark:border-white/10 rounded-t-2xl md:rounded-2xl p-5 sm:p-6 z-50 shadow-2xl space-y-4 animate-in slide-in-from-bottom duration-200"
       >
         {/* Header */}
-        <div className="flex items-center justify-between pb-2 border-b border-neutral-100 dark:border-neutral-800">
+        <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-white/10">
           <div className="space-y-0.5">
             <div className="flex items-center gap-2">
-              <span className="p-1.5 rounded-xl bg-orange-500/10 text-orange-500 dark:text-orange-400 border border-orange-500/20">
+              <span className="p-1.5 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
                 <MessageSquarePlus className="w-4 h-4" />
               </span>
               <h3 id="feedback-modal-title" className="font-extrabold text-base sm:text-lg text-slate-900 dark:text-white">
                 Feedback &amp; Resource Requests
               </h3>
             </div>
-            <p className="text-xs text-slate-500 dark:text-neutral-400 pl-8">
+            <p className="text-xs text-slate-500 dark:text-slate-400 pl-8 font-sans">
               Built by Rony Biswas — Help improve MechKit for Sem 3.
             </p>
           </div>
@@ -69,7 +69,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({ isOpen, onClose })
             type="button"
             onClick={onClose}
             aria-label="Close feedback modal"
-            className="min-h-[40px] min-w-[40px] p-2 rounded-xl text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors flex items-center justify-center cursor-pointer active:scale-95"
+            className="min-h-[40px] min-w-[40px] p-2 rounded-xl text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.06] transition-colors flex items-center justify-center cursor-pointer active:scale-95"
           >
             <X className="w-5 h-5" />
           </button>
@@ -83,7 +83,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({ isOpen, onClose })
             href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full min-h-[44px] px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm bg-emerald-600 hover:bg-emerald-500 text-white transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer active:scale-95"
+            className="w-full min-h-[44px] px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm bg-[#05DF8E] hover:bg-[#10F09C] text-[#021B13] transition-all shadow-emerald-glow flex items-center justify-center gap-2 cursor-pointer active:scale-95"
           >
             <MessageCircle className="w-4 h-4 shrink-0" />
             <span>Chat on WhatsApp</span>
@@ -94,9 +94,9 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({ isOpen, onClose })
           <a
             id="btn-feedback-email"
             href="mailto:ronyb70747@gmail.com?subject=MechKit%20Feedback"
-            className="w-full min-h-[44px] px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95 shadow-xs"
+            className="w-full min-h-[44px] px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm bg-slate-100 hover:bg-slate-200 dark:bg-white/[0.06] dark:hover:bg-white/[0.1] text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-white/10 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95 shadow-xs"
           >
-            <Mail className="w-4 h-4 text-orange-400 shrink-0" />
+            <Mail className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
             <span>Email Feedback</span>
           </a>
 
@@ -104,7 +104,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({ isOpen, onClose })
           <a
             id="btn-request-missing-pyq"
             href={missingPyqUrl}
-            className="w-full min-h-[44px] px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm bg-orange-500 hover:bg-orange-600 text-white transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer active:scale-95"
+            className="w-full min-h-[44px] px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm bg-emerald-600 hover:bg-emerald-500 text-white transition-all shadow-emerald-glow flex items-center justify-center gap-2 cursor-pointer active:scale-95"
           >
             <MessageSquarePlus className="w-4 h-4 shrink-0" />
             <span>Request a Missing PYQ</span>

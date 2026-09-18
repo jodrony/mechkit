@@ -702,7 +702,7 @@ export const Utilities: React.FC<UtilitiesProps> = ({ initialToolId }) => {
     <div className="max-w-5xl mx-auto px-3 sm:px-6 py-4 space-y-4">
       {/* Category Tabs & Multi-Field Search */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-        <div className="flex items-center gap-1.5 p-1 bg-slate-100 dark:bg-[#1e293b] rounded-xl border border-slate-200 dark:border-slate-700/60 overflow-x-auto shrink-0">
+        <div className="flex items-center gap-1.5 p-1 bg-slate-200/60 dark:bg-white/[0.04] rounded-xl border border-slate-200 dark:border-white/10 overflow-x-auto shrink-0">
           {CATEGORY_TABS.map((cat) => (
             <button
               key={cat.id}
@@ -712,9 +712,9 @@ export const Utilities: React.FC<UtilitiesProps> = ({ initialToolId }) => {
                 const first = UTILITY_TOOLS.find((t) => cat.id === 'all' || t.category === cat.id);
                 if (first) setActiveToolId(first.id);
               }}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap active:scale-95 ${
                 activeCategory === cat.id
-                  ? 'bg-white dark:bg-slate-900 text-mech-blue dark:text-blue-400 shadow-xs'
+                  ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-sm ring-1 ring-emerald-400/30 font-bold'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
@@ -731,7 +731,7 @@ export const Utilities: React.FC<UtilitiesProps> = ({ initialToolId }) => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search utilities, units..."
-              className="w-full py-1.5 pl-8 pr-7 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1e293b] text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-mech-blue"
+              className="w-full py-1.5 pl-8 pr-7 text-xs rounded-xl border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-emerald-500"
             />
             {searchQuery && (
               <button
@@ -758,10 +758,10 @@ export const Utilities: React.FC<UtilitiesProps> = ({ initialToolId }) => {
             type="button"
             id={`chip-${t.id}`}
             onClick={() => setActiveToolId(t.id)}
-            className={`px-3 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all border cursor-pointer ${
+            className={`px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all border cursor-pointer active:scale-95 ${
               activeToolId === t.id
-                ? 'bg-mech-blue text-white border-mech-blue shadow-xs'
-                : 'bg-white dark:bg-[#1e293b] text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700/60 hover:border-slate-300'
+                ? 'bg-emerald-600 dark:bg-emerald-500 text-white border-emerald-500 shadow-sm ring-1 ring-emerald-400/30 font-bold'
+                : 'bg-white/80 dark:bg-zinc-900/60 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20'
             }`}
           >
             {t.title}
@@ -817,10 +817,10 @@ Wrought steels attain theoretical density (≈7,850 kg/m³), whereas sand castin
                       key={m.id}
                       type="button"
                       onClick={() => setDensityMode(m.id as any)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer active:scale-95 ${
                         densityMode === m.id
-                          ? 'bg-mech-blue text-white shadow-xs'
-                          : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
+                          ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-sm ring-1 ring-emerald-400/30 font-bold'
+                          : 'bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-zinc-700 border border-slate-200 dark:border-white/10'
                       }`}
                     >
                       {m.label}
@@ -831,17 +831,17 @@ Wrought steels attain theoretical density (≈7,850 kg/m³), whereas sand castin
 
               {/* Material density quick presets */}
               <div className="space-y-1.5 pt-1">
-                <span className="text-xs font-bold text-slate-500 dark:text-slate-400">Material Presets (ρ):</span>
+                <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 font-sans">Material Presets (ρ):</span>
                 <div className="flex flex-wrap gap-1.5">
                   {MATERIALS.map((mat) => (
                     <button
                       key={mat.name}
                       type="button"
                       onClick={() => setRhoVal(mat.density)}
-                      className={`px-2 py-1 rounded text-[11px] font-mono font-medium border transition-colors cursor-pointer ${
+                      className={`px-2 py-1 rounded-lg text-[11px] font-mono font-medium border transition-colors cursor-pointer active:scale-95 ${
                         toNum(rhoVal) === mat.density
-                          ? 'bg-blue-500/10 text-mech-blue border-mech-blue/40 dark:bg-blue-900/30 dark:text-blue-300'
-                          : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-slate-300'
+                          ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/40 font-bold'
+                          : 'bg-slate-50 dark:bg-zinc-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-white/10 hover:border-slate-300'
                       }`}
                     >
                       {mat.name.split(' (')[0]} ({mat.density})
@@ -1010,10 +1010,10 @@ In workshop sawing, each cut consumes 2.5–3.5 mm of length (saw kerf). Always 
                       key={p.id}
                       type="button"
                       onClick={() => setStockProfile(p.id as any)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer active:scale-95 ${
                         stockProfile === p.id
-                          ? 'bg-mech-blue text-white shadow-xs'
-                          : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
+                          ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-sm ring-1 ring-emerald-400/30 font-bold'
+                          : 'bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-zinc-700 border border-slate-200 dark:border-white/10'
                       }`}
                     >
                       {p.label}
@@ -1024,8 +1024,8 @@ In workshop sawing, each cut consumes 2.5–3.5 mm of length (saw kerf). Always 
 
               <div className="space-y-1.5 pt-1">
                 <div className="flex justify-between items-center">
-                  <span className="text-xs font-bold text-slate-600 dark:text-slate-300">Alloy Selection:</span>
-                  <span className="text-xs font-mono font-bold text-mech-blue dark:text-blue-400">
+                  <span className="text-xs font-semibold text-slate-700 dark:text-slate-300 font-sans">Alloy Selection:</span>
+                  <span className="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400">
                     {MATERIALS[selectedMatIdx].badge}
                   </span>
                 </div>

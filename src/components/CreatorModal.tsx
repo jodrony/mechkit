@@ -103,15 +103,15 @@ export const CreatorModal: React.FC<CreatorModalProps> = ({ isOpen, onClose, onS
         role="dialog"
         aria-modal="true"
         aria-labelledby="creator-modal-title"
-        className="fixed bottom-0 md:bottom-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 w-full max-w-md bg-slate-900 border border-slate-800 rounded-t-2xl md:rounded-2xl p-6 z-50 shadow-2xl space-y-5 animate-in slide-in-from-bottom duration-200 transform-gpu gpu-accelerated"
+        className="fixed bottom-0 md:bottom-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 w-full max-w-md bg-white/95 dark:bg-zinc-900/95 border border-slate-200 dark:border-white/10 rounded-t-2xl md:rounded-2xl p-6 z-50 shadow-2xl space-y-5 animate-in slide-in-from-bottom duration-200 backdrop-blur-xl transform-gpu gpu-accelerated font-sans"
       >
         {/* Top Action Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="p-1.5 rounded-xl bg-orange-500/10 text-mech-orange border border-orange-500/20">
+            <span className="p-1.5 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
               <Sparkles className="w-4 h-4" />
             </span>
-            <span className="text-xs font-mono font-bold tracking-wider uppercase text-mech-orange">
+            <span className="text-xs font-mono font-bold tracking-wider uppercase text-emerald-600 dark:text-emerald-400">
               Developer &amp; Maintainer
             </span>
           </div>
@@ -122,7 +122,7 @@ export const CreatorModal: React.FC<CreatorModalProps> = ({ isOpen, onClose, onS
             type="button"
             onClick={onClose}
             aria-label="Close creator modal"
-            className="min-h-[44px] min-w-[44px] p-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors flex items-center justify-center cursor-pointer active:scale-95"
+            className="min-h-[40px] min-w-[40px] p-2 rounded-xl text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors flex items-center justify-center cursor-pointer active:scale-95"
           >
             <X className="w-5 h-5" />
           </button>
@@ -130,25 +130,25 @@ export const CreatorModal: React.FC<CreatorModalProps> = ({ isOpen, onClose, onS
 
         {/* Creator Identity & Bio */}
         <div className="space-y-2">
-          <h3 id="creator-modal-title" className="text-2xl font-black text-white tracking-tight">
+          <h3 id="creator-modal-title" className="text-2xl font-black text-slate-900 dark:text-white tracking-tight font-sans">
             Rony Biswas
           </h3>
-          <p className="text-xs font-mono font-semibold text-slate-400">
+          <p className="text-xs font-mono font-semibold text-slate-500 dark:text-slate-400">
             Dept. of Mechanical Engineering • Batch of &apos;25
           </p>
-          <p className="text-sm text-slate-300 leading-relaxed pt-1">
+          <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed pt-1 font-sans">
             Crafted this kit to centralize lab reports, official WBSCTE syllabus, Viva prep, and complete 2018–2026 PYQ archives in one high-speed workspace.
           </p>
         </div>
 
-        {/* Action Buttons (Native HTML <a> tags with min-h-[44px]) */}
+        {/* Action Buttons */}
         <div className="space-y-3 pt-2">
           {/* Share MechKit Button */}
           <button
             id="btn-creator-share"
             type="button"
             onClick={handleShare}
-            className="w-full min-h-[44px] px-4 py-3 rounded-xl font-bold text-xs sm:text-sm bg-orange-500/15 hover:bg-orange-500/25 text-mech-orange border border-orange-500/30 hover:border-orange-500/50 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95 shadow-xs"
+            className="w-full min-h-[44px] px-4 py-2.5 rounded-xl font-semibold text-xs sm:text-sm bg-emerald-600 hover:bg-emerald-500 text-white transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95 shadow-sm"
           >
             <Share2 className="w-4 h-4 shrink-0" />
             <span>Share MechKit v0.3</span>
@@ -160,7 +160,7 @@ export const CreatorModal: React.FC<CreatorModalProps> = ({ isOpen, onClose, onS
             href="https://instagram.com/theonly_rony"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full min-h-[44px] px-4 py-3 rounded-xl font-bold text-xs sm:text-sm bg-gradient-to-r from-pink-600 via-rose-600 to-amber-600 hover:opacity-95 text-white transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer active:scale-95"
+            className="w-full min-h-[44px] px-4 py-2.5 rounded-xl font-semibold text-xs sm:text-sm bg-gradient-to-r from-pink-600 via-rose-600 to-amber-600 hover:opacity-95 text-white transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer active:scale-95"
           >
             <InstagramIcon className="w-4 h-4 shrink-0" />
             <span>Open Instagram (@theonly_rony)</span>
@@ -171,9 +171,9 @@ export const CreatorModal: React.FC<CreatorModalProps> = ({ isOpen, onClose, onS
           <a
             id="btn-creator-email"
             href="mailto:daya.darwaja.toro@gmail.com"
-            className="w-full min-h-[44px] px-4 py-3 rounded-xl font-bold text-xs sm:text-sm bg-slate-800 hover:bg-slate-700/80 text-slate-200 border border-slate-700/80 hover:border-slate-600 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95 shadow-xs"
+            className="w-full min-h-[44px] px-4 py-2.5 rounded-xl font-semibold text-xs sm:text-sm bg-slate-100 dark:bg-white/[0.06] hover:bg-slate-200 dark:hover:bg-white/10 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-white/10 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95"
           >
-            <Mail className="w-4 h-4 text-mech-orange shrink-0" />
+            <Mail className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
             <span>Send Email (daya.darwaja.toro@gmail.com)</span>
           </a>
         </div>

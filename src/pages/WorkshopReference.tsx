@@ -20,16 +20,16 @@ export const WorkshopReference: React.FC = () => {
   return (
     <div className="max-w-5xl mx-auto px-3 sm:px-6 py-4 space-y-4">
       {/* Category Tabs */}
-      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 border-b border-slate-200 dark:border-slate-800">
+      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 border-b border-slate-200 dark:border-white/10">
         {topics.map((t) => (
           <button
             key={t.id}
             type="button"
             onClick={() => setActiveCategory(t.id as any)}
-            className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer active:scale-95 ${
               activeCategory === t.id
-                ? 'bg-amber-600 text-white shadow-xs'
-                : 'bg-white dark:bg-[#1e293b] text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700/60 hover:border-slate-300'
+                ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-sm ring-1 ring-emerald-400/30 font-bold'
+                : 'bg-white/80 dark:bg-zinc-900/60 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20'
             }`}
           >
             {t.label}
@@ -38,38 +38,39 @@ export const WorkshopReference: React.FC = () => {
       </div>
 
       {/* Main Diagram & Content Slot Container */}
-      <div className="p-6 rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-700 bg-white dark:bg-[#1e293b] text-center space-y-3">
-        <div className="w-12 h-12 mx-auto rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+      <div className="p-6 rounded-2xl border-2 border-dashed border-slate-200 dark:border-white/10 bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md text-center space-y-3">
+        <div className="w-12 h-12 mx-auto rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center border border-emerald-500/20">
           <Image className="w-6 h-6" />
         </div>
 
         <div className="max-w-md mx-auto">
-          <h3 className="font-bold text-sm sm:text-base text-slate-900 dark:text-white">
+          <h3 className="font-bold text-sm sm:text-base text-slate-900 dark:text-white font-sans">
             {currentTopic.title}
           </h3>
         </div>
 
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-mono font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-mono font-medium bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-white/10">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
           <span>Slot ID: WKS-{activeCategory.toUpperCase()} • Structure Ready</span>
         </div>
       </div>
 
       {/* Structured Outline Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
-        <div className="py-2.5 sm:py-3 px-3.5 sm:px-4 rounded-xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700/60 flex items-center justify-between gap-3">
+        <div className="py-2.5 sm:py-3 px-3.5 sm:px-4 rounded-xl bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md border border-slate-200 dark:border-white/10 flex items-center justify-between gap-3 shadow-sm">
           <div className="flex items-center gap-2">
-            <FileText className="w-4 h-4 text-amber-500 shrink-0" />
-            <h4 className="font-bold text-xs sm:text-sm text-slate-900 dark:text-white">Technical Specifications Slot</h4>
+            <FileText className="w-4 h-4 text-emerald-500 shrink-0" />
+            <h4 className="font-bold text-xs sm:text-sm text-slate-900 dark:text-white font-sans">Technical Specifications Slot</h4>
           </div>
-          <span className="text-[10px] font-mono font-medium px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 shrink-0">Ready</span>
+          <span className="text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 shrink-0">Ready</span>
         </div>
 
-        <div className="py-2.5 sm:py-3 px-3.5 sm:px-4 rounded-xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700/60 flex items-center justify-between gap-3">
+        <div className="py-2.5 sm:py-3 px-3.5 sm:px-4 rounded-xl bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md border border-slate-200 dark:border-white/10 flex items-center justify-between gap-3 shadow-sm">
           <div className="flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-            <h4 className="font-bold text-xs sm:text-sm text-slate-900 dark:text-white">Shop Practice Checklist Slot</h4>
+            <h4 className="font-bold text-xs sm:text-sm text-slate-900 dark:text-white font-sans">Shop Practice Checklist Slot</h4>
           </div>
-          <span className="text-[10px] font-mono font-medium px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 shrink-0">Ready</span>
+          <span className="text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 shrink-0">Ready</span>
         </div>
       </div>
     </div>

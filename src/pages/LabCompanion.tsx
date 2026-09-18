@@ -175,15 +175,15 @@ export const LabCompanion: React.FC<LabCompanionProps> = ({
                 onClick={() => setActiveLabTab(cat.id)}
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all cursor-pointer snap-start active:scale-95 ${
                   isActive
-                    ? 'bg-mech-orange text-white shadow-md ring-2 ring-orange-500/30'
-                    : 'bg-white dark:bg-[#1e293b] text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700/60 hover:border-slate-300 dark:hover:border-slate-600'
+                    ? 'bg-emerald-500 text-slate-950 shadow-sm ring-1 ring-emerald-500/50'
+                    : 'bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-white/10 hover:border-emerald-500/40'
                 }`}
               >
                 <Icon className="w-4 h-4 shrink-0" />
                 <span>{cat.label}</span>
                 {cat.id === 'Thermal' && (
                   <span className={`ml-1 px-1.5 py-0.2 rounded text-[10px] font-mono font-bold ${
-                    isActive ? 'bg-white/20 text-white' : 'bg-orange-500/10 text-mech-orange'
+                    isActive ? 'bg-slate-950/20 text-slate-950' : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
                   }`}>
                     3 PDFs
                   </span>
@@ -199,16 +199,16 @@ export const LabCompanion: React.FC<LabCompanionProps> = ({
       {/* ==================================================== */}
       {activeLabTab === 'Thermal' && (
         <div className="space-y-4">
-          <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-slate-800">
+          <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-white/10">
             <div className="flex items-center gap-2">
-              <div className="p-1.5 rounded-lg bg-orange-500/10 text-mech-orange">
+              <div className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
                 <Flame className="w-5 h-5" />
               </div>
-              <h3 className="font-extrabold text-base sm:text-lg text-slate-900 dark:text-white">
+              <h3 className="font-extrabold text-base sm:text-lg text-slate-900 dark:text-white font-sans">
                 Thermal Engineering Lab Manuals
               </h3>
             </div>
-            <span className="hidden sm:inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900/40">
+            <span className="hidden sm:inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
               <CheckCircle2 className="w-3.5 h-3.5" />
               3 Manuals Available
             </span>
@@ -230,7 +230,7 @@ export const LabCompanion: React.FC<LabCompanionProps> = ({
                 <div
                   key={exp.id}
                   id={`item-${exp.id}`}
-                  className="rounded-2xl border border-neutral-200 dark:border-neutral-800/80 bg-white dark:bg-neutral-900/60 backdrop-blur-sm p-4 shadow-xs hover:border-orange-500/40 dark:hover:border-orange-500/40 transition-all flex flex-col justify-between space-y-3 group"
+                  className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md p-4 shadow-sm hover:border-emerald-500/40 dark:hover:border-emerald-500/40 transition-all flex flex-col justify-between space-y-3 group"
                 >
                   <div id={`l-boiler${idx + 1}`}>
                     <div id={exp.id} />
@@ -238,7 +238,7 @@ export const LabCompanion: React.FC<LabCompanionProps> = ({
                   </div>
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded-full bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-500/20">
+                      <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
                         Exp 0{idx + 1}
                       </span>
                       <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
@@ -246,20 +246,20 @@ export const LabCompanion: React.FC<LabCompanionProps> = ({
                       </span>
                     </div>
 
-                    <h4 className="font-bold text-base text-slate-900 dark:text-white group-hover:text-orange-500 transition-colors leading-snug">
+                    <h4 className="font-bold text-base text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors leading-snug font-sans">
                       {exp.title}
                     </h4>
                   </div>
 
-                  <div className="pt-2.5 border-t border-neutral-100 dark:border-neutral-800/80 space-y-2">
+                  <div className="pt-2.5 border-t border-slate-100 dark:border-white/[0.08] space-y-2">
                     <div className="flex items-center gap-2">
                       <button
                         id={`btn-view-${exp.id}`}
                         type="button"
                         onClick={(e) => handlePdfAction(e, exp.pdfUrl, true, `${exp.title} Manual`)}
-                        className="flex-1 py-2 px-3 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 transition-colors flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 shadow-xs"
+                        className="flex-1 py-2 px-3 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-white/[0.06] dark:hover:bg-white/[0.1] text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-white/10 transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 shadow-2xs font-sans"
                       >
-                        <Eye className="w-3.5 h-3.5 text-orange-400 shrink-0" />
+                        <Eye className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
                         <span>Open PDF</span>
                       </button>
                       <a
@@ -269,7 +269,7 @@ export const LabCompanion: React.FC<LabCompanionProps> = ({
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={(e) => handlePdfAction(e, exp.pdfUrl, false, `${exp.title} Manual`)}
-                        className="p-2 rounded-xl text-xs font-bold bg-orange-500 hover:bg-orange-600 text-white transition-colors flex items-center justify-center cursor-pointer active:scale-95 shadow-xs"
+                        className="p-2 rounded-xl text-xs font-semibold bg-emerald-500 hover:bg-emerald-400 text-slate-950 transition-all flex items-center justify-center cursor-pointer active:scale-95 shadow-2xs"
                         title="Download PDF"
                         aria-label={`Download ${exp.title} PDF`}
                       >
@@ -282,7 +282,7 @@ export const LabCompanion: React.FC<LabCompanionProps> = ({
                       type="button"
                       onClick={() => onNavigate?.('viva', exp.boilerId)}
                       title={`Practice ${exp.title} Viva`}
-                      className="w-full py-1.5 px-2.5 text-xs font-semibold rounded-xl bg-orange-500/10 hover:bg-orange-500/20 text-orange-600 dark:text-orange-400 border border-orange-200 dark:border-orange-900/40 transition-colors flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
+                      className="w-full py-1.5 px-2.5 text-xs font-semibold rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20 transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 font-sans"
                     >
                       <GraduationCap className="w-3.5 h-3.5 shrink-0" />
                       <span>Practice Boiler Viva</span>
@@ -302,18 +302,18 @@ export const LabCompanion: React.FC<LabCompanionProps> = ({
               <span className="text-xs font-mono text-slate-400">Official Standards</span>
             </div>
 
-            <div className="rounded-2xl border border-neutral-200 dark:border-neutral-800/80 bg-white dark:bg-neutral-900/60 backdrop-blur-sm divide-y divide-neutral-100 dark:divide-neutral-800/80 overflow-hidden shadow-xs">
+            <div className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md divide-y divide-slate-100 dark:divide-white/5 overflow-hidden shadow-sm">
               {/* Front Index Sheet */}
-              <div className="py-2.5 px-3.5 sm:px-4 flex items-center justify-between gap-3 hover:bg-neutral-50/50 dark:hover:bg-neutral-800/30 transition-colors">
+              <div className="py-3 px-3.5 sm:px-4 flex items-center justify-between gap-3 hover:bg-slate-50/80 dark:hover:bg-white/[0.03] transition-colors">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 shrink-0">
+                  <div className="p-2.5 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 shrink-0">
                     <FileSpreadsheet className="w-4 h-4" />
                   </div>
                   <div>
-                    <h5 className="font-bold text-xs sm:text-sm text-slate-900 dark:text-white">
+                    <h5 className="font-semibold text-xs sm:text-sm text-slate-900 dark:text-slate-100">
                       Front Index Sheet
                     </h5>
-                    <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
+                    <span className="text-[11px] font-mono text-slate-500 dark:text-slate-400">
                       Official Format • MEPC 215
                     </span>
                   </div>
@@ -323,9 +323,9 @@ export const LabCompanion: React.FC<LabCompanionProps> = ({
                   <button
                     type="button"
                     onClick={(e) => handlePdfAction(e, '/labs/thermal_front_index.pdf', true, 'Front Index Sheet')}
-                    className="py-1.5 px-3 rounded-xl text-xs font-semibold bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-slate-700 dark:text-slate-200 transition-colors flex items-center gap-1.5 cursor-pointer"
+                    className="py-1.5 px-3 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-white/10 transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer"
                   >
-                    <Eye className="w-3.5 h-3.5 text-orange-500" />
+                    <Eye className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400" />
                     <span>View</span>
                   </button>
                   <a
@@ -334,7 +334,7 @@ export const LabCompanion: React.FC<LabCompanionProps> = ({
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={(e) => handlePdfAction(e, '/labs/thermal_front_index.pdf', false, 'Front Index Sheet')}
-                    className="p-1.5 rounded-xl bg-orange-500 hover:bg-orange-600 text-white transition-colors flex items-center justify-center cursor-pointer shadow-2xs"
+                    className="p-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white transition-all active:scale-95 flex items-center justify-center cursor-pointer shadow-sm"
                     title="Download Front Index Sheet"
                     aria-label="Download Front Index Sheet"
                   >
@@ -344,16 +344,16 @@ export const LabCompanion: React.FC<LabCompanionProps> = ({
               </div>
 
               {/* Universal Assignment Template */}
-              <div className="py-2.5 px-3.5 sm:px-4 flex items-center justify-between gap-3 hover:bg-neutral-50/50 dark:hover:bg-neutral-800/30 transition-colors">
+              <div className="py-3 px-3.5 sm:px-4 flex items-center justify-between gap-3 hover:bg-slate-50/80 dark:hover:bg-white/[0.03] transition-colors">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 shrink-0">
+                  <div className="p-2.5 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 shrink-0">
                     <FileText className="w-4 h-4" />
                   </div>
                   <div>
-                    <h5 className="font-bold text-xs sm:text-sm text-slate-900 dark:text-white">
+                    <h5 className="font-semibold text-xs sm:text-sm text-slate-900 dark:text-slate-100">
                       Universal Assignment Template
                     </h5>
-                    <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
+                    <span className="text-[11px] font-mono text-slate-500 dark:text-slate-400">
                       Standard Report Cover Sheet • Universal
                     </span>
                   </div>
@@ -363,9 +363,9 @@ export const LabCompanion: React.FC<LabCompanionProps> = ({
                   <button
                     type="button"
                     onClick={(e) => handlePdfAction(e, '/templates/universal_assignment_lab_master.pdf', true, 'Universal Assignment Template')}
-                    className="py-1.5 px-3 rounded-xl text-xs font-semibold bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-slate-700 dark:text-slate-200 transition-colors flex items-center gap-1.5 cursor-pointer"
+                    className="py-1.5 px-3 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-white/10 transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer"
                   >
-                    <Eye className="w-3.5 h-3.5 text-orange-500" />
+                    <Eye className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400" />
                     <span>View</span>
                   </button>
                   <a
@@ -374,7 +374,7 @@ export const LabCompanion: React.FC<LabCompanionProps> = ({
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={(e) => handlePdfAction(e, '/templates/universal_assignment_lab_master.pdf', false, 'Universal Assignment Template')}
-                    className="p-1.5 rounded-xl bg-orange-500 hover:bg-orange-600 text-white transition-colors flex items-center justify-center cursor-pointer shadow-2xs"
+                    className="p-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white transition-all active:scale-95 flex items-center justify-center cursor-pointer shadow-sm"
                     title="Download Universal Assignment Template"
                     aria-label="Download Universal Assignment Template"
                   >
@@ -391,23 +391,28 @@ export const LabCompanion: React.FC<LabCompanionProps> = ({
       {/* 2. MATERIALS TESTING LAB: Render placeholder         */}
       {/* ==================================================== */}
       {activeLabTab === 'MaterialsTesting' && (
-        <div id="item-utm" className="p-8 sm:p-12 rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-700 bg-white dark:bg-[#1e293b] text-center space-y-4">
+        <div id="item-utm" className="relative overflow-hidden p-8 sm:p-12 rounded-2xl border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md text-center space-y-4 shadow-sm">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
           <div id="l-utm" />
           <div id="item-l-utm" />
-          <div className="w-14 h-14 mx-auto rounded-2xl bg-blue-500/10 text-mech-blue dark:text-blue-400 flex items-center justify-center">
+          <div className="relative z-10 w-14 h-14 mx-auto rounded-2xl bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 flex items-center justify-center shadow-inner">
             <UploadCloud className="w-7 h-7" />
           </div>
 
-          <div className="space-y-2 max-w-md mx-auto">
-            <div className="inline-block px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-blue-500/10 text-mech-blue dark:text-blue-400 border border-blue-200 dark:border-blue-900/50">
+          <div className="relative z-10 space-y-2 max-w-md mx-auto">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-mono font-medium bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
               MEPC 211
             </div>
-            <h3 className="font-bold text-base sm:text-lg text-slate-900 dark:text-white">
+            <h3 className="font-bold text-base sm:text-lg text-slate-900 dark:text-slate-100">
               Materials Testing Lab
             </h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Tensile testing, hardness verification, and impact charpy/izod analysis modules.
+            </p>
           </div>
 
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-mono font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+          <div className="relative z-10 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-mono font-medium bg-slate-100 dark:bg-zinc-800/80 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-white/10">
             <Clock className="w-3.5 h-3.5 text-amber-500" />
             <span>PDF upload pending</span>
           </div>
@@ -418,23 +423,28 @@ export const LabCompanion: React.FC<LabCompanionProps> = ({
       {/* 3. MANUFACTURING PRACTICE: Render placeholder        */}
       {/* ==================================================== */}
       {activeLabTab === 'Manufacturing' && (
-        <div id="item-mfg" className="p-8 sm:p-12 rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-700 bg-white dark:bg-[#1e293b] text-center space-y-4">
+        <div id="item-mfg" className="relative overflow-hidden p-8 sm:p-12 rounded-2xl border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md text-center space-y-4 shadow-sm">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
           <div id="l-mfg" />
           <div id="item-l-mfg" />
-          <div className="w-14 h-14 mx-auto rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+          <div className="relative z-10 w-14 h-14 mx-auto rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 flex items-center justify-center shadow-inner">
             <Wrench className="w-7 h-7" />
           </div>
 
-          <div className="space-y-2 max-w-md mx-auto">
-            <div className="inline-block px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-900/50">
+          <div className="relative z-10 space-y-2 max-w-md mx-auto">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-mono font-medium bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
               MEPC 213
             </div>
-            <h3 className="font-bold text-base sm:text-lg text-slate-900 dark:text-white">
+            <h3 className="font-bold text-base sm:text-lg text-slate-900 dark:text-slate-100">
               Manufacturing Practice Lab
             </h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Lathe operations, milling setup, shaping, and precision machining safety guidelines.
+            </p>
           </div>
 
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-mono font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+          <div className="relative z-10 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-mono font-medium bg-slate-100 dark:bg-zinc-800/80 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-white/10">
             <Clock className="w-3.5 h-3.5 text-amber-500" />
             <span>PDF upload pending</span>
           </div>
@@ -445,23 +455,28 @@ export const LabCompanion: React.FC<LabCompanionProps> = ({
       {/* 4. DRAWING PRACTICE: Render placeholder              */}
       {/* ==================================================== */}
       {activeLabTab === 'Drawing' && (
-        <div id="item-drawing" className="p-8 sm:p-12 rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-700 bg-white dark:bg-[#1e293b] text-center space-y-4">
+        <div id="item-drawing" className="relative overflow-hidden p-8 sm:p-12 rounded-2xl border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md text-center space-y-4 shadow-sm">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
           <div id="l-drawing" />
           <div id="item-l-drawing" />
-          <div className="w-14 h-14 mx-auto rounded-2xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 flex items-center justify-center">
+          <div className="relative z-10 w-14 h-14 mx-auto rounded-2xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20 flex items-center justify-center shadow-inner">
             <PenTool className="w-7 h-7" />
           </div>
 
-          <div className="space-y-2 max-w-md mx-auto">
-            <div className="inline-block px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-200 dark:border-cyan-900/50">
+          <div className="relative z-10 space-y-2 max-w-md mx-auto">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-mono font-medium bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20">
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-500" />
               MEPC 217
             </div>
-            <h3 className="font-bold text-base sm:text-lg text-slate-900 dark:text-white">
+            <h3 className="font-bold text-base sm:text-lg text-slate-900 dark:text-slate-100">
               Drawing Practice Lab
             </h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Assembly drawings, geometric dimensioning and tolerancing (GD&T), and isometric projections.
+            </p>
           </div>
 
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-mono font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+          <div className="relative z-10 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-mono font-medium bg-slate-100 dark:bg-zinc-800/80 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-white/10">
             <Clock className="w-3.5 h-3.5 text-amber-500" />
             <span>PDF upload pending</span>
           </div>
@@ -477,9 +492,9 @@ export const LabCompanion: React.FC<LabCompanionProps> = ({
           aria-label="Lab Manual Viewer"
           className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex flex-col animate-in fade-in duration-200 transform-gpu gpu-accelerated"
         >
-          <div className="flex items-center justify-between px-4 py-3 sm:px-6 bg-slate-900 border-b border-slate-800 shadow-md">
+          <div className="flex items-center justify-between px-4 py-3 sm:px-6 bg-zinc-900/95 border-b border-white/10 shadow-md backdrop-blur-md">
             <span className="font-semibold text-slate-100 text-sm sm:text-base flex items-center gap-2">
-              <FileText className="w-4 h-4 text-mech-orange" />
+              <FileText className="w-4 h-4 text-emerald-400" />
               <span>Lab Manual Viewer</span>
             </span>
             <div className="flex items-center gap-2 sm:gap-3">
@@ -487,7 +502,7 @@ export const LabCompanion: React.FC<LabCompanionProps> = ({
                 href={activePdfUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="min-h-[44px] px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 flex items-center gap-1.5 transition-colors cursor-pointer"
+                className="min-h-[44px] px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/[0.08] border border-white/10 flex items-center gap-1.5 transition-colors cursor-pointer active:scale-95"
               >
                 <ExternalLink className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">Open in Tab</span>
@@ -495,7 +510,7 @@ export const LabCompanion: React.FC<LabCompanionProps> = ({
               <a
                 href={activePdfUrl}
                 download
-                className="text-xs text-mech-orange hover:underline px-2 py-1 min-h-[44px] flex items-center gap-1 font-semibold"
+                className="text-xs text-emerald-400 hover:text-emerald-300 px-3 py-1.5 min-h-[44px] flex items-center gap-1.5 font-semibold bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 rounded-xl transition-all cursor-pointer active:scale-95"
               >
                 <Download className="w-3.5 h-3.5" />
                 <span>Save Offline</span>
@@ -505,7 +520,7 @@ export const LabCompanion: React.FC<LabCompanionProps> = ({
                 type="button"
                 onClick={() => setActivePdfUrl(null)}
                 aria-label="Close viewer"
-                className="p-1 min-h-[44px] min-w-[44px] text-slate-400 hover:text-white text-lg flex items-center justify-center rounded-lg hover:bg-slate-800 transition-colors cursor-pointer active:scale-95"
+                className="p-1 min-h-[44px] min-w-[44px] text-slate-400 hover:text-white text-lg flex items-center justify-center rounded-xl hover:bg-white/[0.08] transition-colors cursor-pointer active:scale-95"
               >
                 <X className="w-5 h-5" />
               </button>

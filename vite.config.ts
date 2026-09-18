@@ -36,6 +36,9 @@ export default defineConfig({
   plugins: [react(), pdfServePlugin()],
   server: {
     port: 5173,
+    watch: {
+      ignored: ['**/.agents/**', '**/dist/**'],
+    },
   },
 })
 

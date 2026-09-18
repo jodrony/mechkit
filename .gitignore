@@ -24,3 +24,10 @@ dist-ssr
 *.sw?
 
 .vercel
+
+# Agents & MCP
+.agents
+.mcp.json
+mcp.json
+mcp_config.json
+skills-lock.json

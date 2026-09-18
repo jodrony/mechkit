@@ -1,353 +1,857 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Calculator,
-  FlaskConical,
-  Hammer,
-  BookOpen,
-  HelpCircle,
-  Calendar,
-  ChevronRight,
-  Scale,
+  Search,
   Clock,
-  CheckCircle2,
   Share2,
-  FileText,
   ArrowRight,
-  Search
+  FolderArchive,
+  FileText,
+  ExternalLink,
+  X,
+  ChevronRight,
+  Layers,
+  HelpCircle,
+  ChevronDown,
+  Lock,
+  FileCheck2,
+  SlidersHorizontal,
 } from 'lucide-react';
 import type { ActiveTab } from '../App';
-import { CountdownTimer } from '../components/CountdownTimer';
 import { useToast } from '../components/Toast';
 
-interface HomeProps {
+export interface HomeProps {
   onNavigate: (tab: ActiveTab | string, toolId?: string) => void;
   onOpenCreator?: () => void;
   onShare?: () => void;
   onOpenSearch?: () => void;
+  onViewPdf?: (url: string, title: string) => void;
 }
 
-export const Home: React.FC<HomeProps> = ({ onNavigate, onOpenCreator, onShare, onOpenSearch }) => {
+interface ResourceItem {
+  id: string;
+  title: string;
+  category: 'syllabus' | 'calendar' | 'pyq' | 'manual' | 'tool';
+  categoryLabel: string;
+  fileSize?: string;
+  url?: string;
+  isExternal?: boolean;
+}
+
+const TARGET_EXAM_DATE = new Date('2027-01-05T00:00:00').getTime();
+
+const calculateTimeRemaining = () => {
+  const diff = Math.max(0, TARGET_EXAM_DATE - Date.now());
+  return {
+    days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+    hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
+    minutes: Math.floor((diff / (1000 * 60)) % 60),
+    seconds: Math.floor((diff / 1000) % 60),
+  };
+};
+
+export const Home: React.FC<HomeProps> = ({
+  onNavigate,
+  onOpenCreator,
+  onShare,
+  onOpenSearch,
+  onViewPdf,
+}) => {
   const { showToast } = useToast();
 
-  const handleShare = async () => {
+  // Collapsible Roadmap Drawer Toggle
+  const [isMoreOpen, setIsMoreOpen] = useState(false);
+
+  // Resources Drawer State
+  const [isResourcesOpen, setIsResourcesOpen] = useState(false);
+  const [activeFilter, setActiveFilter] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Exam Countdown Ticker
+  const [timeLeft, setTimeLeft] = useState(calculateTimeRemaining);
+
+  useEffect(() => {
+    const timer = setInterval(() => setTimeLeft(calculateTimeRemaining()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  // Global Hotkey Support (Escape closes drawer)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsResourcesOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  const handleShareClick = () => {
     if (onShare) {
       onShare();
       return;
     }
-    const shareUrl = window.location.href;
-    const shareData = {
-      title: 'MechKit v0.3 — Diploma ME Sem 3 Portal',
-      text: 'Access WBSCTE Sem 3 Lab Reports, Viva Prep, and 2018-2026 PYQs:',
-      url: shareUrl
-    };
-
-    if (navigator.share && window.isSecureContext) {
-      try {
-        await navigator.share(shareData);
-        return;
-      } catch (err) {
-        if ((err as Error).name === 'AbortError') return;
-      }
-    }
-
-    try {
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        await navigator.clipboard.writeText(shareUrl);
-      } else {
-        const textArea = document.createElement('textarea');
-        textArea.value = shareUrl;
-        textArea.style.position = 'fixed';
-        textArea.style.left = '-9999px';
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textArea);
-      }
-      showToast('Link copied to clipboard! Share it in your WhatsApp group.');
-    } catch {
-      showToast('Unable to auto-copy. App URL: ' + window.location.origin);
-    }
+    navigator.clipboard?.writeText(window.location.origin);
+    showToast('Portal link copied to clipboard', 'success');
   };
 
-  // 2x2 Core High-Priority Modules
-  const coreModules = [
+  const resourcesList: ResourceItem[] = [
     {
-      id: 'resources' as ActiveTab,
-      title: 'PYQ Archive',
-      badge: '2018–2026 PYQs',
-      tag: 'Official Papers',
-      icon: FileText,
-      accentBg: 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-900/50',
-      borderHover: 'hover:border-blue-500/60 dark:hover:border-blue-500/60',
+      id: 'dme-syllabus',
+      title: 'WBSCTE DME 3rd Semester Official Syllabus',
+      category: 'syllabus',
+      categoryLabel: 'Curriculum',
+      fileSize: '1.4 MB PDF',
+      url: '/syllabus/DME_3rd_Semester_Syllabus.pdf',
     },
     {
-      id: 'labs' as ActiveTab,
-      title: 'Lab Companion',
-      badge: '4 Lab Subjects',
-      tag: 'Reports & Manuals',
-      icon: FlaskConical,
-      accentBg: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900/50',
-      borderHover: 'hover:border-emerald-500/60 dark:hover:border-emerald-500/60',
+      id: 'academic-calendar',
+      title: 'Academic Calendar 2026–2027 (Exam Dates & Internals)',
+      category: 'calendar',
+      categoryLabel: 'Schedule',
+      fileSize: '680 KB PDF',
+      url: '/academic/academic_calendar_2026_2027.pdf',
     },
     {
-      id: 'formulas' as ActiveTab,
-      title: 'Formula Deck',
-      badge: '40+ Formulas',
-      tag: 'Curated Equations',
-      icon: BookOpen,
-      accentBg: 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-200 dark:border-purple-900/50',
-      borderHover: 'hover:border-purple-500/60 dark:hover:border-purple-500/60',
+      id: 'college-routine',
+      title: 'Sem 3 Class & Lab Weekly Master Schedule',
+      category: 'calendar',
+      categoryLabel: 'Routine',
+      fileSize: '420 KB PDF',
+      url: '/routine/simplified_routine_sem3.pdf',
     },
     {
-      id: 'resources' as ActiveTab,
-      title: 'Routine & Syllabus',
-      badge: '2026–2027 Schedule',
-      tag: 'Official WBSCTE',
-      icon: Calendar,
-      accentBg: 'bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border-cyan-200 dark:border-cyan-900/50',
-      borderHover: 'hover:border-cyan-500/60 dark:hover:border-cyan-500/60',
+      id: 'som-pyq',
+      title: 'Strength of Materials 2018–2026 PYQ Master Archive',
+      category: 'pyq',
+      categoryLabel: 'Official PYQ',
+      fileSize: '4.8 MB PDF',
+      url: '/pyq/som_pyq_all.pdf',
+    },
+    {
+      id: 'thermal-pyq',
+      title: 'Thermal Engineering-I 2018–2026 PYQ Master Archive',
+      category: 'pyq',
+      categoryLabel: 'Official PYQ',
+      fileSize: '5.2 MB PDF',
+      url: '/pyq/thermal_pyq_all.pdf',
+    },
+    {
+      id: 'thermal-exp1',
+      title: 'Thermal Lab Manual: Exp 1 Observation Sheet',
+      category: 'manual',
+      categoryLabel: 'Lab Manual',
+      fileSize: '890 KB PDF',
+      url: '/labs/exp1_tl.pdf',
+    },
+    {
+      id: 'lab-master',
+      title: 'Universal Mechanical Lab Assignment Template',
+      category: 'manual',
+      categoryLabel: 'Template',
+      fileSize: '340 KB PDF',
+      url: '/templates/universal_assignment_lab_master.pdf',
+    },
+    {
+      id: 'wbscte-portal',
+      title: 'WBSCTE Council Official Exam Portal',
+      category: 'tool',
+      categoryLabel: 'External',
+      url: 'https://webscte.co.in/',
+      isExternal: true,
+    },
+    {
+      id: 'matweb',
+      title: 'MatWeb Materials Density & Yield DB',
+      category: 'tool',
+      categoryLabel: 'External',
+      url: 'https://www.matweb.com/',
+      isExternal: true,
     },
   ];
 
-  // Secondary Tools (Compact Scannable Grid)
-  const secondaryTools = [
+  const filteredResources = resourcesList.filter((r) => {
+    const matchesCategory = activeFilter === 'all' || r.category === activeFilter;
+    const matchesSearch =
+      !searchQuery ||
+      r.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      r.categoryLabel.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
+
+  const handleResourceClick = (res: ResourceItem) => {
+    if (res.isExternal && res.url) {
+      window.open(res.url, '_blank', 'noopener,noreferrer');
+      return;
+    }
+    if (res.url) {
+      if (onViewPdf) {
+        onViewPdf(res.url, res.title);
+      } else {
+        window.open(res.url, '_blank');
+      }
+    }
+  };
+
+  // Primary Data-Populated Modules Grid (for HUD)
+  const primaryModules = [
     {
-      id: 'calculators' as ActiveTab,
-      title: 'Calculators',
-      count: '8 Tools',
+      id: 'calculators',
+      title: 'Solvers & Calculators',
+      desc: '12 active solvers: Lathe RPM, cutting speed, gear trains',
       icon: Calculator,
-      color: 'text-blue-500 dark:text-blue-400',
-      bg: 'bg-blue-500/10',
+      metric: '12 Solvers',
+      badge: 'Active',
+      action: () => onNavigate('calculators'),
     },
     {
-      id: 'viva' as ActiveTab,
-      title: 'Viva Center',
-      count: 'Boilers & Practice',
+      id: 'formulas',
+      title: 'Formula Library',
+      desc: '48 verified LaTeX cards: SOM, Thermo, Fluid Mechanics',
+      icon: Layers,
+      metric: '48 Cards',
+      badge: 'Active',
+      action: () => onNavigate('formulas'),
+    },
+    {
+      id: 'pyq-vault',
+      title: 'PYQ & Document Vault',
+      desc: '2018–2026 Board papers, DME 3rd Sem syllabus PDFs',
+      icon: FolderArchive,
+      metric: '9 PDFs',
+      badge: 'Verified',
+      action: () => setIsResourcesOpen(true),
+    },
+    {
+      id: 'viva',
+      title: 'Viva Defense Center',
+      desc: '120+ oral defense Q&A, boiler tests, flashcards',
       icon: HelpCircle,
-      color: 'text-rose-500 dark:text-rose-400',
-      bg: 'bg-rose-500/10',
+      metric: '120+ Q&A',
+      badge: 'Study Ready',
+      action: () => onNavigate('viva'),
     },
+  ];
+
+  // Inactive / Staged Modules
+  const inactiveModules = [
     {
-      id: 'workshop' as ActiveTab,
       title: 'Workshop Reference',
-      count: '6 Topics',
-      icon: Hammer,
-      color: 'text-amber-500 dark:text-amber-400',
-      bg: 'bg-amber-500/10',
+      desc: 'Fit & tolerance charts, limits, and allowances database',
+      status: 'Ready',
+      action: () => onNavigate('workshop'),
     },
     {
-      id: 'utilities' as ActiveTab,
       title: 'Engineering Utilities',
-      count: '12 Tools',
-      icon: Scale,
-      color: 'text-indigo-500 dark:text-indigo-400',
-      bg: 'bg-indigo-500/10',
+      desc: 'SI unit converters, density & section modulus tables',
+      status: 'Active',
+      action: () => onNavigate('utilities'),
+    },
+    {
+      title: 'CAD Viewer & Geometry',
+      desc: '3D STEP and STL component interactive wireframes',
+      status: 'Staged v3.2',
     },
   ];
 
   return (
-    <div className="max-w-5xl mx-auto px-3 sm:px-6 py-5 space-y-5">
-      {/* 1. Header: MechKit Logo + WBSCTE Mechanical Engineering + Instant Search */}
-      <div className="flex flex-col gap-3 pb-2 border-b border-neutral-200 dark:border-neutral-800">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+    <div className="relative overflow-x-hidden min-h-screen text-slate-900 dark:text-slate-100 font-sans pb-32 selection:bg-emerald-500/20">
+
+      {/* ─────────────────────────────────────────────────────────────
+          1. ATMOSPHERE & BACKGROUND DEPTH (Strictly pointer-events-none)
+         ───────────────────────────────────────────────────────────── */}
+      <div className="absolute top-8 left-1/2 -translate-x-1/2 w-[340px] h-[340px] sm:w-[500px] sm:h-[500px] bg-emerald-500/10 dark:bg-emerald-500/12 rounded-full blur-[100px] pointer-events-none -z-10" />
+      <div className="bg-[linear-gradient(to_right,#00000008_1px,transparent_1px),linear-gradient(to_bottom,#00000008_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none absolute inset-0 -z-10" />
+
+      {/* ─────────────────────────────────────────────────────────────
+          2. CONCISE BRANDING & ACTION CHIPS COMMAND BAR
+         ───────────────────────────────────────────────────────────── */}
+      <div className="relative z-20 max-w-5xl mx-auto w-full px-4 sm:px-6 pt-3 pb-2">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200 dark:border-white/[0.08]">
+          {/* Real Concise Branding */}
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-orange-500/10 dark:bg-orange-500/20 border border-orange-500/30 flex items-center justify-center text-orange-500 shrink-0">
-              <span className="font-mono font-black text-base">MK</span>
+            <div className="w-9 h-9 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 font-mono font-bold text-xs tracking-tight shadow-sm shrink-0">
+              MK
             </div>
             <div>
-              <h1 className="text-lg sm:text-xl font-black tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
-                MechKit
-                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-orange-500/10 text-orange-500 dark:text-orange-400 border border-orange-500/20">
-                  v0.3
+              <div className="flex items-center gap-2">
+                <h1 className="text-base sm:text-lg font-bold tracking-tight text-slate-900 dark:text-white">
+                  MechKit <span className="text-emerald-600 dark:text-emerald-400">v0.3</span>
+                </h1>
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-semibold bg-slate-200/70 dark:bg-white/[0.06] text-slate-700 dark:text-emerald-400 border border-slate-300/60 dark:border-white/10 uppercase tracking-wider">
+                  Sem 3 ME
                 </span>
-              </h1>
-              <p className="text-xs font-semibold text-slate-500 dark:text-neutral-400">
-                WBSCTE Mechanical Engineering
+              </div>
+              <p className="text-2xs font-mono uppercase tracking-widest text-slate-500 dark:text-slate-400">
+                WBSCTE Mechanical Engineering Portal
               </p>
             </div>
           </div>
 
+          {/* Action Chips */}
           <div className="flex items-center gap-2 flex-wrap self-start sm:self-auto">
             <button
-              id="btn-share-mechkit"
               type="button"
-              onClick={handleShare}
-              title="Share MechKit v0.3"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-orange-500/10 hover:bg-orange-500/20 border border-orange-500/30 text-xs font-bold text-orange-500 dark:text-orange-400 transition-all active:scale-95 cursor-pointer shadow-2xs"
+              onClick={handleShareClick}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-white/[0.04] dark:hover:bg-white/[0.08] border border-slate-200 dark:border-white/10 text-xs font-medium text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all active:scale-95 cursor-pointer"
+              title="Share Portal"
             >
-              <Share2 className="w-3.5 h-3.5" />
+              <Share2 className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
               <span>Share</span>
             </button>
+
+            {onOpenCreator && (
+              <button
+                id="btn-creator-chip"
+                type="button"
+                onClick={onOpenCreator}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-white/[0.04] dark:hover:bg-white/[0.08] border border-slate-200 dark:border-white/10 hover:border-emerald-500/40 text-xs text-slate-700 dark:text-slate-200 transition-all active:scale-95 cursor-pointer"
+              >
+                <span className="w-2 h-2 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse" />
+                <span>Built by Rony Biswas</span>
+                <span className="text-emerald-600 dark:text-emerald-400 font-mono text-[11px]">ME &apos;25</span>
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Global Instant Search Bar Shortcut */}
+        {onOpenSearch && (
+          <button
+            type="button"
+            onClick={onOpenSearch}
+            className="w-full mt-3 flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md border border-slate-200 dark:border-white/10 hover:border-emerald-500/40 text-slate-400 dark:text-slate-400 text-xs sm:text-sm cursor-pointer transition-all shadow-xs group text-left active:scale-95 relative z-10"
+          >
+            <Search className="w-4 h-4 text-slate-400 group-hover:text-emerald-500 transition-colors shrink-0" />
+            <span className="flex-1 font-sans text-slate-600 dark:text-slate-300 truncate">
+              Search 2018–2026 PYQs, lab manuals, engineering formulas, calculators...
+            </span>
+            <kbd className="hidden sm:inline text-[10px] font-mono px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-white/10 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-400">
+              ⌘K
+            </kbd>
+          </button>
+        )}
+      </div>
+
+      {/* ─────────────────────────────────────────────────────────────
+          3. MAIN HUD CONTENT (Semester Mastery + Hero Cards + Primary Tools)
+         ───────────────────────────────────────────────────────────── */}
+      <main className="relative z-20 max-w-5xl mx-auto w-full px-4 sm:px-6 pt-1 pb-8 space-y-4">
+
+        {/* Section: Status Pills + High-Density SVG Progress Ring */}
+        <section className="flex flex-col items-center justify-center pt-2 pb-2 relative z-20">
+          {/* Status Pills */}
+          <div className="w-full max-w-sm flex items-center justify-between px-1 mb-2">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-white/[0.04] border border-slate-200 dark:border-white/10 text-2xs text-slate-700 dark:text-slate-300 font-sans">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse" />
+              <span className="text-slate-500 dark:text-slate-400 uppercase tracking-wider">Kinematics</span>
+              <span className="font-mono text-emerald-600 dark:text-emerald-400 font-semibold">BOOST</span>
+            </div>
+
             <button
-              id="btn-creator-hero-pill"
               type="button"
-              onClick={onOpenCreator}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-800/90 border border-slate-700/80 hover:border-orange-500 text-xs text-slate-300 transition-all active:scale-95 cursor-pointer shadow-2xs"
+              onClick={() => setIsResourcesOpen(true)}
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-white/[0.04] dark:hover:bg-white/[0.08] border border-slate-200 dark:border-white/10 text-2xs text-slate-700 dark:text-slate-300 font-sans transition-all cursor-pointer active:scale-95"
             >
-              <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
-              <span>Built by Rony Biswas</span>
-              <span className="text-orange-400 font-semibold">ME &apos;25</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 dark:bg-cyan-400" />
+              <span className="text-slate-500 dark:text-slate-400 uppercase tracking-wider">Vault</span>
+              <span className="font-mono text-slate-900 dark:text-white font-semibold">9 PDFs</span>
             </button>
           </div>
-        </div>
 
-        {/* Instant Search Bar */}
-        <button
-          id="btn-hero-search"
-          type="button"
-          onClick={onOpenSearch}
-          className="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl bg-slate-100/90 dark:bg-neutral-800/80 border border-neutral-200 dark:border-neutral-700/80 hover:border-orange-500/50 text-slate-400 dark:text-neutral-400 text-xs sm:text-sm cursor-pointer transition-colors shadow-2xs group text-left"
-        >
-          <Search aria-hidden="true" className="w-4 h-4 text-slate-400 group-hover:text-orange-500 transition-colors shrink-0" />
-          <span className="flex-1 font-medium text-slate-500 dark:text-neutral-400 truncate">
-            Search PYQs, lab manuals, formulas, calculators...
-          </span>
-          <kbd className="hidden sm:inline text-[10px] font-mono px-1.5 py-0.5 rounded bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 text-slate-500">
-            ⌘K
-          </kbd>
-        </button>
-      </div>
+          {/* High-Density SVG Circular Progress Ring */}
+          <div className="group relative w-52 h-52 sm:w-56 sm:h-56 flex items-center justify-center select-none my-1">
+            {/* Smooth ambient emerald backlight */}
+            <div className="absolute inset-2 bg-emerald-500/10 blur-[80px] pointer-events-none rounded-full" />
 
-      {/* 2. Official Academic Countdown & Milestones Card */}
-      <div className="bg-white dark:bg-neutral-900/60 backdrop-blur-sm border border-neutral-200 dark:border-neutral-800/80 rounded-2xl p-3.5 sm:p-4 shadow-xs space-y-3 sm:space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2.5 border-b border-neutral-100 dark:border-neutral-800">
-          <div className="space-y-0.5">
-            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-              Official Academic Timeline
-            </span>
-            <h3 className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white flex items-center gap-2">
-              <Clock className="w-4 h-4 text-mech-blue shrink-0" />
-              <span>Board Exam Target: Jan 5, 2027</span>
-            </h3>
-          </div>
+            <svg viewBox="0 0 200 200" className="w-full h-full pointer-events-none -rotate-90 transform">
+              <defs>
+                <linearGradient id="home-readiness-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#10B981" />
+                  <stop offset="50%" stopColor="#34D399" />
+                  <stop offset="100%" stopColor="#06B6D4" />
+                </linearGradient>
+              </defs>
 
-          <div className="flex items-center gap-1.5 self-start sm:self-auto">
-            <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold bg-blue-500/10 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-800">
-              Theory Target
-            </span>
-          </div>
-        </div>
+              {/* Outer Decorative Tick Ring */}
+              <circle
+                cx="100"
+                cy="100"
+                r="92"
+                fill="none"
+                stroke="currentColor"
+                className="text-slate-300/40 dark:text-white/[0.08]"
+                strokeWidth="1"
+                strokeDasharray="2 6"
+              />
+              {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((deg) => (
+                <line
+                  key={deg}
+                  x1="100"
+                  y1="5"
+                  x2="100"
+                  y2="10"
+                  stroke={deg % 90 === 0 ? '#10B981' : 'currentColor'}
+                  className={deg % 90 === 0 ? '' : 'text-slate-400/30 dark:text-white/25'}
+                  strokeWidth={deg % 90 === 0 ? '1.5' : '1'}
+                  transform={`rotate(${deg} 100 100)`}
+                />
+              ))}
 
-        {/* Live Countdown Timer Digits Display */}
-        <CountdownTimer />
+              {/* Background Track Circle */}
+              <circle
+                cx="100"
+                cy="100"
+                r="78"
+                fill="none"
+                stroke="currentColor"
+                className="text-slate-200 dark:text-white/[0.06]"
+                strokeWidth="8"
+              />
 
-        {/* Milestones List */}
-        <div className="pt-1 space-y-2">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
-            <div className="p-2 sm:p-2.5 rounded-xl bg-slate-50 dark:bg-neutral-800/40 border border-neutral-200 dark:border-neutral-800 flex items-start gap-2.5">
-              <div className="p-1 rounded-md bg-blue-500/10 text-mech-blue dark:text-blue-400 shrink-0 mt-0.5">
-                <CheckCircle2 className="w-3.5 h-3.5" />
-              </div>
-              <div className="space-y-0.5">
-                <span className="text-[10px] font-mono font-bold text-slate-400 dark:text-slate-500 block uppercase">
-                  Internal Exam
+              {/* Active 78% Progress Arc */}
+              <circle
+                cx="100"
+                cy="100"
+                r="78"
+                fill="none"
+                stroke="url(#home-readiness-gradient)"
+                strokeWidth="8"
+                strokeLinecap="round"
+                strokeDasharray="490.1"
+                strokeDashoffset="107.8"
+                className="transition-all duration-1000 ease-out drop-shadow-[0_0_8px_rgba(16,185,129,0.35)]"
+              />
+
+              {/* Inner Caliper Ring */}
+              <circle
+                cx="100"
+                cy="100"
+                r="64"
+                fill="none"
+                stroke="currentColor"
+                className="text-slate-200 dark:text-white/[0.06]"
+                strokeWidth="1"
+                strokeDasharray="1 5"
+              />
+            </svg>
+
+            {/* Center Metrics Readout */}
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none px-4">
+              <span className="text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 font-sans font-semibold mb-0.5">
+                Semester Mastery
+              </span>
+              <div className="flex items-baseline justify-center gap-0.5 my-0.5">
+                <span className="font-mono text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight tabular-nums">
+                  78
                 </span>
-                <p className="text-xs font-bold text-slate-900 dark:text-white">
-                  Second Internal Assessment: By Dec 10, 2026
-                </p>
-              </div>
-            </div>
-
-            <div className="p-2 sm:p-2.5 rounded-xl bg-slate-50 dark:bg-neutral-800/40 border border-neutral-200 dark:border-neutral-800 flex items-start gap-2.5">
-              <div className="p-1 rounded-md bg-rose-500/10 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5">
-                <Calendar className="w-3.5 h-3.5" />
-              </div>
-              <div className="space-y-0.5">
-                <span className="text-[10px] font-mono font-bold text-slate-400 dark:text-slate-500 block uppercase">
-                  Board Theory
+                <span className="font-mono text-base sm:text-lg font-bold text-emerald-600 dark:text-emerald-400">
+                  %
                 </span>
-                <p className="text-xs font-bold text-slate-900 dark:text-white">
-                  Theoretical Board Exams: Tentative Jan 5, 2027
-                </p>
               </div>
+              <span className="text-3xs font-mono uppercase tracking-wider text-emerald-600 dark:text-emerald-400 font-medium px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 mt-0.5">
+                WBSCTE Sem 3 Core
+              </span>
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* 3. Core Modules: 2x2 Quick-Access Grid */}
-      <div className="space-y-2.5">
-        <div className="flex items-center justify-between px-0.5">
-          <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-            Core Modules
-          </span>
-          <span className="text-[10px] font-mono text-slate-400">Tap to open</span>
-        </div>
+          {/* Micro-Stats Underneath */}
+          <div className="flex items-center justify-center gap-2 mt-2 text-xs text-slate-600 dark:text-slate-300 font-sans flex-wrap">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 dark:bg-white/[0.04] border border-slate-200 dark:border-white/10 text-2xs shadow-2xs">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400" />
+              <span className="font-mono text-slate-900 dark:text-white font-semibold">14</span>
+              <span className="text-slate-500 dark:text-slate-400">Formulas Cached</span>
+            </div>
+            <span className="text-slate-300 dark:text-white/20 text-xs">•</span>
+            <button
+              type="button"
+              onClick={() => setIsResourcesOpen(true)}
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-white/[0.04] dark:hover:bg-white/[0.08] border border-slate-200 dark:border-white/10 hover:border-cyan-500/40 text-2xs text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all cursor-pointer active:scale-95 shadow-2xs"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 dark:bg-cyan-400" />
+              <span className="font-mono text-slate-900 dark:text-white font-semibold">9</span>
+              <span className="text-slate-500 dark:text-slate-400">PYQ Vault PDFs Active</span>
+            </button>
+          </div>
+        </section>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3.5">
-          {coreModules.map((module) => {
-            const Icon = module.icon;
-            return (
-              <button
-                key={module.title}
-                type="button"
-                onClick={() => onNavigate(module.id)}
-                className={`flex items-center justify-between p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-neutral-900/60 backdrop-blur-sm border border-neutral-200 dark:border-neutral-800/80 ${module.borderHover} shadow-xs hover:shadow-md transition-all text-left cursor-pointer group active:scale-[0.99]`}
-              >
-                <div className="flex items-center gap-3">
-                  <div className={`p-2.5 rounded-xl ${module.accentBg} group-hover:scale-105 transition-transform`}>
-                    <Icon className="w-5 h-5" />
-                  </div>
-                  <div className="space-y-0.5">
-                    <div className="flex items-center gap-1.5 flex-wrap">
-                      <h3 className="font-bold text-sm text-slate-900 dark:text-white group-hover:text-orange-500 transition-colors">
-                        {module.title}
-                      </h3>
-                    </div>
-                    <div className="flex items-center gap-1.5 text-[11px] text-slate-500 dark:text-slate-400">
-                      <span className="font-semibold text-slate-700 dark:text-slate-300">{module.badge}</span>
-                      <span>•</span>
-                      <span>{module.tag}</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="p-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-400 group-hover:text-orange-500 group-hover:bg-orange-50 dark:group-hover:bg-orange-950/30 transition-all">
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-                </div>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* 4. Secondary Tools: Compact Scannable Row / Grid */}
-      <div className="space-y-2.5">
-        <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 px-0.5 block">
-          Tools &amp; Practice
-        </span>
-
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-          {secondaryTools.map((tool) => {
-            const Icon = tool.icon;
-            return (
-              <button
-                key={tool.id}
-                type="button"
-                onClick={() => onNavigate(tool.id)}
-                className="flex flex-col justify-between p-3 rounded-2xl bg-white dark:bg-neutral-900/60 backdrop-blur-sm border border-neutral-200 dark:border-neutral-800/80 hover:border-neutral-400 dark:hover:border-neutral-700 shadow-xs hover:shadow-sm transition-all text-left cursor-pointer group active:scale-[0.98]"
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <div className={`p-1.5 rounded-lg ${tool.bg} ${tool.color}`}>
-                    <Icon className="w-4 h-4" />
-                  </div>
-                  <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
+        {/* ─────────────────────────────────────────────────────────────
+            4. LOWER SECTION: RICH DATA-DRIVEN HERO CARDS
+               (Card A: Finals Countdown + Card B: Resource Vault)
+           ───────────────────────────────────────────────────────────── */}
+        <section id="hero-cards" className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 relative z-20">
+          {/* Card A: WBSCTE Finals Countdown */}
+          <div
+            onClick={() => setIsResourcesOpen(true)}
+            className="group relative overflow-hidden rounded-2xl bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md border border-slate-200 dark:border-white/10 p-4 shadow-sm hover:border-slate-300 dark:hover:border-white/20 hover:bg-white dark:hover:bg-zinc-900/80 transition-all cursor-pointer active:scale-95"
+          >
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-white/[0.05] border border-slate-200 dark:border-white/[0.08] flex items-center justify-center text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">
+                  <Clock className="w-4 h-4" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-xs text-slate-900 dark:text-white group-hover:text-orange-500 transition-colors">
-                    {tool.title}
-                  </h4>
-                  <span className="text-[10px] text-slate-500 dark:text-slate-400 block mt-0.5">
-                    {tool.count}
-                  </span>
+                  <h3 className="text-xs font-semibold text-slate-900 dark:text-white tracking-tight font-sans">
+                    WBSCTE Finals
+                  </h3>
+                  <p className="text-2xs text-slate-500 dark:text-slate-400 font-sans">Official Council Schedule</p>
                 </div>
+              </div>
+
+              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-3xs font-mono bg-cyan-500/10 text-cyan-600 dark:text-cyan-300 border border-cyan-500/20 font-medium">
+                Jan 05, 2027
+              </span>
+            </div>
+
+            <div className="flex items-baseline justify-between">
+              <div className="flex items-baseline gap-1.5">
+                <span className="font-mono text-3xl font-bold text-slate-900 dark:text-white tabular-nums tracking-tight">
+                  {timeLeft.days}
+                </span>
+                <span className="text-xs text-slate-500 dark:text-slate-400 font-sans font-medium">Days remaining</span>
+              </div>
+
+              <ArrowRight className="w-4 h-4 text-slate-400 dark:text-slate-500 group-hover:text-slate-900 dark:group-hover:text-white group-hover:translate-x-0.5 transition-all" />
+            </div>
+
+            {/* Live h:m:s sub-ticker */}
+            <div className="mt-3 pt-2.5 border-t border-slate-100 dark:border-white/[0.06] flex items-center justify-between text-2xs text-slate-500 dark:text-slate-400 font-mono">
+              <span>{String(timeLeft.hours).padStart(2, '0')}h {String(timeLeft.minutes).padStart(2, '0')}m {String(timeLeft.seconds).padStart(2, '0')}s</span>
+              <span className="text-emerald-600 dark:text-emerald-400/90 font-sans font-medium">Audit Ready</span>
+            </div>
+          </div>
+
+          {/* Card B: High-Value Resource Vault (Connected to Live PDF Viewer & Hub) */}
+          <div
+            onClick={() => onNavigate('resources')}
+            className="group relative overflow-hidden rounded-2xl bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md border border-slate-200 dark:border-white/10 p-4 shadow-sm hover:border-slate-300 dark:hover:border-white/20 hover:bg-white dark:hover:bg-zinc-900/80 transition-all cursor-pointer active:scale-95"
+          >
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-600 dark:text-rose-400 group-hover:text-rose-500 dark:group-hover:text-rose-300 transition-colors">
+                  <FileText className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="text-xs font-semibold text-slate-900 dark:text-white tracking-tight font-sans">
+                    Resource Vault
+                  </h3>
+                  <p className="text-2xs text-slate-500 dark:text-slate-400 font-sans">Verified PDF Master Archive</p>
+                </div>
+              </div>
+
+              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-3xs font-mono bg-emerald-500/10 text-emerald-600 dark:text-emerald-300 border border-emerald-500/20 font-medium">
+                3 New Syllabi
+              </span>
+            </div>
+
+            <div className="flex items-baseline justify-between">
+              <div>
+                <div className="flex items-baseline gap-1.5">
+                  <span className="font-mono text-3xl font-bold text-slate-900 dark:text-white tabular-nums tracking-tight">
+                    {resourcesList.length}
+                  </span>
+                  <span className="text-xs text-slate-500 dark:text-slate-400 font-sans font-medium">Documents Indexed</span>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400 font-sans group-hover:text-emerald-500 dark:group-hover:text-emerald-300 transition-colors">
+                <span>Browse Vault</span>
+                <ArrowRight className="w-4 h-4 text-emerald-600 dark:text-emerald-400 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </div>
+
+            {/* Quick-Access File Manager Chips (Direct PDF Viewer Launchers) */}
+            <div className="mt-3 pt-2.5 border-t border-slate-100 dark:border-white/[0.06] flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleResourceClick(resourcesList[0]);
+                }}
+                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-slate-100 hover:bg-slate-200 dark:bg-white/[0.04] dark:hover:bg-white/[0.1] text-3xs text-slate-700 dark:text-slate-300 font-mono transition-colors cursor-pointer"
+                title="Open WBSCTE DME 3rd Sem Syllabus PDF"
+              >
+                <FileCheck2 className="w-3 h-3 text-rose-500 dark:text-rose-400" />
+                <span>DME Sem 3</span>
               </button>
-            );
-          })}
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleResourceClick(resourcesList[3]);
+                }}
+                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-slate-100 hover:bg-slate-200 dark:bg-white/[0.04] dark:hover:bg-white/[0.1] text-3xs text-slate-700 dark:text-slate-300 font-mono transition-colors cursor-pointer"
+                title="Open SOM 2018–2026 PYQs PDF"
+              >
+                <FileCheck2 className="w-3 h-3 text-cyan-500 dark:text-cyan-400" />
+                <span>SOM '18–'26</span>
+              </button>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleResourceClick(resourcesList[4]);
+                }}
+                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-slate-100 hover:bg-slate-200 dark:bg-white/[0.04] dark:hover:bg-white/[0.1] text-3xs text-slate-700 dark:text-slate-300 font-mono transition-colors cursor-pointer"
+                title="Open Thermal Engineering-I PYQs PDF"
+              >
+                <FileCheck2 className="w-3 h-3 text-emerald-500 dark:text-emerald-400" />
+                <span>Thermal PYQ</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        {/* ─────────────────────────────────────────────────────────────
+            5. PRIMARY ACTIVE ENGINEERING MODULES
+           ───────────────────────────────────────────────────────────── */}
+        <section id="primary-tools" className="space-y-2 relative z-20">
+          <div className="flex items-center justify-between px-1">
+            <h2 className="text-xs font-semibold text-slate-900 dark:text-white tracking-wider uppercase font-sans">
+              Primary Engineering Tools
+            </h2>
+            <span className="text-2xs text-slate-500 dark:text-slate-400 font-sans">Active &amp; Populated</span>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3">
+            {primaryModules.map((mod) => {
+              const Icon = mod.icon;
+              return (
+                <button
+                  key={mod.id}
+                  type="button"
+                  onClick={mod.action}
+                  className="min-h-[96px] p-3.5 sm:p-4 rounded-2xl bg-white/80 hover:bg-white dark:bg-zinc-900/60 dark:hover:bg-zinc-900/80 border border-slate-200 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20 transition-all text-left cursor-pointer group flex flex-col justify-between active:scale-95 shadow-sm"
+                >
+                  <div className="flex items-center justify-between w-full">
+                    <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.06] flex items-center justify-center text-slate-700 dark:text-slate-300 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                      <Icon className="w-4 h-4" />
+                    </div>
+                    <span className="text-3xs font-mono px-1.5 py-0.5 rounded bg-slate-100 dark:bg-white/[0.06] text-slate-600 dark:text-slate-400 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                      {mod.metric}
+                    </span>
+                  </div>
+
+                  <div className="mt-2">
+                    <h3 className="text-xs sm:text-sm font-semibold text-slate-900 dark:text-white tracking-tight font-sans">
+                      {mod.title}
+                    </h3>
+                    <p className="text-2xs text-slate-500 dark:text-slate-400 line-clamp-1 mt-0.5 font-sans">
+                      {mod.desc}
+                    </p>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* ─────────────────────────────────────────────────────────────
+            6. QUICK REFERENCE TOOL CHIPS
+           ───────────────────────────────────────────────────────────── */}
+        <section className="backdrop-blur-md bg-white/80 dark:bg-zinc-900/60 border border-slate-200 dark:border-white/10 rounded-2xl p-3 flex flex-col sm:flex-row items-center justify-between gap-2.5 relative z-20 shadow-sm">
+          <div className="flex items-center gap-2.5 w-full sm:w-auto">
+            <div className="w-7 h-7 rounded-lg bg-slate-100 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.06] flex items-center justify-center text-slate-700 dark:text-slate-300 shrink-0">
+              <SlidersHorizontal className="w-3.5 h-3.5" />
+            </div>
+            <span className="text-xs text-slate-800 dark:text-slate-300 font-medium font-sans">Quick Reference</span>
+          </div>
+
+          <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto no-scrollbar">
+            <button
+              type="button"
+              onClick={() => onNavigate('utilities', 'conv_press')}
+              className="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-white/[0.04] dark:hover:bg-white/[0.08] border border-slate-200 dark:border-white/[0.06] text-xs text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white whitespace-nowrap transition-all cursor-pointer active:scale-95"
+            >
+              Unit Converter
+            </button>
+            <button
+              type="button"
+              onClick={() => onNavigate('resources')}
+              className="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-white/[0.06] dark:hover:bg-white/[0.1] border border-slate-200 dark:border-white/[0.08] text-xs text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white whitespace-nowrap transition-all cursor-pointer active:scale-95 flex items-center gap-1.5"
+            >
+              <FolderArchive className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+              <span>PYQs (2018–26)</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsMoreOpen(!isMoreOpen)}
+              className="px-2.5 py-1.5 rounded-lg bg-slate-100/60 hover:bg-slate-100 dark:bg-white/[0.03] dark:hover:bg-white/[0.06] border border-slate-200 dark:border-white/[0.06] text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-300 whitespace-nowrap transition-all cursor-pointer active:scale-95 flex items-center gap-1"
+            >
+              <span>More Modules</span>
+              <ChevronDown className={`w-3 h-3 transition-transform ${isMoreOpen ? 'rotate-180' : ''}`} />
+            </button>
+          </div>
+        </section>
+
+        {/* ─────────────────────────────────────────────────────────────
+            7. DEPRIORITIZED / ROADMAP MODULES (Collapsible)
+           ───────────────────────────────────────────────────────────── */}
+        {isMoreOpen && (
+          <section className="p-4 rounded-2xl bg-white/60 dark:bg-zinc-950/60 border border-slate-200 dark:border-white/5 space-y-2.5 transition-all relative z-20 shadow-xs">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Lock className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
+                <span className="text-xs font-medium text-slate-600 dark:text-slate-400 font-sans">Additional Modules &amp; Roadmap</span>
+              </div>
+              <span className="text-3xs text-slate-400 dark:text-slate-500 font-mono">SEMESTER 3 EXTENDED</span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+              {inactiveModules.map((item, idx) => (
+                <div
+                  key={idx}
+                  onClick={item.action}
+                  className={`p-3 rounded-xl bg-slate-100/70 dark:bg-white/[0.02] border border-slate-200 dark:border-white/[0.04] flex flex-col justify-between ${
+                    item.action ? 'cursor-pointer hover:border-emerald-500/40 active:scale-95 transition-all' : 'opacity-60 cursor-not-allowed'
+                  }`}
+                >
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-medium text-slate-800 dark:text-slate-300 font-sans">{item.title}</span>
+                      <span className="text-3xs font-mono px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
+                        {item.status}
+                      </span>
+                    </div>
+                    <p className="text-2xs text-slate-500 dark:text-slate-500 mt-1 font-sans line-clamp-2">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+      </main>
+
+      {/* ─────────────────────────────────────────────────────────────
+          8. INTEGRATED RESOURCES BOTTOM SHEET / DRAWER (Engineering Vault)
+         ───────────────────────────────────────────────────────────── */}
+      {isResourcesOpen && (
+        <div
+          className="fixed inset-0 z-50 bg-black/60 dark:bg-black/75 backdrop-blur-xs transition-opacity duration-300 pointer-events-auto"
+          onClick={() => setIsResourcesOpen(false)}
+        />
+      )}
+
+      <div
+        className={`fixed z-50 transition-all duration-300 ease-out flex flex-col
+          inset-x-0 bottom-0 max-h-[82vh] rounded-t-3xl backdrop-blur-2xl bg-white/95 dark:bg-zinc-950/95 border-t border-slate-200 dark:border-white/[0.12] shadow-2xl
+          md:inset-y-0 md:right-0 md:left-auto md:w-[420px] md:max-h-none md:rounded-none md:border-t-0 md:border-l md:border-slate-200 dark:md:border-white/[0.1]
+          ${isResourcesOpen ? 'translate-y-0 md:translate-x-0 pointer-events-auto opacity-100 visible' : 'translate-y-full md:translate-x-full pointer-events-none opacity-0 invisible'}
+        `}
+      >
+        {/* Mobile Swipe / Drag Pip */}
+        <div className="md:hidden pt-3 pb-1 flex justify-center">
+          <div className="w-10 h-1 rounded-full bg-slate-300 dark:bg-white/25" />
+        </div>
+
+        {/* Drawer Header */}
+        <div className="p-4 border-b border-slate-200 dark:border-white/[0.08] flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+              <FolderArchive className="w-4 h-4" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-xs text-slate-900 dark:text-white font-sans">Engineering Vault</h3>
+              <p className="text-2xs text-slate-500 dark:text-slate-400 font-sans">Official DME Syllabus &amp; PYQ Archives</p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setIsResourcesOpen(false)}
+            className="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-white/[0.04] dark:hover:bg-white/10 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all cursor-pointer active:scale-95"
+            aria-label="Close Vault"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* Search Field */}
+        <div className="px-4 pt-3 pb-2">
+          <div className="relative">
+            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search syllabus, papers, manuals..."
+              className="w-full bg-slate-100 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+            />
+          </div>
+        </div>
+
+        {/* Category Filter Chips */}
+        <div className="px-4 py-2 border-b border-slate-200 dark:border-white/[0.06] flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+          {[
+            { id: 'all', label: 'All' },
+            { id: 'syllabus', label: 'Syllabus' },
+            { id: 'pyq', label: 'PYQs' },
+            { id: 'manual', label: 'Manuals' },
+            { id: 'calendar', label: 'Calendar' },
+            { id: 'tool', label: 'External' },
+          ].map((cat) => (
+            <button
+              key={cat.id}
+              type="button"
+              onClick={() => setActiveFilter(cat.id)}
+              className={`px-2.5 py-1 rounded-md text-xs font-sans whitespace-nowrap transition-all cursor-pointer active:scale-95 ${
+                activeFilter === cat.id
+                  ? 'bg-emerald-600 dark:bg-emerald-500/20 text-white dark:text-emerald-300 dark:border dark:border-emerald-500/40 font-medium shadow-xs'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-transparent'
+              }`}
+            >
+              {cat.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Scrollable Document List */}
+        <div className="flex-1 overflow-y-auto p-3 space-y-2">
+          {filteredResources.map((res) => (
+            <div
+              key={res.id}
+              onClick={() => handleResourceClick(res)}
+              className="p-3 rounded-xl bg-slate-50 hover:bg-slate-100 dark:bg-white/[0.02] dark:hover:bg-white/[0.06] border border-slate-200/80 dark:border-white/[0.04] hover:border-slate-300 dark:hover:border-white/[0.08] transition-all cursor-pointer flex items-center justify-between group active:scale-95"
+            >
+              <div className="flex items-start gap-3 min-w-0 pr-2">
+                <div className="p-2 rounded-lg bg-slate-200/60 dark:bg-white/[0.04] text-slate-500 dark:text-slate-400 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors shrink-0 mt-0.5">
+                  {res.isExternal ? <ExternalLink className="w-4 h-4" /> : <FileText className="w-4 h-4" />}
+                </div>
+                <div className="min-w-0">
+                  <h4 className="font-medium text-xs text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-white transition-colors line-clamp-1">
+                    {res.title}
+                  </h4>
+                  <div className="flex items-center gap-2 mt-1">
+                    <span className="text-3xs text-slate-500 dark:text-slate-400 font-sans">{res.categoryLabel}</span>
+                    {res.fileSize && <span className="font-mono text-3xs text-slate-400 dark:text-slate-500">{res.fileSize}</span>}
+                  </div>
+                </div>
+              </div>
+
+              <ChevronRight className="w-4 h-4 text-slate-400 dark:text-slate-500 group-hover:text-slate-900 dark:group-hover:text-white group-hover:translate-x-0.5 transition-all shrink-0" />
+            </div>
+          ))}
+        </div>
+
+        {/* Full Hub Link in Footer */}
+        <div className="p-4 border-t border-slate-200 dark:border-white/[0.06]">
+          <button
+            type="button"
+            onClick={() => {
+              setIsResourcesOpen(false);
+              onNavigate('resources');
+            }}
+            className="w-full min-h-[48px] py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-white/[0.04] dark:hover:bg-white/[0.08] border border-slate-200 dark:border-white/[0.08] text-xs font-medium text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95"
+          >
+            <span>Open Dedicated Resources Hub</span>
+            <ArrowRight className="w-4 h-4" />
+          </button>
         </div>
       </div>
+
     </div>
   );
 };
 
+export default Home;

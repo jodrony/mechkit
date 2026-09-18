@@ -27,7 +27,21 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="theme-color" content="#0f172a" />
+    <meta name="theme-color" content="#06090e" />
+    <!-- Prevent theme FOUC before React hydration -->
+    <script>
+      (function() {
+        try {
+          var saved = localStorage.getItem('mechkit-theme');
+          var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          if (saved === 'dark' || (!saved && prefersDark)) {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+        } catch (e) {}
+      })();
+    </script>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -42,7 +56,7 @@
       }
     </script>
   </head>
-  <body class="bg-slate-50 text-slate-900 dark:bg-mech-dark dark:text-slate-100 min-h-screen antialiased selection:bg-mech-orange selection:text-white transition-colors duration-200">
+  <body class="bg-slate-50 text-slate-900 dark:bg-[#06090e] dark:text-slate-100 min-h-screen antialiased selection:bg-emerald-500/30 selection:text-white transition-colors duration-200">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

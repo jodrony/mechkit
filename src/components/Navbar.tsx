@@ -44,30 +44,30 @@ export const Navbar: React.FC<NavbarProps> = ({
   ];
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-[#0f172a]/95 backdrop-blur-md">
+    <header className="sticky top-0 z-40 w-full border-b border-slate-200/80 dark:border-white/10 bg-white/85 dark:bg-[#06090e]/85 backdrop-blur-xl transition-colors">
       <div className="max-w-7xl mx-auto px-3 sm:px-6">
         <div className="flex items-center justify-between h-14 gap-2">
           {/* Logo & Sem 3 Badge */}
           <button
             type="button"
             onClick={() => onNavigate('dashboard')}
-            className="flex items-center gap-2 text-left focus:outline-none cursor-pointer group shrink-0"
+            className="flex items-center gap-2 text-left focus:outline-none cursor-pointer group shrink-0 active:scale-95 transition-transform"
           >
-            <div className="w-7 h-7 rounded-lg bg-mech-blue flex items-center justify-center text-white font-bold text-xs shadow-xs">
-              <Wrench className="w-4 h-4" />
+            <div className="w-7 h-7 rounded-full bg-[#05DF8E] flex items-center justify-center text-[#021B13] font-bold text-xs ring-1 ring-[#05DF8E]/40 shadow-emerald-glow">
+              <Wrench className="w-3.5 h-3.5" />
             </div>
             <div className="flex items-center gap-1.5">
               <span className="font-extrabold text-sm tracking-tight text-slate-900 dark:text-white">
-                Mech<span className="text-mech-orange">Kit</span>
+                Mech<span className="text-[#05DF8E]">Kit</span>
               </span>
-              <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-slate-200/70 dark:bg-white/[0.06] text-slate-700 dark:text-emerald-400 border border-slate-300/60 dark:border-white/10 uppercase tracking-wider">
                 Sem 3
               </span>
             </div>
           </button>
 
-          {/* Desktop Nav Items */}
-          <nav className="hidden lg:flex items-center gap-1.5 overflow-x-auto">
+          {/* Desktop Nav Items (Floating Pill Container) */}
+          <nav className="hidden lg:flex items-center gap-1 p-1 rounded-full bg-slate-200/60 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] overflow-x-auto">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = currentTab === item.id;
@@ -76,13 +76,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                   key={item.id}
                   type="button"
                   onClick={() => onNavigate(item.id)}
-                  className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-bold transition-all cursor-pointer ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer active:scale-95 ${
                     isActive
-                      ? 'bg-mech-blue text-white shadow-md ring-2 ring-mech-blue/20'
-                      : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
+                      ? 'bg-emerald-600 text-white dark:bg-emerald-500 dark:text-slate-950 shadow-sm ring-1 ring-emerald-400/30 font-bold'
+                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/80 dark:hover:bg-white/[0.06]'
                   }`}
                 >
-                  <Icon className="w-4 h-4" />
+                  <Icon className="w-3.5 h-3.5" />
                   <span>{item.label}</span>
                 </button>
               );
@@ -91,16 +91,16 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Right Action Icons */}
           <div className="flex items-center gap-2">
-            {/* Search Trigger */}
+            {/* Search Trigger (Pill Shaped) */}
             <button
               type="button"
               onClick={onOpenSearch}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-100/80 dark:bg-[#1e293b] text-sm text-slate-600 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-600 transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/[0.04] text-xs font-medium text-slate-600 dark:text-slate-300 hover:border-emerald-500/40 hover:text-slate-900 dark:hover:text-white transition-all cursor-pointer active:scale-95"
               title="Search (Ctrl+K)"
             >
-              <Search className="w-4 h-4" />
-              <span className="hidden sm:inline font-semibold">Search</span>
-              <kbd className="hidden sm:inline text-[10px] font-mono opacity-60">⌘K</kbd>
+              <Search className="w-3.5 h-3.5 text-slate-400 dark:text-slate-400" />
+              <span className="hidden sm:inline">Search</span>
+              <kbd className="hidden sm:inline text-[10px] font-mono opacity-60 px-1 rounded bg-black/5 dark:bg-white/10">⌘K</kbd>
             </button>
 
             {/* Feedback / Request Action */}
@@ -109,29 +109,45 @@ export const Navbar: React.FC<NavbarProps> = ({
                 id="btn-nav-feedback"
                 type="button"
                 onClick={onOpenFeedback}
-                className="flex items-center gap-1.5 px-2.5 sm:px-3 py-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 text-xs font-bold transition-colors cursor-pointer"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 text-xs font-semibold transition-all cursor-pointer active:scale-95"
                 title="Feedback / Request PYQ"
               >
-                <MessageSquarePlus className="w-4 h-4 shrink-0" />
+                <MessageSquarePlus className="w-3.5 h-3.5 shrink-0" />
                 <span className="hidden sm:inline">Feedback</span>
               </button>
             )}
+
+            {/* Design Test Prototype Pill Switcher */}
+            <button
+              id="btn-nav-test"
+              type="button"
+              onClick={() => onNavigate('test')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer active:scale-95 ${
+                currentTab === 'test'
+                  ? 'bg-emerald-600 text-white dark:bg-emerald-500 dark:text-slate-950 ring-1 ring-emerald-400/30 shadow-sm'
+                  : 'bg-slate-100 dark:bg-white/[0.04] text-slate-700 dark:text-emerald-400 border border-emerald-500/30 hover:border-emerald-500/60'
+              }`}
+              title="Preview /test Prototype"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span>/test</span>
+            </button>
 
             {/* Dark / Light Toggle */}
             <button
               type="button"
               onClick={onToggleTheme}
-              className="p-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1e293b] text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer"
-              title={isDark ? 'Light Mode' : 'Dark Mode'}
+              className="p-2 rounded-full border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/[0.04] text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-white/10 transition-colors cursor-pointer active:scale-95"
+              title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
               aria-label="Toggle theme"
             >
-              {isDark ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-600" />}
+              {isDark ? <Sun className="w-3.5 h-3.5 text-amber-400" /> : <Moon className="w-3.5 h-3.5 text-slate-600" />}
             </button>
           </div>
         </div>
 
-        {/* Mobile & Tablet quick scroll navigation bar - enlarged & prominent */}
-        <div className="lg:hidden flex items-center gap-2 overflow-x-auto py-2.5 border-t border-slate-100 dark:border-slate-800/80 scrollbar-none snap-x">
+        {/* Mobile & Tablet quick scroll navigation bar - pill ribbon */}
+        <div className="lg:hidden flex items-center gap-1.5 overflow-x-auto py-2 border-t border-slate-200/70 dark:border-white/[0.08] scrollbar-none snap-x">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = currentTab === item.id;
@@ -140,13 +156,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                 key={item.id}
                 type="button"
                 onClick={() => onNavigate(item.id)}
-                className={`flex items-center gap-2 py-3 px-4 rounded-xl text-base font-bold whitespace-nowrap shrink-0 transition-all active:scale-95 snap-start cursor-pointer ${
+                className={`flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-semibold whitespace-nowrap shrink-0 transition-all active:scale-95 snap-start cursor-pointer ${
                   isActive
-                    ? 'bg-mech-blue text-white shadow-lg ring-2 ring-mech-blue/40 font-extrabold'
-                    : 'text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700/60'
+                    ? 'bg-emerald-600 text-white dark:bg-emerald-500 dark:text-slate-950 shadow-sm ring-1 ring-emerald-400/30 font-bold'
+                    : 'text-slate-700 dark:text-slate-300 bg-slate-200/60 dark:bg-white/[0.04] border border-slate-300/40 dark:border-white/10'
                 }`}
               >
-                <Icon className="w-4 h-4" />
+                <Icon className="w-3.5 h-3.5" />
                 <span>{item.label}</span>
               </button>
             );
@@ -156,3 +172,5 @@ export const Navbar: React.FC<NavbarProps> = ({
     </header>
   );
 };
+
+export default Navbar;

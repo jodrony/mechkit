@@ -96,31 +96,32 @@ export const CalculatorShell: React.FC<CalculatorShellProps> = ({
   const getCategoryBadgeClass = (cat: string) => {
     switch (cat) {
       case 'Workshop':
-        return 'bg-amber-100 text-amber-800 dark:bg-amber-950/70 dark:text-amber-300 border-amber-300 dark:border-amber-700';
+        return 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30';
       case 'Strength of Materials':
-        return 'bg-blue-100 text-blue-800 dark:bg-blue-950/70 dark:text-blue-300 border-blue-300 dark:border-blue-700';
+        return 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/30';
       case 'Thermal':
-        return 'bg-rose-100 text-rose-800 dark:bg-rose-950/70 dark:text-rose-300 border-rose-300 dark:border-rose-700';
+        return 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/30';
       case 'Materials':
-        return 'bg-indigo-100 text-indigo-800 dark:bg-indigo-950/70 dark:text-indigo-300 border-indigo-300 dark:border-indigo-700';
+        return 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30';
       case 'Drawing':
-        return 'bg-cyan-100 text-cyan-800 dark:bg-cyan-950/70 dark:text-cyan-300 border-cyan-300 dark:border-cyan-700';
+        return 'bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border-cyan-500/30';
       default:
-        return 'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300 border-slate-300 dark:border-slate-700';
+        return 'bg-slate-500/10 text-slate-600 dark:text-slate-400 border-slate-500/30';
     }
   };
 
   return (
-    <div className="bg-white dark:bg-mech-card border border-slate-200 dark:border-slate-700/60 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden">
+    <div className="bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md border border-slate-200 dark:border-white/10 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden">
       {/* Header bar */}
-      <div className="p-4 sm:p-6 border-b border-slate-100 dark:border-slate-700/60 bg-gradient-to-r from-slate-50 via-white to-slate-50 dark:from-slate-900/40 dark:via-mech-card dark:to-slate-900/40">
+      <div className="p-4 sm:p-6 border-b border-slate-100 dark:border-white/[0.08] bg-slate-50/60 dark:bg-zinc-900/40">
         <div className="flex items-center justify-between gap-3 mb-2">
           <div className="flex items-center gap-2">
-            <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold border ${getCategoryBadgeClass(category)}`}>
+            <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold border ${getCategoryBadgeClass(category)}`}>
+              <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />
               {category}
             </span>
             {badge && (
-              <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-mech-orange/10 text-mech-orange dark:bg-orange-950/50 dark:text-orange-400 border border-orange-200 dark:border-orange-800/60">
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-medium bg-slate-100 dark:bg-white/[0.06] text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-white/10">
                 {badge}
               </span>
             )}
@@ -130,7 +131,7 @@ export const CalculatorShell: React.FC<CalculatorShellProps> = ({
           </span>
         </div>
 
-        <h3 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tight">{title}</h3>
+        <h3 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tight font-sans">{title}</h3>
         <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">{description}</p>
       </div>
 
@@ -156,7 +157,7 @@ export const CalculatorShell: React.FC<CalculatorShellProps> = ({
                   <div className="flex justify-between items-baseline">
                     <label htmlFor={inp.id} className="text-sm font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
                       {inp.symbol && (
-                        <span className="font-mono text-mech-blue dark:text-blue-400 font-bold">
+                        <span className="font-mono text-emerald-600 dark:text-emerald-400 font-bold">
                           <MathView math={inp.symbol} displayMode={false} />:
                         </span>
                       )}
@@ -179,7 +180,7 @@ export const CalculatorShell: React.FC<CalculatorShellProps> = ({
                       step={inp.step || 'any'}
                       min={inp.min}
                       max={inp.max}
-                      className="block w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3.5 py-3 text-slate-900 dark:text-white placeholder-slate-400 focus:border-mech-blue focus:outline-none focus:ring-2 focus:ring-mech-blue/20 dark:focus:border-blue-500 dark:focus:ring-blue-500/20 font-mono text-base transition-colors"
+                      className="block w-full rounded-xl border border-slate-300 dark:border-white/10 bg-white/70 dark:bg-white/[0.04] px-3.5 py-3 text-slate-900 dark:text-white placeholder-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500/30 font-mono text-base transition-all"
                     />
                     {inp.units && inp.units.length > 0 && (
                       <div className="absolute inset-y-0 right-0 flex items-center pr-1.5">
@@ -187,7 +188,7 @@ export const CalculatorShell: React.FC<CalculatorShellProps> = ({
                           aria-label={`${inp.label} unit`}
                           value={inp.currentUnit || inp.units[0].label}
                           onChange={(e) => inp.onUnitChange?.(e.target.value)}
-                          className="h-9 rounded-lg border-0 bg-slate-100 dark:bg-slate-800 py-0 pl-2.5 pr-7 text-xs font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-inset focus:ring-mech-blue cursor-pointer"
+                          className="h-9 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-zinc-800 py-0 pl-2.5 pr-7 text-xs font-bold text-slate-700 dark:text-slate-200 focus:ring-1 focus:ring-emerald-500 cursor-pointer"
                         >
                           {inp.units.map((u) => (
                             <option key={u.label} value={u.label}>
@@ -208,7 +209,7 @@ export const CalculatorShell: React.FC<CalculatorShellProps> = ({
                           key={p.label}
                           type="button"
                           onClick={() => inp.onChange(p.value)}
-                          className="text-[11px] px-2.5 py-1 rounded-md bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-mono transition-colors cursor-pointer"
+                          className="text-[11px] px-2.5 py-1 rounded-md bg-slate-100 hover:bg-slate-200 dark:bg-white/[0.06] dark:hover:bg-white/[0.1] text-slate-700 dark:text-slate-300 font-mono transition-colors cursor-pointer active:scale-95"
                         >
                           {p.label} ({p.value})
                         </button>
@@ -227,9 +228,9 @@ export const CalculatorShell: React.FC<CalculatorShellProps> = ({
                 type="button"
                 onClick={onSwap}
                 title={swapTooltip}
-                className="flex-1 min-h-[44px] px-4 py-2.5 rounded-xl text-sm font-bold bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/50 dark:hover:bg-blue-900/60 text-mech-blue dark:text-blue-300 border border-blue-200 dark:border-blue-800/80 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-98 shadow-xs"
+                className="flex-1 min-h-[44px] px-4 py-2.5 rounded-xl text-sm font-semibold bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95 shadow-xs font-sans"
               >
-                <ArrowLeftRight className="w-4 h-4 text-mech-blue dark:text-blue-400" />
+                <ArrowLeftRight className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                 <span>Swap Units ⇄</span>
               </button>
             )}
@@ -237,20 +238,20 @@ export const CalculatorShell: React.FC<CalculatorShellProps> = ({
               type="button"
               onClick={onReset}
               title="Clear all fields to blank"
-              className="flex-1 min-h-[44px] px-4 py-2.5 rounded-xl text-sm font-bold bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-98 shadow-xs"
+              className="flex-1 min-h-[44px] px-4 py-2.5 rounded-xl text-sm font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-white/[0.06] dark:hover:bg-white/[0.1] text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-white/10 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95 shadow-xs font-sans"
             >
               <RotateCcw className="w-4 h-4 text-slate-500 dark:text-slate-400" />
               <span>Clear / Reset</span>
             </button>
           </div>
 
-          {/* 3. Calculated Output (Highly prominent result card) */}
+          {/* 3. Calculated Output (Prominent result card with emerald glow) */}
           <div className="space-y-2.5">
-            <div className="flex items-center justify-between pb-1 border-b border-slate-100 dark:border-slate-800">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+            <div className="flex items-center justify-between pb-1 border-b border-slate-100 dark:border-white/[0.08]">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 font-sans">
                 2. Calculated Output
               </span>
-              <span className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
+              <span className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1 font-sans">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                 Active Result
               </span>
@@ -276,12 +277,12 @@ export const CalculatorShell: React.FC<CalculatorShellProps> = ({
                 return (
                   <div
                     key={out.id}
-                    className="p-5 rounded-2xl border-2 bg-gradient-to-br from-blue-50/90 via-indigo-50/50 to-blue-100/40 dark:from-slate-900 dark:via-blue-950/40 dark:to-slate-900 border-blue-300/90 dark:border-blue-700/80 shadow-sm"
+                    className="p-5 rounded-2xl border border-emerald-500/20 dark:border-emerald-500/30 bg-emerald-500/[0.03] dark:bg-emerald-500/[0.06] shadow-sm relative overflow-hidden"
                   >
                     <div className="flex items-center justify-between gap-2 mb-2">
-                      <span className="text-xs font-bold text-slate-700 dark:text-slate-200 flex items-center gap-1.5 uppercase tracking-wide">
+                      <span className="text-xs font-bold text-slate-700 dark:text-slate-200 flex items-center gap-1.5 uppercase tracking-wide font-sans">
                         {out.symbol && (
-                          <span className="font-mono text-mech-blue dark:text-blue-400 font-extrabold text-sm">
+                          <span className="font-mono text-emerald-600 dark:text-emerald-400 font-extrabold text-sm">
                             <MathView math={out.symbol} displayMode={false} />:
                           </span>
                         )}
@@ -294,7 +295,7 @@ export const CalculatorShell: React.FC<CalculatorShellProps> = ({
                             aria-label={`${out.label} target unit`}
                             value={out.currentUnit || out.units[0].label}
                             onChange={(e) => out.onUnitChange?.(e.target.value)}
-                            className="h-8 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 py-0 pl-2.5 pr-7 text-xs font-bold text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-mech-blue cursor-pointer shadow-2xs"
+                            className="h-8 rounded-lg border border-slate-300 dark:border-white/10 bg-white dark:bg-zinc-800 py-0 pl-2.5 pr-7 text-xs font-bold text-slate-800 dark:text-slate-100 focus:ring-1 focus:ring-emerald-500 cursor-pointer shadow-2xs font-mono"
                           >
                             {out.units.map((u) => (
                               <option key={u.label} value={u.label}>
@@ -307,7 +308,7 @@ export const CalculatorShell: React.FC<CalculatorShellProps> = ({
                           type="button"
                           onClick={() => handleCopy(out, displayVal)}
                           title="Copy result to clipboard"
-                          className="min-h-[44px] min-w-[44px] rounded-xl text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center transition-colors cursor-pointer active:scale-95 shadow-2xs"
+                          className="min-h-[44px] min-w-[44px] rounded-xl text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-white/10 border border-slate-200 dark:border-white/10 flex items-center justify-center transition-all cursor-pointer active:scale-95 shadow-2xs"
                         >
                           {copiedId === out.id ? (
                             <Check className="w-5 h-5 text-emerald-500" />
@@ -319,16 +320,16 @@ export const CalculatorShell: React.FC<CalculatorShellProps> = ({
                     </div>
 
                     <div className="flex items-baseline gap-2.5 pt-1">
-                      <span className="text-3xl sm:text-4xl font-extrabold font-mono text-slate-900 dark:text-white tracking-tight">
+                      <span className="text-3xl sm:text-4xl font-extrabold font-mono text-slate-900 dark:text-white tracking-tight tabular-nums">
                         {displayVal}
                       </span>
-                      <span className="text-base sm:text-lg font-mono font-bold text-mech-blue dark:text-blue-400">
+                      <span className="text-base sm:text-lg font-mono font-bold text-emerald-600 dark:text-emerald-400">
                         {out.currentUnit || ''}
                       </span>
                     </div>
 
                     {out.subtext && (
-                      <p className="text-xs font-medium text-slate-600 dark:text-slate-300 mt-2.5 pt-2.5 border-t border-blue-200/70 dark:border-slate-800">
+                      <p className="text-xs font-medium text-slate-600 dark:text-slate-300 mt-2.5 pt-2.5 border-t border-emerald-500/20 dark:border-emerald-500/20 font-sans">
                         {out.subtext}
                       </p>
                     )}
@@ -340,11 +341,11 @@ export const CalculatorShell: React.FC<CalculatorShellProps> = ({
 
           {/* 4. Secondary Controls (Material Presets, standard lookup tables - MUST appear below output) */}
           {extraContent && (
-            <div className="pt-3 border-t border-slate-200 dark:border-slate-800 space-y-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+            <div className="pt-3 border-t border-slate-200 dark:border-white/10 space-y-2">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 font-sans">
                 3. Secondary Controls & Parameters
               </span>
-              <div className="p-3.5 bg-slate-50/80 dark:bg-slate-900/50 rounded-xl border border-slate-200 dark:border-slate-700/60">
+              <div className="p-3.5 bg-slate-50/80 dark:bg-zinc-900/50 rounded-xl border border-slate-200 dark:border-white/10">
                 {extraContent}
               </div>
             </div>
@@ -355,7 +356,7 @@ export const CalculatorShell: React.FC<CalculatorShellProps> = ({
         <div className="lg:col-span-5 flex flex-col space-y-4">
           
           {/* Formula Strip & Educational Tab Toggles */}
-          <div className="p-4 bg-slate-100/90 dark:bg-slate-900/60 rounded-2xl border border-slate-200 dark:border-slate-700/60 space-y-3">
+          <div className="p-4 bg-slate-100/80 dark:bg-zinc-900/60 rounded-2xl border border-slate-200 dark:border-white/10 space-y-3">
             <div className="flex items-center justify-between flex-wrap gap-2">
               <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                 Governing Equation
@@ -364,9 +365,9 @@ export const CalculatorShell: React.FC<CalculatorShellProps> = ({
                 <button
                   type="button"
                   onClick={() => setEducationalTab('explanation')}
-                  className={`min-h-[36px] px-3 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                  className={`min-h-[36px] px-3 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer font-sans active:scale-95 ${
                     educationalTab === 'explanation'
-                      ? 'bg-mech-blue text-white shadow-xs'
+                      ? 'bg-emerald-500 text-slate-950 shadow-xs'
                       : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                   }`}
                 >
@@ -376,9 +377,9 @@ export const CalculatorShell: React.FC<CalculatorShellProps> = ({
                   <button
                     type="button"
                     onClick={() => setEducationalTab('si')}
-                    className={`min-h-[36px] px-3 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                    className={`min-h-[36px] px-3 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer font-sans active:scale-95 ${
                       educationalTab === 'si'
-                        ? 'bg-mech-blue text-white shadow-xs'
+                        ? 'bg-emerald-500 text-slate-950 shadow-xs'
                         : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                     }`}
                   >
@@ -388,22 +389,22 @@ export const CalculatorShell: React.FC<CalculatorShellProps> = ({
               </div>
             </div>
 
-            <div className="p-3.5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 text-center shadow-2xs">
+            <div className="p-3.5 bg-white dark:bg-zinc-950/80 rounded-xl border border-slate-200 dark:border-white/10 text-center shadow-2xs font-mono">
               <MathView math={formulaLatex} displayMode={true} />
             </div>
           </div>
 
           {/* Educational Tab 1: Detailed Mechanical Engineering Explanation */}
           {educationalTab === 'explanation' && (
-            <div className="p-5 sm:p-6 bg-white dark:bg-slate-900/40 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-3.5 shadow-2xs">
-              <div className="flex items-center gap-2 text-mech-blue dark:text-blue-400">
+            <div className="p-5 sm:p-6 bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md rounded-2xl border border-slate-200 dark:border-white/10 space-y-3.5 shadow-2xs">
+              <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-sans">
                 <Info className="w-5 h-5 shrink-0" />
                 <h4 className="text-base font-bold text-slate-900 dark:text-white">
                   Mechanical Engineering Significance & Failure Context
                 </h4>
               </div>
 
-              <div className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed space-y-3 whitespace-pre-line">
+              <div className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed space-y-3 whitespace-pre-line font-sans">
                 {formulaExplanation || 'Calculates the target parameter using standard mechanical engineering kinematic and kinetic relations.'}
               </div>
             </div>
@@ -411,8 +412,8 @@ export const CalculatorShell: React.FC<CalculatorShellProps> = ({
 
           {/* Educational Tab 2: Rigorous SI Analysis & Base Unit Breakdown */}
           {educationalTab === 'si' && siBaseExplanation && (
-            <div className="p-5 sm:p-6 bg-white dark:bg-slate-900/40 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-4 shadow-2xs">
-              <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
+            <div className="p-5 sm:p-6 bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md rounded-2xl border border-slate-200 dark:border-white/10 space-y-4 shadow-2xs">
+              <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-sans">
                 <HelpCircle className="w-5 h-5 shrink-0" />
                 <h4 className="text-base font-bold text-slate-900 dark:text-white">
                   SI Dimensional Analysis & Base Unit Breakdown
@@ -420,7 +421,7 @@ export const CalculatorShell: React.FC<CalculatorShellProps> = ({
               </div>
 
               <div className="space-y-3">
-                <div className="p-3.5 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800">
+                <div className="p-3.5 bg-slate-50/70 dark:bg-white/[0.03] rounded-xl border border-slate-200 dark:border-white/10">
                   <div className="text-xs text-slate-500 dark:text-slate-400 uppercase font-mono font-bold tracking-wider">
                     Step-by-Step Derivation
                   </div>
@@ -430,16 +431,16 @@ export const CalculatorShell: React.FC<CalculatorShellProps> = ({
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div className="p-3.5 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800">
+                  <div className="p-3.5 bg-slate-50/70 dark:bg-white/[0.03] rounded-xl border border-slate-200 dark:border-white/10">
                     <div className="text-xs text-slate-500 dark:text-slate-400 uppercase font-mono font-bold tracking-wider">
                       Dimensional Formula
                     </div>
-                    <div className="text-base font-mono font-bold text-mech-blue dark:text-blue-400 mt-1">
+                    <div className="text-base font-mono font-bold text-emerald-600 dark:text-emerald-400 mt-1">
                       {siBaseExplanation.dimensions}
                     </div>
                   </div>
 
-                  <div className="p-3.5 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800">
+                  <div className="p-3.5 bg-slate-50/70 dark:bg-white/[0.03] rounded-xl border border-slate-200 dark:border-white/10">
                     <div className="text-xs text-slate-500 dark:text-slate-400 uppercase font-mono font-bold tracking-wider">
                       Fundamental SI Base Units
                     </div>
@@ -450,7 +451,7 @@ export const CalculatorShell: React.FC<CalculatorShellProps> = ({
                 </div>
 
                 {siBaseExplanation.equivalences && (
-                  <div className="p-3 bg-emerald-50/50 dark:bg-emerald-950/20 rounded-xl border border-emerald-200 dark:border-emerald-900/40 text-xs text-emerald-900 dark:text-emerald-300 font-mono">
+                  <div className="p-3 bg-emerald-500/10 dark:bg-emerald-500/10 rounded-xl border border-emerald-500/20 dark:border-emerald-500/30 text-xs text-emerald-800 dark:text-emerald-300 font-mono">
                     <strong>Equivalences:</strong> {siBaseExplanation.equivalences}
                   </div>
                 )}
@@ -460,12 +461,12 @@ export const CalculatorShell: React.FC<CalculatorShellProps> = ({
 
           {/* Practical Shop / Lab Tips */}
           {practicalTips.length > 0 && (
-            <div className="p-4 bg-amber-50/80 dark:bg-amber-950/30 rounded-2xl border border-amber-200/70 dark:border-amber-900/40 text-xs text-amber-900 dark:text-amber-200 space-y-2">
-              <div className="flex items-center gap-1.5 font-bold text-amber-800 dark:text-amber-300">
+            <div className="p-4 bg-amber-500/10 dark:bg-amber-500/10 rounded-2xl border border-amber-500/20 dark:border-amber-500/30 text-xs text-amber-900 dark:text-amber-200 space-y-2">
+              <div className="flex items-center gap-1.5 font-bold text-amber-800 dark:text-amber-300 font-sans">
                 <Lightbulb className="w-4 h-4 shrink-0 text-amber-600 dark:text-amber-400" />
                 <span>Shop / Lab Practical Guidance</span>
               </div>
-              <ul className="list-disc list-inside space-y-1 text-slate-700 dark:text-slate-300 pl-1 text-xs leading-relaxed">
+              <ul className="list-disc list-inside space-y-1 text-slate-700 dark:text-slate-300 pl-1 text-xs leading-relaxed font-sans">
                 {practicalTips.map((tip, idx) => (
                   <li key={idx}>{tip}</li>
                 ))}

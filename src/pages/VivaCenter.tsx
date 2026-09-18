@@ -543,33 +543,36 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
 
 
   return (
-    <div className="max-w-6xl mx-auto px-2.5 sm:px-6 py-3 sm:py-5 space-y-3 sm:space-y-5">
+    <div className="max-w-6xl mx-auto px-2.5 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
       {/* Top Header & Two-Tier Mode Selector */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 sm:gap-4 pb-3 sm:pb-4 border-b border-slate-200 dark:border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 pb-4 border-b border-slate-200 dark:border-white/10">
         <div>
           <div className="flex items-center gap-2">
-            <span className="p-1.5 rounded-lg bg-orange-500/10 text-mech-orange">
+            <span className="p-2 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
               <GraduationCap className="w-4 h-4 sm:w-5 sm:h-5" />
             </span>
-            <h2 className="text-lg sm:text-2xl font-extrabold text-slate-900 dark:text-white">
+            <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
               Oral Viva Examination Center
             </h2>
           </div>
-          <p className="text-[11px] sm:text-xs font-mono font-bold text-mech-orange mt-0.5 uppercase tracking-wider">
-            Boiler Viva Prep • Oral Exam Practice
-          </p>
+          <div className="flex items-center gap-2 mt-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+            <p className="text-xs font-mono text-slate-500 dark:text-slate-400">
+              Boiler Viva Prep • Oral Exam Practice
+            </p>
+          </div>
         </div>
 
         {/* Top-Level Mode Selector Buttons */}
-        <div className="grid grid-cols-2 sm:flex p-1 rounded-2xl bg-slate-100 dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700/80 w-full sm:w-auto shrink-0 shadow-2xs">
+        <div className="grid grid-cols-2 sm:flex p-1 rounded-2xl bg-slate-200/60 dark:bg-zinc-900/80 backdrop-blur-md border border-slate-200 dark:border-white/10 w-full sm:w-auto shrink-0 shadow-xs">
           <button
             type="button"
             id="btn-mode-experiment"
             onClick={() => setVivaMode('experiment')}
-            className={`flex items-center justify-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+            className={`flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer active:scale-95 ${
               vivaMode === 'experiment'
-                ? 'bg-mech-orange text-white shadow-md ring-2 ring-orange-500/30'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-sm'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
             }`}
           >
             <TestTube2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
@@ -580,10 +583,10 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
             type="button"
             id="btn-mode-semester"
             onClick={() => setVivaMode('semester')}
-            className={`flex items-center justify-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+            className={`flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer active:scale-95 ${
               vivaMode === 'semester'
-                ? 'bg-mech-blue text-white shadow-md ring-2 ring-blue-500/30'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-sm'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
             }`}
           >
             <GraduationCap className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
@@ -596,19 +599,19 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
       {/* TIER 1: EXPERIMENT COMPONENT VIVA (Diagram Oral Exam) */}
       {/* ==================================================== */}
       {vivaMode === 'experiment' && (
-        <div className="space-y-2.5 sm:space-y-3.5 animate-fadeIn">
+        <div className="space-y-4 animate-fadeIn">
           {/* Top: Boiler Selector Tabs */}
-          <div className="space-y-1.5">
+          <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] sm:text-xs font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              <span className="text-xs font-mono uppercase tracking-wider text-slate-500 dark:text-slate-400">
                 Select Boiler Experiment
               </span>
-              <span className="text-[10px] sm:text-xs font-mono text-slate-400 dark:text-slate-500">
+              <span className="text-xs font-mono text-slate-400 dark:text-slate-500">
                 Diploma Lab Oral Examination
               </span>
             </div>
 
-            <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1 scrollbar-none snap-x">
+            <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none snap-x">
               {boilerExperiments.map((boiler) => {
                 const isActive = selectedBoilerId === boiler.id;
                 return (
@@ -620,17 +623,17 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
                       setSelectedBoilerId(boiler.id);
                       setActiveComponentIndex(0);
                     }}
-                    className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all cursor-pointer snap-start active:scale-95 ${
+                    className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-medium whitespace-nowrap transition-all cursor-pointer snap-start active:scale-95 ${
                       isActive
-                        ? 'bg-mech-orange text-white shadow-md ring-2 ring-orange-500/30'
-                        : 'bg-white dark:bg-[#1e293b] text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700/60 hover:border-slate-300'
+                        ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-sm ring-1 ring-emerald-400/30 font-semibold'
+                        : 'bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20'
                     }`}
                   >
                     <Flame className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
                     <span>{boiler.title}</span>
                     <span
-                      className={`px-1.5 py-0.2 rounded text-[10px] font-mono font-bold ${
-                        isActive ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-500'
+                      className={`px-1.5 py-0.5 rounded text-[10px] font-mono ${
+                        isActive ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-zinc-800 text-slate-500 dark:text-slate-400'
                       }`}
                     >
                       {boiler.components.length}
@@ -642,18 +645,19 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
           </div>
 
           {/* Seamless Natural Vertical Stacking Flow */}
-          <div className="max-w-3xl mx-auto space-y-3 sm:space-y-4">
+          <div className="max-w-3xl mx-auto space-y-4">
             {/* [1] Boiler Diagram Card */}
             <div
               id={`boiler-${currentBoiler.id}`}
-              className="rounded-2xl border border-neutral-200 dark:border-neutral-800/80 bg-white dark:bg-neutral-900/60 backdrop-blur-sm p-3 sm:p-4 shadow-xs space-y-2"
+              className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md p-4 sm:p-5 shadow-sm space-y-3"
             >
               <div className="flex items-center justify-between px-0.5">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-500/20">
+                <div className="flex items-center gap-2">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-mono font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                     {currentBoiler.type}
                   </span>
-                  <h3 className="font-bold text-xs sm:text-sm text-slate-900 dark:text-white truncate">
+                  <h3 className="font-semibold text-xs sm:text-sm text-slate-900 dark:text-slate-100 truncate">
                     {currentBoiler.title} Diagram
                   </h3>
                 </div>
@@ -662,9 +666,9 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
                   type="button"
                   onClick={() => setIsLightboxOpen(true)}
                   title="Open full-screen diagram"
-                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-slate-700 dark:text-slate-300 transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-white/10 transition-all active:scale-95 cursor-pointer"
                 >
-                  <Maximize2 className="w-3.5 h-3.5 text-orange-500" />
+                  <Maximize2 className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400" />
                   <span className="hidden sm:inline">Zoom</span>
                 </button>
               </div>
@@ -672,7 +676,7 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
               {/* Interactive Diagram Container */}
               <div
                 onClick={() => setIsLightboxOpen(true)}
-                className="relative group rounded-xl overflow-hidden bg-slate-950/40 border border-neutral-200 dark:border-neutral-800 p-1.5 flex items-center justify-center h-48 sm:h-64 md:h-80 cursor-pointer"
+                className="relative group rounded-xl overflow-hidden bg-slate-950/40 dark:bg-black/60 border border-slate-200 dark:border-white/10 p-2 flex items-center justify-center h-48 sm:h-64 md:h-80 cursor-pointer"
               >
                 <img
                   src={currentBoiler.imageSrc}
@@ -687,9 +691,9 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
                     e.stopPropagation();
                     setIsLightboxOpen(true);
                   }}
-                  className="absolute bottom-2 right-2 inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] sm:text-xs font-bold bg-slate-950/85 hover:bg-slate-900 text-slate-200 border border-slate-700/80 shadow-md backdrop-blur-xs transition-colors cursor-pointer"
+                  className="absolute bottom-2.5 right-2.5 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] sm:text-xs font-semibold bg-zinc-950/85 hover:bg-zinc-900 text-slate-200 border border-white/10 shadow-md backdrop-blur-sm transition-all active:scale-95 cursor-pointer"
                 >
-                  <Maximize2 className="w-3 h-3 text-orange-400 shrink-0" />
+                  <Maximize2 className="w-3 h-3 text-emerald-400 shrink-0" />
                   <span>Tap to expand / pinch</span>
                 </button>
               </div>
@@ -701,10 +705,10 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
                 id="component-select-dropdown"
                 value={activeComponentIndex}
                 onChange={(e) => setActiveComponentIndex(Number(e.target.value))}
-                className="w-full py-2 px-3 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-sm text-slate-800 dark:text-slate-200 focus:outline-none focus:border-orange-500 transition-colors cursor-pointer"
+                className="w-full py-2.5 px-3.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md text-sm text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all cursor-pointer"
               >
                 {currentBoiler.components.map((comp, idx) => (
-                  <option key={comp.partName} value={idx} className="bg-white dark:bg-neutral-900 text-slate-900 dark:text-slate-100">
+                  <option key={comp.partName} value={idx} className="bg-white dark:bg-zinc-900 text-slate-900 dark:text-slate-100">
                     {String(idx + 1).padStart(2, '0')}. {comp.partName} ({comp.category})
                   </option>
                 ))}
@@ -715,7 +719,7 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
             {currentComponent ? (
               <div
                 id={`item-${currentComponent.partName.replace(/\s+/g, '-').toLowerCase()}`}
-                className="rounded-2xl border border-neutral-200 dark:border-neutral-800/80 bg-white dark:bg-neutral-900/60 backdrop-blur-sm p-3.5 sm:p-4 shadow-xs space-y-3"
+                className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md p-4 sm:p-5 shadow-sm space-y-3.5"
               >
                 <div id={currentComponent.partName.replace(/\s+/g, '-').toLowerCase()}>
                   <div id={currentComponent.partName}>
@@ -723,11 +727,12 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
                   </div>
                 </div>
                 {/* Header row: Component Name + Category Tag */}
-                <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-neutral-100 dark:border-neutral-800">
-                  <h3 className="font-semibold text-base text-slate-900 dark:text-white leading-tight">
+                <div className="flex items-center justify-between gap-2 pb-3 border-b border-slate-200 dark:border-white/10">
+                  <h3 className="font-semibold text-base sm:text-lg text-slate-900 dark:text-slate-100 leading-tight">
                     {currentComponent.partName}
                   </h3>
-                  <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-500/20 shrink-0">
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-mono font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 shrink-0">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                     {currentComponent.category === 'Mounting'
                       ? 'Boiler Mounting'
                       : currentComponent.category === 'Accessory'
@@ -736,7 +741,7 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
                   </span>
                 </div>
 
-                {/* Body: Direct function/answer without quotes or artificial roleplay */}
+                {/* Body: Direct function/answer */}
                 <div className="py-1">
                   <p className="text-xs sm:text-sm text-slate-800 dark:text-slate-200 leading-relaxed font-normal">
                     {currentComponent.examinerAnswer || currentComponent.answer}
@@ -744,12 +749,12 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
                 </div>
 
                 {/* Compact bottom navigation: [< Prev] [Random] [Next >] */}
-                <div className="grid grid-cols-3 gap-2 pt-2 border-t border-neutral-100 dark:border-neutral-800">
+                <div className="grid grid-cols-3 gap-2 pt-2 border-t border-slate-200 dark:border-white/10">
                   <button
                     type="button"
                     id="btn-prev-part"
                     onClick={handlePrevComponent}
-                    className="py-1.5 px-3 rounded-lg text-xs font-semibold border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-slate-700 dark:text-slate-200 hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors flex items-center justify-center gap-1 cursor-pointer active:scale-95"
+                    className="py-2 px-3 rounded-xl text-xs font-semibold border border-slate-200 dark:border-white/10 bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-slate-700 dark:text-slate-200 transition-all flex items-center justify-center gap-1 cursor-pointer active:scale-95"
                   >
                     <ChevronLeft className="w-3.5 h-3.5 shrink-0" />
                     <span>Prev</span>
@@ -759,7 +764,7 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
                     type="button"
                     id="btn-random-part"
                     onClick={handleRandomComponent}
-                    className="py-1.5 px-3 rounded-lg text-xs font-semibold bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-slate-700 dark:text-slate-200 border border-neutral-200/60 dark:border-neutral-700/60 transition-colors flex items-center justify-center gap-1 cursor-pointer active:scale-95"
+                    className="py-2 px-3 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-white/10 transition-all flex items-center justify-center gap-1 cursor-pointer active:scale-95"
                   >
                     <Shuffle className="w-3 h-3 shrink-0" />
                     <span>Random</span>
@@ -769,7 +774,7 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
                     type="button"
                     id="btn-next-part"
                     onClick={handleNextComponent}
-                    className="py-1.5 px-3 rounded-lg text-xs font-semibold bg-orange-500 hover:bg-orange-600 text-white transition-all shadow-2xs flex items-center justify-center gap-1 cursor-pointer active:scale-95"
+                    className="py-2 px-3 rounded-xl text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white shadow-sm transition-all flex items-center justify-center gap-1 cursor-pointer active:scale-95"
                   >
                     <span>Next</span>
                     <ChevronRight className="w-3.5 h-3.5 shrink-0" />
@@ -777,7 +782,7 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
                 </div>
               </div>
             ) : (
-              <div className="rounded-2xl border border-neutral-200 dark:border-neutral-800/80 bg-white dark:bg-neutral-900/60 backdrop-blur-sm p-6 shadow-xs text-center">
+              <div className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md p-6 shadow-sm text-center">
                 <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
                   No component data for this experiment
                 </p>
@@ -796,10 +801,10 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
                       type="button"
                       id={`item-${compSlug}`}
                       onClick={() => setActiveComponentIndex(idx)}
-                      className={`px-2.5 py-1 rounded-lg text-[11px] font-medium whitespace-nowrap transition-all cursor-pointer snap-start active:scale-95 ${
+                      className={`px-3 py-1.5 rounded-xl text-[11px] font-medium whitespace-nowrap transition-all cursor-pointer snap-start active:scale-95 ${
                         isSelected
-                          ? 'bg-orange-500 text-white font-semibold shadow-2xs'
-                          : 'bg-neutral-100 dark:bg-neutral-800/60 text-slate-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-700/50 hover:border-neutral-400 dark:hover:border-neutral-500'
+                          ? 'bg-emerald-600 dark:bg-emerald-500 text-white font-semibold shadow-sm'
+                          : 'bg-white/80 dark:bg-zinc-900/60 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20'
                       }`}
                     >
                       {comp.partName}
@@ -813,18 +818,18 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
           {/* Lightbox Modal for Full-Screen Diagram Zoom */}
           {isLightboxOpen && (
             <div
-              className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 animate-fadeIn gpu-accelerated"
+              className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 animate-fadeIn gpu-accelerated"
               onClick={() => setIsLightboxOpen(false)}
             >
               <div
-                className="relative max-w-5xl w-full max-h-[92vh] bg-white dark:bg-[#1e293b] rounded-2xl border border-slate-200 dark:border-slate-700 shadow-2xl overflow-hidden flex flex-col transform-gpu gpu-accelerated"
+                className="relative max-w-5xl w-full max-h-[92vh] bg-white dark:bg-zinc-900 rounded-2xl border border-slate-200 dark:border-white/10 shadow-2xl overflow-hidden flex flex-col transform-gpu gpu-accelerated"
                 onClick={(e) => e.stopPropagation()}
               >
                 {/* Lightbox Header */}
-                <div className="px-4 py-3 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-900/60">
+                <div className="px-4 py-3 border-b border-slate-200 dark:border-white/10 flex items-center justify-between bg-slate-50 dark:bg-zinc-950/60">
                   <div className="flex items-center gap-2">
-                    <Flame className="w-4 h-4 text-mech-orange" />
-                    <h3 className="font-bold text-sm sm:text-base text-slate-900 dark:text-white">
+                    <Flame className="w-4 h-4 text-emerald-500" />
+                    <h3 className="font-semibold text-sm sm:text-base text-slate-900 dark:text-slate-100">
                       {currentBoiler.title} — High-Resolution Engineering Diagram
                     </h3>
                   </div>
@@ -832,14 +837,14 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
                     type="button"
                     onClick={() => setIsLightboxOpen(false)}
                     aria-label="Close diagram"
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors cursor-pointer"
+                    className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors cursor-pointer active:scale-95"
                   >
                     <X className="w-5 h-5" />
                   </button>
                 </div>
 
                 {/* Lightbox Image Body */}
-                <div className="flex-1 overflow-auto p-4 flex items-center justify-center bg-slate-900/10 dark:bg-slate-950">
+                <div className="flex-1 overflow-auto p-4 flex items-center justify-center bg-slate-900/10 dark:bg-zinc-950">
                   <img
                     src={currentBoiler.imageSrc}
                     alt={`${currentBoiler.title} full diagram`}
@@ -848,12 +853,12 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
                 </div>
 
                 {/* Lightbox Footer */}
-                <div className="px-4 py-2.5 bg-slate-50 dark:bg-slate-900/60 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500">
+                <div className="px-4 py-2.5 bg-slate-50 dark:bg-zinc-950/60 border-t border-slate-200 dark:border-white/10 flex items-center justify-between text-xs text-slate-500">
                   <span>{currentBoiler.summary}</span>
                   <button
                     type="button"
                     onClick={() => setIsLightboxOpen(false)}
-                    className="px-3 py-1 rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold cursor-pointer"
+                    className="px-3 py-1.5 rounded-xl bg-slate-200 dark:bg-zinc-800 text-slate-700 dark:text-slate-300 font-semibold cursor-pointer active:scale-95"
                   >
                     Close (Esc)
                   </button>
@@ -872,7 +877,7 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
           {/* Subject Category Tabs */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              <span className="text-xs font-mono uppercase tracking-wider text-slate-500 dark:text-slate-400">
                 Select Oral Examination Subject
               </span>
               <span className="text-xs font-mono text-slate-400 dark:text-slate-500">
@@ -895,17 +900,17 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
                       setRevealedAnswers(new Set());
                       setShowAllTheory(false);
                     }}
-                    className={`flex items-center gap-2 px-3.5 sm:px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all cursor-pointer snap-start active:scale-95 ${
+                    className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-medium whitespace-nowrap transition-all cursor-pointer snap-start active:scale-95 ${
                       isActive
-                        ? 'bg-mech-blue text-white shadow-md ring-2 ring-blue-500/30'
-                        : 'bg-white dark:bg-[#1e293b] text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700/60 hover:border-slate-300'
+                        ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-sm ring-1 ring-emerald-400/30 font-semibold'
+                        : 'bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20'
                     }`}
                   >
                     <Icon className="w-4 h-4 shrink-0" />
                     <span>{cat.label}</span>
                     <span
-                      className={`px-1.5 py-0.2 rounded text-[10px] font-mono font-bold ${
-                        isActive ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-500'
+                      className={`px-1.5 py-0.5 rounded text-[10px] font-mono ${
+                        isActive ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-zinc-800 text-slate-500 dark:text-slate-400'
                       }`}
                     >
                       {count}
@@ -926,13 +931,13 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
                 value={theorySearch}
                 onChange={(e) => setTheorySearch(e.target.value)}
                 placeholder="Search oral questions (e.g. Hooke, Poisson, First Law, ASA, Abbe)..."
-                className="w-full pl-10 pr-10 py-2.5 bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700/70 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-mech-blue shadow-xs"
+                className="w-full pl-10 pr-10 py-2.5 bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md border border-slate-200 dark:border-white/10 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm"
               />
               {theorySearch && (
                 <button
                   type="button"
                   onClick={() => setTheorySearch('')}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer active:scale-95"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -952,7 +957,7 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
                     setRevealedAnswers(new Set(filteredTheoryQuestions.map((q) => q.id)));
                   }
                 }}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1e293b] text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+                className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-zinc-900/60 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-zinc-800 transition-all cursor-pointer active:scale-95"
               >
                 {showAllTheory ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                 <span>{showAllTheory ? 'Hide All Answers' : 'Reveal All Answers'}</span>
@@ -962,7 +967,7 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
                 type="button"
                 id="btn-theory-random"
                 onClick={handleRandomTheory}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-mech-blue hover:bg-blue-700 text-xs font-bold text-white shadow-xs transition-colors cursor-pointer active:scale-95"
+                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-xs font-semibold text-white shadow-sm transition-all cursor-pointer active:scale-95"
               >
                 <Shuffle className="w-3.5 h-3.5" />
                 <span>Next Random Flashcard</span>
@@ -973,14 +978,14 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
           {/* Theory Questions Flashcard Grid */}
           <div className="space-y-3">
             {filteredTheoryQuestions.length === 0 ? (
-              <div className="p-8 sm:p-12 rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-700 bg-white dark:bg-[#1e293b] text-center space-y-2">
+              <div className="p-8 sm:p-12 rounded-2xl border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md text-center space-y-2">
                 <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
                   No questions match "{theorySearch}" in this subject.
                 </p>
                 <button
                   type="button"
                   onClick={() => setTheorySearch('')}
-                  className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-mech-blue text-white cursor-pointer"
+                  className="px-3.5 py-1.5 text-xs font-semibold rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white transition-all active:scale-95 cursor-pointer"
                 >
                   Clear Search
                 </button>
@@ -994,7 +999,7 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
                     key={item.id}
                     id={`item-${item.id}`}
                     style={{ contentVisibility: 'auto', containIntrinsicSize: '0 120px' }}
-                    className="bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700/60 rounded-2xl p-4 sm:p-5 shadow-xs hover:shadow-md transition-all space-y-3 content-visibility-auto"
+                    className="bg-white/80 dark:bg-zinc-900/60 backdrop-blur-md border border-slate-200 dark:border-white/10 rounded-2xl p-4 sm:p-5 shadow-sm hover:border-slate-300 dark:hover:border-white/20 transition-all space-y-3 content-visibility-auto"
                   >
                     <div id={`theory-card-${item.id}`}>
                       <div id={`theory-${item.id}`} />
@@ -1004,20 +1009,21 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
                       onClick={() => toggleTheoryReveal(item.id)}
                       className="flex items-start justify-between gap-3 cursor-pointer select-none"
                     >
-                      <div className="space-y-1 flex-1">
+                      <div className="space-y-1.5 flex-1">
                         <div className="flex items-center gap-2">
-                          <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-500/10 text-mech-blue dark:text-blue-400 border border-blue-200 dark:border-blue-900/40">
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
                             Q{item.id}
                           </span>
-                          <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-white/10">
                             {item.topic}
                           </span>
-                          <span className="hidden sm:inline-block px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400">
+                          <span className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
+                            <span className="w-1 h-1 rounded-full bg-amber-500" />
                             {item.yieldLevel}
                           </span>
                         </div>
 
-                        <h4 className="font-bold text-sm sm:text-base text-slate-900 dark:text-white leading-snug">
+                        <h4 className="font-semibold text-sm sm:text-base text-slate-900 dark:text-slate-100 leading-snug">
                           {item.question}
                         </h4>
                       </div>
@@ -1025,7 +1031,7 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
                       {/* Reveal Toggle Icon */}
                       <button
                         type="button"
-                        className="p-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-mech-blue transition-colors shrink-0"
+                        className="p-2 rounded-xl bg-slate-100 dark:bg-zinc-800 text-slate-500 dark:text-slate-400 hover:text-emerald-500 dark:hover:text-emerald-400 transition-colors shrink-0"
                       >
                         {isRevealed ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </button>
@@ -1033,11 +1039,11 @@ export const VivaCenter: React.FC<VivaCenterProps> = ({
 
                     {/* Revealed Answer Box */}
                     {isRevealed && (
-                      <div className="pt-3 border-t border-slate-100 dark:border-slate-800/80 bg-blue-50/40 dark:bg-blue-950/20 rounded-xl p-3.5 sm:p-4 border-l-4 border-l-mech-blue space-y-1.5 animate-fadeIn">
-                        <span className="text-[11px] font-mono font-bold text-mech-blue uppercase tracking-wider block">
+                      <div className="pt-3 border-t border-slate-200 dark:border-white/10 bg-emerald-500/[0.03] dark:bg-emerald-500/[0.06] border border-emerald-500/20 dark:border-emerald-500/30 rounded-xl p-3.5 sm:p-4 space-y-1.5 animate-in fade-in">
+                        <span className="text-[11px] font-mono font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider block">
                           Answer:
                         </span>
-                        <p className="text-xs sm:text-sm text-slate-800 dark:text-slate-200 leading-relaxed font-mono font-medium">
+                        <p className="text-xs sm:text-sm text-slate-800 dark:text-slate-200 leading-relaxed font-mono">
                           {item.answer}
                         </p>
                       </div>
