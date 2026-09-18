@@ -851,13 +851,13 @@ export const DesignTest: React.FC<DesignTestProps> = ({
             </button>
 
             <div className="flex items-center gap-2">
-              <span className="text-2xs font-mono uppercase tracking-wider text-emerald-400 font-semibold">
-                {activeTab === 'calculators' && 'Module 2: Calculators'}
-                {activeTab === 'utilities' && 'Module 3: Utilities'}
-                {activeTab === 'labs' && 'Module 4: Lab Companion'}
-                {activeTab === 'formulas' && 'Module 6: Formula Library'}
-                {activeTab === 'viva' && 'Module 7: Viva Defense'}
-                {activeTab === 'resources' && 'Module 7: Resources Vault'}
+              <span className="text-xs font-sans text-emerald-400 font-semibold">
+                {activeTab === 'calculators' && 'Engineering Calculators'}
+                {activeTab === 'utilities' && 'Engineering Utilities'}
+                {activeTab === 'labs' && 'Lab Companion'}
+                {activeTab === 'formulas' && 'Formula Library'}
+                {activeTab === 'viva' && 'Viva Defense'}
+                {activeTab === 'resources' && 'Resources Vault'}
               </span>
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
             </div>

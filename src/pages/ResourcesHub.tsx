@@ -309,7 +309,7 @@ export const ResourcesHub: React.FC<ResourcesHubProps> = ({ onViewPdf }) => {
         <div className="flex items-center gap-2 self-start sm:self-auto shrink-0">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-            Module 7 • Sem 3 ME
+            Resource Vault • Sem 3 ME
           </span>
         </div>
       </div>

@@ -117,22 +117,6 @@ export const Navbar: React.FC<NavbarProps> = ({
               </button>
             )}
 
-            {/* Design Test Prototype Pill Switcher */}
-            <button
-              id="btn-nav-test"
-              type="button"
-              onClick={() => onNavigate('test')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer active:scale-95 ${
-                currentTab === 'test'
-                  ? 'bg-emerald-600 text-white dark:bg-emerald-500 dark:text-slate-950 ring-1 ring-emerald-400/30 shadow-sm'
-                  : 'bg-slate-100 dark:bg-white/[0.04] text-slate-700 dark:text-emerald-400 border border-emerald-500/30 hover:border-emerald-500/60'
-              }`}
-              title="Preview /test Prototype"
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span>/test</span>
-            </button>
-
             {/* Dark / Light Toggle */}
             <button
               type="button"

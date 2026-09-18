@@ -339,16 +339,16 @@ function AppContent() {
 
   const getModuleTitle = (tab: ActiveTab): string => {
     switch (tab) {
-      case 'calculators': return 'Module 2: Engineering Calculators';
-      case 'utilities': return 'Module 3: Engineering Utilities';
-      case 'labs': return 'Module 4: Lab Companion';
-      case 'workshop': return 'Module 5: Workshop Reference';
-      case 'formulas': return 'Module 6: Formula Library';
-      case 'viva': return 'Module 7: Viva Practice Center';
+      case 'calculators': return 'Engineering Calculators';
+      case 'utilities': return 'Engineering Utilities';
+      case 'labs': return 'Lab Companion';
+      case 'workshop': return 'Workshop Reference';
+      case 'formulas': return 'Formula Library';
+      case 'viva': return 'Viva Practice Center';
       case 'resources':
-      case 'downloads': return 'Module 7: Resources Hub';
-      case 'test': return 'Prototype: Design System Test (/test)';
-      default: return 'Module 1: Dashboard';
+      case 'downloads': return 'Resources Hub';
+      case 'test': return 'Design System Prototype';
+      default: return 'Dashboard';
     }
   };
 
@@ -376,7 +376,7 @@ function AppContent() {
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Back to Dashboard</span>
             </button>
-            <span className="text-2xs font-mono font-medium uppercase tracking-wider text-slate-500 dark:text-emerald-400/80 truncate max-w-[200px] sm:max-w-none">
+            <span className="text-xs font-sans font-medium text-slate-600 dark:text-emerald-400 truncate max-w-[200px] sm:max-w-none">
               {getModuleTitle(currentTab)}
             </span>
           </div>
